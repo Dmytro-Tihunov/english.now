@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "english.now",
   "private": true,
   "scripts": {
     "build": "turbo build",
