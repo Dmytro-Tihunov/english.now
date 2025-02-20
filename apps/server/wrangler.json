@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "server",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-02-16",
+    "vars": {
+    "POSTGRES_URL": "postgresql://neondb_owner:npg_m5Ik9oNCLwus@ep-old-hat-a2vj5mdt-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require",
+    "BETTER_AUTH_SECRET":"QxSDLStmjEj3MYJdpc0RQIHd4AVw8vqo"
+  }
+  // "compatibility_flags": [
+  //   "nodejs_compat"
+  // ],
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "MY_KV_NAMESPACE",
+  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  //   }
+  // ],
+  // "r2_buckets": [
+  //   {
+  //     "binding": "MY_BUCKET",
+  //     "bucket_name": "my-bucket"
+  //   }
+  // ],
+  // "d1_databases": [
+  //   {
+  //     "binding": "MY_DB",
+  //     "database_name": "my-database",
+  //     "database_id": ""
+  //   }
+  // ],
+  // "ai": {
+  //   "binding": "AI"
+  // },
+  // "observability": {
+  //   "enabled": true,
+  //   "head_sampling_rate": 1
+  // }
+}

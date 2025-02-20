@@ -1,0 +1,62 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1739916403289,
+      "tag": "0000_amusing_squadron_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739960485225,
+      "tag": "0001_curious_morph",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739960529550,
+      "tag": "0002_milky_lorna_dane",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1739960975303,
+      "tag": "0003_steep_captain_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1739961092809,
+      "tag": "0004_sharp_purple_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1739961250585,
+      "tag": "0005_large_talon",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1739961278405,
+      "tag": "0006_giant_pixie",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1739961397228,
+      "tag": "0007_perpetual_groot",
+      "breakpoints": true
+    }
+  ]
+}

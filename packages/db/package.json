@@ -1,0 +1,21 @@
+{
+	"name": "@repo/db",
+	"version": "1.0.0",
+	"main": "src/index.ts",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "tsc --watch",
+		"build": "tsc"
+	},
+	"dependencies": {
+		"@neondatabase/serverless": "^0.10.4",
+		"drizzle-orm": "^0.39.3"
+	},
+	"devDependencies": {
+		"@repo/eslint-config": "workspace:*",
+		"@repo/typescript-config": "workspace:*",
+		"drizzle-kit": "^0.30.4",
+		"typescript": "5.7.3"
+	}
+}

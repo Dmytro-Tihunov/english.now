@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify"
+  },
+  "dependencies": {
+    "@repo/db": "workspace:*",
+    "better-auth": "^1.1.18",
+    "hono": "^4.7.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "wrangler": "^3.101.0"
+  }
+}

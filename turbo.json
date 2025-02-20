@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env"],
   "ui": "tui",
   "tasks": {
     "build": {
@@ -17,5 +18,8 @@
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalEnv": [
+    "POSTGRES_URL"
+  ]
 }
