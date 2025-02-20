@@ -1,16 +1,19 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { jwt } from 'hono/jwt'
-import { createClient } from '@repo/db'
 import { user } from '@repo/db/src/schema'
-import { auth } from './utils/auth'
+import { init } from './middleware'
 
 type Bindings = {
   POSTGRES_URL: string
 }
 
+type Varibles = {
+  db: any
+}
+
 const app = new Hono<{ Bindings: Bindings }>({ strict: false })
 
+app.use("*", init())
 app.use("*", cors({
   origin: ['http://localhost:8081', 'exp://192.168.1.X:8081'], // Add your Expo development URLs
   allowHeaders: ["Content-Type", "Authorization"],
@@ -20,19 +23,20 @@ app.use("*", cors({
   credentials: true,
 }))
 
-// app.use("*", jwt({ secret: 'dsadas'}))
-
-app.notFound((c) => {
+app.notFound((c) => { 
   return c.text('Custom 404 Message', 404)
 })
 
-app.on(["POST", "GET"], "/api/auth/**", (c) => auth.handler(c.req.raw));
+app.on(["POST", "GET"], "/api/auth/**", (c) => { 
+  const auth = c.get('auth')
+  return auth.handler(c.req.raw)
+});
 
 app.get('/', async (c) => {
-  const db = createClient(c.env.POSTGRES_URL)
+  const db = c.get('db')
   const users = await db.select().from(user)
   console.log(users)
-  return c.json({ message: 'Hello World', users })
+  return c.json({  users })
 })
 
 app.get('/ping', (c) => {

@@ -4,7 +4,6 @@ import { authClient } from "../../lib/auth-client";
 import { useEffect, useState } from 'react';
 
 const Welcome = () => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { data: session } = authClient.useSession();
