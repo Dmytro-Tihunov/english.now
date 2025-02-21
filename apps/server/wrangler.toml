@@ -1,3 +1,6 @@
 name = "server"
 main = "src/index.ts"
 compatibility_date = "2025-02-16"
+compatibility_flags = ["nodejs_compat"]
+
+route = { pattern = "api.english.now", custom_domain = true, zone_name = "english.now" }

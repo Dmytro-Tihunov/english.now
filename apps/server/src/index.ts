@@ -7,11 +7,15 @@ type Bindings = {
   POSTGRES_URL: string
 }
 
-type Varibles = {
+type Variables = {
   db: any
 }
 
 const app = new Hono<{ Bindings: Bindings }>({ strict: false })
+
+// app.notFound((c) => { 
+//   return c.text('Custom 404 Message', 404)
+// })
 
 app.use("*", init())
 app.use("*", cors({
@@ -23,19 +27,14 @@ app.use("*", cors({
   credentials: true,
 }))
 
-app.notFound((c) => { 
-  return c.text('Custom 404 Message', 404)
-})
-
 app.on(["POST", "GET"], "/api/auth/**", (c) => { 
-  const auth = c.get('auth')
+  const auth: any = c.get('auth')
   return auth.handler(c.req.raw)
 });
 
 app.get('/', async (c) => {
   const db = c.get('db')
   const users = await db.select().from(user)
-  console.log(users)
   return c.json({  users })
 })
 

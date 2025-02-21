@@ -6,24 +6,23 @@ import { useEffect, useState } from 'react';
 const Welcome = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
     const { data: session } = authClient.useSession();
 
     const handleLogin = async () => {
         // await authClient.signIn.social({
         //     provider: 'google',
         // });
-        await authClient.signUp.email({
+        await authClient.signIn.email({
                 email,
                 password,
-                name: 'test',
-                image: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+            //  name: 'John Doe'
         })
     };
 
     return (
-        <View  style={styles.container}>
-            <Text  style={{ $$css: true, _: 'text-5xl text-red' }}>Привіт dasasце я</Text>
-            <Text>Welcome, {session}</Text>
+        <View style={styles.container}>
+           {/* <View>{session?.user}</View> */}
             <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
@@ -41,9 +40,9 @@ const Welcome = () => {
                 provider: 'apple',
                 idToken: {
                     token: credential.identityToken,
-                }
+                },
+                callbackURL: '/explore'
             })
-            // signed in
           } catch (e) {
             if (e.code === 'ERR_REQUEST_CANCELED') {
             console.log('ERR_REQUEST_CANCELED', e)
@@ -56,13 +55,10 @@ const Welcome = () => {
         }}
       />
 
-      <Button title="Google" onPress={async () => {
-          await authClient.signIn.social({  
-              provider: 'google',
-              callbackURL: '/explore'
-          });
-      }
-      } />
+{ session?.user ? <Text>Welcome {session?.user?.name}</Text> : null }
+
+<Button title="Sign in with Google" onPress={ async() => await authClient.signIn.social({provider: 'google'})} />
+
                 <Text style={{color: 'red'}}>
                     By continuing, you agree to our Terms of Service and Privacy Policy
                 </Text>
@@ -70,7 +66,7 @@ const Welcome = () => {
                 <View>
             <TextInput
                 placeholder="Email"
-                value={email}
+                value={email} 
                 onChangeText={setEmail}
             />
             <TextInput
@@ -79,6 +75,7 @@ const Welcome = () => {
                 onChangeText={setPassword}
             />
             <Button title="Login" onPress={handleLogin} />
+            <Button title="Sign Out" onPress={ async() => await authClient.signOut() } />
         </View>
          </View>
     )

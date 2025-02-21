@@ -10,10 +10,8 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "usesAppleSignIn": true
-    },
-    "extra": {
-      "API_URL": "https://server.tihunov.workers.dev"
+      "usesAppleSignIn": true,
+      "bundleIdentifier": "com.english.now"
     },
     "android": {
       "adaptiveIcon": {
