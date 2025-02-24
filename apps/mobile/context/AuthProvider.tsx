@@ -1,41 +1,34 @@
 import { createContext, useContext, useState } from "react";
 import { authClient } from "../lib/auth-client";
-import type { User } from "better-auth/types";
+import type { Session } from "../lib/auth-client";
 
 interface AuthContextType {
+  isPending: boolean;
+  session: Session | null;
   signOut: () => void;
-  session: User | null;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>({
-  signOut: async () => await authClient.signOut(),
+  isPending: false,
   session: null,
+  signOut: async () => await authClient.signOut(),
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<User | null>(null);
+  const { data: session, isPending } = authClient.useSession();
 
   const signOut = async () => {
     try {
       await authClient.signOut();
-      setSession(null);
     } catch (error) {
       console.error("Error signing out:", error);
-    }
-  };
-
-  const fetchSession = async () => {
-    try {
-      const session = await authClient.getSession();
-      setSession(session.data);
-    } catch (error) {
-      console.error("Error fetching session:", error);
     }
   };
 
   return (
     <AuthContext.Provider
       value={{
+        isPending,
         session,
         signOut,
       }}
@@ -45,7 +38,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Add a custom hook to use the auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

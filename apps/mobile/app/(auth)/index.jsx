@@ -1,18 +1,32 @@
 import { View, Button, Text, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { authClient } from "../../lib/auth-client";
 import { useRouter } from "expo-router";
+import { useAuth } from "../../context/AuthProvider";
 
 const Welcome = () => {
   const router = useRouter();
-  const { data: session } = authClient.useSession();
+  const { session } = useAuth();
 
   return (
     <View style={styles.container}>
-      <Text className="text-xl font-bold bg-blue-400">Welcome to the app</Text>
-      <Text style={{ marginBottom: 20 }}>
-        Sign up or log in to continue to the app
+      <View
+        style={{
+          marginBottom: 20,
+          width: 100,
+          height: 100,
+          backgroundColor: "red",
+          borderRadius: 20,
+        }}
+      ></View>
+      <Text style={{ fontSize: 34, fontWeight: "bold", marginBottom: 10 }}>
+        English.now
       </Text>
+      <Text style={{ marginBottom: 20, fontSize: 16 }}>
+        Час вивчати англійську мову з English.now
+      </Text>
+      {session?.user ? <Text>Welcome {session?.user?.name}</Text> : null}
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
@@ -33,7 +47,7 @@ const Welcome = () => {
               },
             });
             if (test) {
-              router.push("/explore");
+              router.push("/(app)");
             }
           } catch (e) {
             if (e.code === "ERR_REQUEST_CANCELED") {
@@ -47,8 +61,6 @@ const Welcome = () => {
         }}
       />
 
-      {session?.user ? <Text>Welcome {session?.user?.name}</Text> : null}
-
       <Button
         title="Sign in with Google"
         onPress={async () =>
@@ -56,7 +68,9 @@ const Welcome = () => {
         }
       />
 
-      <Text>
+      <Text
+        style={{ marginTop: 20, fontSize: 12, textAlign: "center", width: 250 }}
+      >
         By continuing, you agree to our Terms of Service and Privacy Policy
       </Text>
     </View>
