@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import { authClient } from "../lib/auth-client";
 import type { Session } from "../lib/auth-client";
 
@@ -9,7 +9,7 @@ interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>({
-  isPending: false,
+  isPending: true,
   session: null,
   signOut: async () => await authClient.signOut(),
 });

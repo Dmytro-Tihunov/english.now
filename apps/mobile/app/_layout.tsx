@@ -1,5 +1,5 @@
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router"; // Add useRouter
+import { Stack, useRouter } from "expo-router"; // Add useRouter
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -14,26 +14,34 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
+  const { session, isPending } = useAuth();
+  const router = useRouter();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Chevy: require("../assets/fonts/Chewy-Regular.ttf"),
   });
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    if (isPending && !loaded) {
+      return;
     }
-  }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+    if (session && !isPending) {
+      console.log("session", session);
+      router.replace("/(app)");
+    } else if (!session && !isPending) {
+      console.log("no session");
+      router.replace("/(auth)");
+    }
+
+    SplashScreen.hideAsync();
+  }, [session, isPending, router, loaded]);
 
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Stack>
           <Stack.Screen name="(app)" options={{ headerShown: false }} />
-          {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>

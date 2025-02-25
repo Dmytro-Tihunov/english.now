@@ -1,68 +1,30 @@
-import { Tabs } from "expo-router";
-import { Text, View } from "react-native";
-import { Redirect } from "expo-router";
-import { useAuth } from "../../context/AuthProvider";
+import { Tabs, Stack } from "expo-router";
 import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 
 export default function AppLayout() {
-  const { session, isPending } = useAuth();
-
-  if (isPending) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
-  if (!session) {
-    return <Redirect href="/(auth)" />;
-  }
-
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // position: "absolute",
-          },
-          default: {},
-        }),
-      }}
-    >
-      <Tabs.Screen
-        name="index"
+    <Stack>
+      <Stack.Screen
+        name="(tabs)"
         options={{
-          title: "Головна",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={26} name="house.fill" color={color} />
-          ),
+          headerShown: false,
         }}
       />
-      <Tabs.Screen
-        name="library"
+      <Stack.Screen
+        name="[id]"
         options={{
-          title: "Бібліотека",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={26} name="safari.fill" color={color} />
-          ),
+          headerShown: false,
+          headerTitle: "Course Details",
+          presentation: "card",
+          animation: "slide_from_right",
+          // Enable swipe back gesture
+          gestureEnabled: true,
+          gestureDirection: "horizontal",
         }}
       />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Профіль",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={26} name="person.fill" color={color} />
-          ),
-        }}
-      />
-    </Tabs>
+    </Stack>
   );
 }
