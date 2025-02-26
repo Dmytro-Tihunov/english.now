@@ -1,4 +1,4 @@
-import { Text, Button, StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/Header";
 import { LinearGradient } from "expo-linear-gradient";
@@ -6,9 +6,9 @@ import CourseSwiper from "@/components/app/CourseSwiper";
 import { useState, useMemo } from "react";
 
 const gradients = [
-  ["#C372FD", "white"] as const, // First slide
-  ["#8B1E3F", "white"] as const, // Second slide
-  ["#9B6B9E", "white"] as const, // Third slide
+  ["#FFE99C", "white"] as const, // First slide
+  ["#FFE99C", "white"] as const, // Second slide
+  ["#FFE99C", "white"] as const, // Third slide
 ] as const;
 
 export default function Index() {
@@ -35,15 +35,6 @@ export default function Index() {
           />
         </View>
         <CourseSwiper onSlideChange={setCurrentSlide} />
-        <View style={styles.container}>
-          <Text style={styles.title}>Index</Text>
-          <View
-            style={{
-              height: 200,
-              backgroundColor: "red",
-            }}
-          />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );

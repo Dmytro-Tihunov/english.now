@@ -1,12 +1,14 @@
-import { Tabs, Stack } from "expo-router";
-import { Platform } from "react-native";
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
+import { Stack } from "expo-router";
 
 export default function AppLayout() {
   return (
     <Stack>
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="(tabs)"
         options={{

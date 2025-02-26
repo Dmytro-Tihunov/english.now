@@ -18,6 +18,7 @@ interface Slide {
   title: string;
   level: string;
   backgroundColor: string;
+  progress: number;
 }
 
 interface CourseCardProps {
@@ -36,18 +37,21 @@ const slides: Slide[] = [
     title: "Sharing your Life Story",
     level: "Beginner",
     backgroundColor: "#FF7B92",
+    progress: 0.7,
   },
   {
     id: "2",
     title: "Discussing Childhood Memories",
     level: "Beginner",
     backgroundColor: "#8B1E3F",
+    progress: 0.3,
   },
   {
     id: "3",
     title: "School Days",
     level: "Beginner",
     backgroundColor: "#9B6B9E",
+    progress: 0.1,
   },
 ];
 
@@ -90,6 +94,21 @@ const CourseCard: React.FC<CourseCardProps> = ({ slide, index, scrollX }) => {
           <View style={styles.textContainer}>
             <Text style={styles.title}>{slide.title}</Text>
             <Text style={styles.level}>{slide.level}</Text>
+
+            <View style={styles.progressContainer}>
+              <View style={styles.progressBackground}>
+                <View
+                  style={[
+                    styles.progressFill,
+                    { width: `${slide.progress * 100}%` },
+                  ]}
+                />
+              </View>
+              r
+              <Text style={styles.progressText}>
+                {Math.round(slide.progress * 100)}% complete
+              </Text>
+            </View>
           </View>
         </View>
       </Pressable>
@@ -190,6 +209,25 @@ const styles = StyleSheet.create({
   level: {
     color: "rgba(255, 255, 255, 0.8)",
     fontSize: 16,
+  },
+  progressContainer: {
+    marginTop: 8,
+  },
+  progressBackground: {
+    height: 6,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    borderRadius: 3,
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 3,
+  },
+  progressText: {
+    color: "rgba(255, 255, 255, 0.8)",
+    fontSize: 12,
+    marginTop: 4,
   },
 });
 
