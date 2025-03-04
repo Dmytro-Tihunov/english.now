@@ -1,5 +1,11 @@
-import { pgTable, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, boolean, pgEnum, jsonb } from "drizzle-orm/pg-core";
 
+// ============= ENUMS =============
+export const cefrLevelEnum = pgEnum("cefr_level", ["A1", "A2", "B1", "B2", "C1", "C2"]);
+export const lessonTypeEnum = pgEnum("lesson_type", ["grammar", "vocabulary", "reading", "listening", "speaking", "writing"]);
+
+
+// ============= USERS & AUTHENTICATION =============
 export const user = pgTable("user", {
 	id: text("id").primaryKey(),
 	name: text('name').notNull(),
@@ -44,4 +50,44 @@ export const verification = pgTable("verification", {
 	expiresAt: timestamp('expires_at').notNull(),
 	createdAt: timestamp('created_at'),
 	updatedAt: timestamp('updated_at')
+});
+
+// ============= CORE CONTENT STRUCTURE =============
+export const course = pgTable("course", {
+	id: text("id").primaryKey(),
+	title: text('title').notNull(),
+	description: text('description'),
+	level: cefrLevelEnum('level').notNull(),
+	isPublished: boolean('is_published').notNull().default(false),
+	createdAt: timestamp('created_at').notNull(),
+	updatedAt: timestamp('updated_at').notNull(),
+	metadata: jsonb('metadata')
+});
+
+export const module = pgTable("module", {
+	id: text("id").primaryKey(),
+	courseId: text('course_id').notNull().references(() => course.id, { onDelete: 'cascade' }),
+	title: text('title').notNull(),
+	description: text('description'),
+	isPublished: boolean('is_published').notNull().default(false),
+	createdAt: timestamp('created_at').notNull(),
+	updatedAt: timestamp('updated_at').notNull(),
+});
+
+export const lesson = pgTable("lesson", {
+	id: text("id").primaryKey(),
+	title: text('title').notNull(),
+	description: text('description'),
+	isPublished: boolean('is_published').notNull().default(false),
+	createdAt: timestamp('created_at').notNull(),
+	updatedAt: timestamp('updated_at').notNull(),
+	moduleId: text('module_id').notNull().references(() => module.id, { onDelete: 'cascade' })
+});
+
+export const exercise = pgTable("exercise", {
+	id: text("id").primaryKey(),
+	lessonId: text('lesson_id').notNull().references(() => lesson.id, { onDelete: 'cascade' }),
+	type: lessonTypeEnum('type').notNull(),
+	createdAt: timestamp('created_at').notNull(),
+	updatedAt: timestamp('updated_at').notNull(),
 });

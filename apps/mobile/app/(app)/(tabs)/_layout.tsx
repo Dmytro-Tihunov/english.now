@@ -1,48 +1,61 @@
 import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        tabBarActiveTintColor: "#1F2129",
+        tabBarInactiveTintColor: "#8E8E93",
+        tabBarStyle: {
+          borderTopWidth: 1,
+          borderTopColor: "#E5E5EA",
+        },
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // position: "absolute",
-          },
-          default: {},
-        }),
+        tabBarLabelStyle: {
+          paddingBottom: Platform.OS === "ios" ? 0 : 2,
+        },
+        lazy: false,
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(index)"
         options={{
-          title: "Головна",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={26} name="house.fill" color={color} />
+          headerShown: false,
+          title: "Курс",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="words"
+        options={{
+          headerShown: false,
+          title: "Слова",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="book-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="library"
         options={{
+          headerShown: false,
           title: "Бібліотека",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={26} name="safari.fill" color={color} />
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="library-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
+          headerShown: false,
           title: "Профіль",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={26} name="person.fill" color={color} />
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" size={size} color={color} />
           ),
         }}
       />

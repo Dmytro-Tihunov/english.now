@@ -34,21 +34,21 @@ interface CourseSwiperProps {
 const slides: Slide[] = [
   {
     id: "1",
-    title: "Sharing your Life Story",
+    title: "B1",
     level: "Beginner",
     backgroundColor: "#FF7B92",
     progress: 0.7,
   },
   {
     id: "2",
-    title: "Discussing Childhood Memories",
+    title: "B2",
     level: "Beginner",
     backgroundColor: "#8B1E3F",
     progress: 0.3,
   },
   {
     id: "3",
-    title: "School Days",
+    title: "A1",
     level: "Beginner",
     backgroundColor: "#9B6B9E",
     progress: 0.1,
@@ -73,9 +73,9 @@ const CourseCard: React.FC<CourseCardProps> = ({ slide, index, scrollX }) => {
   });
 
   const handlePress = () => {
-    // Navigate to the course screen with animation and enable swipe back
+    // Navigate to the course screen outside of tabs navigation
     router.push({
-      pathname: "/(app)/[id]",
+      pathname: "/(app)/(index)/[id]",
       params: {
         id: slide.id,
         title: slide.title,
@@ -88,9 +88,15 @@ const CourseCard: React.FC<CourseCardProps> = ({ slide, index, scrollX }) => {
       <Pressable
         onPress={handlePress}
         style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
-        android_ripple={{ color: "rgba(255, 255, 255, 0.3)" }}
       >
-        <View style={[styles.card, { backgroundColor: slide.backgroundColor }]}>
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: slide.backgroundColor,
+            },
+          ]}
+        >
           <View style={styles.textContainer}>
             <Text style={styles.title}>{slide.title}</Text>
             <Text style={styles.level}>{slide.level}</Text>
@@ -104,10 +110,9 @@ const CourseCard: React.FC<CourseCardProps> = ({ slide, index, scrollX }) => {
                   ]}
                 />
               </View>
-              r
-              <Text style={styles.progressText}>
+              {/* <Text style={styles.progressText}>
                 {Math.round(slide.progress * 100)}% complete
-              </Text>
+              </Text> */}
             </View>
           </View>
         </View>
@@ -194,7 +199,10 @@ const styles = StyleSheet.create({
   card: {
     height: 150,
     width: CARD_WIDTH,
+    borderWidth: 1,
+    borderColor: "#C089FF",
     borderRadius: 20,
+    backgroundImage: "linear-gradient(to right, #C089FF, #8B1E3F)",
     padding: 20,
     justifyContent: "flex-start",
   },

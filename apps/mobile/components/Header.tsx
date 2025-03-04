@@ -1,23 +1,25 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { IconSymbol } from "./ui/IconSymbol";
 
-const Header = () => {
+const Header = memo(() => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.btn_left}>
-        <IconSymbol size={26} name="flame.fill" color="#FF0000" />
-        <View style={styles.badge}>
-          <Text style={{ fontWeight: "bold", fontSize: 10 }}>10</Text>
-        </View>
-      </TouchableOpacity>
       <Text style={styles.title}>English Now</Text>
-      <TouchableOpacity style={styles.button}>
-        <IconSymbol size={26} name="smiley.fill" color="black" />
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+        <TouchableOpacity style={styles.btn_course}>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>A1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btn_streak}>
+          <IconSymbol size={20} color="#000" name="flame.fill" />
+          <View>
+            <Text style={{ fontWeight: "bold", fontSize: 10 }}>10</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   header: {
@@ -33,26 +35,29 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  btn_left: {
+  btn_streak: {
+    backgroundColor: "#fff",
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "#000",
     display: "flex",
     flexDirection: "row",
-    position: "relative",
     alignItems: "center",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
     justifyContent: "center",
-    fontWeight: "bold",
   },
-  button: {},
-  title: {
-    fontSize: 26,
-    fontFamily: "Chewy",
-  },
-  badge: {
-    position: "absolute",
-    bottom: -5,
-    right: -5,
-    padding: 2,
+  btn_course: {
     backgroundColor: "#fff",
-    borderRadius: 20,
+    borderRadius: 30,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: "#000",
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: "Chewy",
   },
   settingsButton: {
     padding: 10,
@@ -61,5 +66,8 @@ const styles = StyleSheet.create({
     color: "#007BFF",
   },
 });
+
+// Add display name for debugging
+Header.displayName = "Header";
 
 export default Header;
