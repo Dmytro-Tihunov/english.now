@@ -1,23 +1,35 @@
 import { Hono } from 'hono'
+import { requestId } from 'hono/request-id'
+import { logger } from "hono/logger";
 import { cors } from 'hono/cors'
-import { user } from '@repo/db/src/schema'
-import { init } from './middleware'
+import { init, authMiddleware } from './middleware'
+import course from './routes/course'
+import type{ User, Session } from './utils/auth';
 
 type Bindings = {
   POSTGRES_URL: string
 }
 
-type Variables = {
-  db: any
+type Variables = { 
+  db: any,
+  auth: any,
+  user: User | null,
+  session: Session | null
 }
 
-const app = new Hono<{ Bindings: Bindings }>({ strict: false })
+const app = new Hono<{ Bindings: Bindings, Variables: Variables }>({ strict: false })
 
-// app.notFound((c) => { 
-//   return c.text('Custom 404 Message', 404)
-// })
+app.notFound((c) => { 
+  return c.text('Custom 404 Message', 404)
+})
 
+/**
+ * Middleware
+ */
+app.use("*", requestId())
+app.use("*", logger())
 app.use("*", init())
+app.use("*", authMiddleware())
 app.use("*", cors({
   origin: ['http://localhost:8081', 'exp://192.168.1.X:8081'], // Add your Expo development URLs
   allowHeaders: ["Content-Type", "Authorization"],
@@ -32,14 +44,16 @@ app.on(["POST", "GET"], "/api/auth/**", (c) => {
   return auth.handler(c.req.raw)
 });
 
-app.get('/', async (c) => {
-  const db = c.get('db')
-  const users = await db.select().from(user)
-  return c.json({  users })
-})
-
+/**
+ * Ping Pong
+ */
 app.get('/ping', (c) => {
   return c.json({ message: 'pong' })
 })
+
+/**
+ * API Routes v1
+ */
+app.route('/v1/course', course)
 
 export default app

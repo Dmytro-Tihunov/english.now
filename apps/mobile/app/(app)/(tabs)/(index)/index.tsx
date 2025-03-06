@@ -31,6 +31,7 @@ export default function HomeScreen() {
               courseId="1"
               title="English Now"
               level="A1"
+              completedLessons={10}
               progress={10}
               totalLessons={10}
             />

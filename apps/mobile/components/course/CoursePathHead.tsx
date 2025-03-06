@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useCourseData } from "@/hooks/useCourseData";
 
 interface CoursePathHeadProps {
   courseId: string;
@@ -23,6 +24,7 @@ export default function CoursePathHead({
   onInfoPress,
   onPress,
 }: CoursePathHeadProps) {
+  const { courses, isLoading } = useCourseData();
   // Calculate progress percentage
   const progressPercentage = Math.round(
     (completedLessons / totalLessons) * 100,

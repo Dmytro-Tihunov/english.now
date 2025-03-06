@@ -1,5 +1,4 @@
-import React from "react";
-import { View, Text, StyleSheet, Pressable, FlatList } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -218,12 +217,12 @@ export default function DetailScreen() {
         <Text style={styles.title}>{title || `Category ${id}`}</Text>
         <Text style={styles.subtitle}>Learn these essential words</Text>
 
-        <FlatList
+        {/* <FlatList
           data={words}
           renderItem={renderWordItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.wordsList}
-        />
+        /> */}
       </View>
     </SafeAreaView>
   );

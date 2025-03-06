@@ -4,7 +4,7 @@ import { createClient } from '@repo/db'
 import { schema } from '@repo/db'
 import { Env } from "../env";
 
-export const auth = (options: Env): any => {
+export const auth = (options: Env) => { 
     return betterAuth({
         secret: options.BETTER_AUTH_SECRET,
         database: drizzleAdapter(createClient(options.POSTGRES_URL), {
@@ -28,3 +28,7 @@ export const auth = (options: Env): any => {
         }
     })
 } 
+
+export type Auth = ReturnType<typeof auth>;
+export type User = Auth["$Infer"]["Session"]["user"];
+export type Session = Auth["$Infer"]["Session"]["session"];

@@ -7,7 +7,6 @@ import "react-native-reanimated";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthProvider";
 import { useAuth } from "../context/AuthProvider";
-import "./global.css";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -16,13 +15,14 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   const { session, isPending } = useAuth();
   const router = useRouter();
+
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Chevy: require("../assets/fonts/Chewy-Regular.ttf"),
   });
 
   useEffect(() => {
-    if (isPending && !loaded) {
+    if (!isPending && !loaded) {
       return;
     }
 
