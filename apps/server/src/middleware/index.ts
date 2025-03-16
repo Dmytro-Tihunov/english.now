@@ -1,4 +1,5 @@
 import type { MiddlewareHandler } from "hono";
+import type { Auth } from "../utils/auth";
 import { createClient } from '@repo/db'
 import { auth } from "../utils/auth";
 
@@ -19,7 +20,7 @@ function init(): MiddlewareHandler {
 
 function authMiddleware(): MiddlewareHandler {
   return async (c, next) => {
-    const auth: any = c.get('auth')
+    const auth: Auth = c.get('auth')
     const session = await auth.api.getSession({ headers: c.req.raw.headers})
   	if (!session) {
     	c.set("user", null);

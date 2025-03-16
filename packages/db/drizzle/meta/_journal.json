@@ -64,6 +64,48 @@
       "when": 1741124751474,
       "tag": "0008_swift_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1741952814241,
+      "tag": "0009_groovy_lightspeed",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1742033345637,
+      "tag": "0010_violet_medusa",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1742033924021,
+      "tag": "0011_lush_madame_masque",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1742034053232,
+      "tag": "0012_flashy_terror",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1742052173345,
+      "tag": "0013_gigantic_legion",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1742052364666,
+      "tag": "0014_outgoing_ken_ellis",
+      "breakpoints": true
     }
   ]
 }

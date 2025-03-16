@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "@/context/AuthProvider";
 import Header from "@/components/Header";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function ProfileScreen() {
   const { signOut } = useAuth();
-
+  const { top } = useSafeAreaInsets();
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <LinearGradient
         colors={["#FFE99C", "white"]}
         style={styles.fadeBackground}
@@ -20,7 +20,7 @@ export default function ProfileScreen() {
           <Button title="Sign Out" onPress={() => signOut()} />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

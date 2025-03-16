@@ -67,7 +67,7 @@ export default function CoursePathHead({
             <TouchableOpacity onPress={onInfoPress} style={styles.infoButton}>
               <Ionicons
                 name="information-circle-outline"
-                size={24}
+                size={22}
                 color="#999"
               />
             </TouchableOpacity>

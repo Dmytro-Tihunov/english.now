@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 import { authClient } from "../lib/auth-client";
 import type { Session } from "../lib/auth-client";
-import { router } from "expo-router";
 interface AuthContextType {
   isPending: boolean;
   session: Session | null;
@@ -20,7 +19,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     try {
       await authClient.signOut();
-      router.replace("/(auth)");
     } catch (error) {
       console.error("Error signing out:", error);
     }

@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useCourseData } from "@/hooks/useCourseData";
 
-// Types for our course structure
 interface Exercise {
   id: string;
   title: string;
@@ -41,6 +41,7 @@ interface Course {
 }
 
 // Mock data - replace with your actual data
+
 const mockCourses: Course[] = [
   {
     id: "c1",
@@ -140,43 +141,10 @@ const mockCourses: Course[] = [
       },
     ],
   },
-  {
-    id: "c2",
-    title: "Advanced Vocabulary",
-    description: "Expand your vocabulary with advanced terms and expressions",
-    progress: 15,
-    units: [
-      {
-        id: "u3",
-        title: "Business Language",
-        completed: false,
-        lessons: [
-          {
-            id: "l5",
-            title: "Office Terminology",
-            completed: true,
-            exercises: [
-              {
-                id: "e9",
-                title: "Office Vocabulary",
-                type: "flashcards",
-                completed: true,
-              },
-              {
-                id: "e10",
-                title: "Business Emails",
-                type: "writing",
-                completed: false,
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
 ];
 
 export default function CoursePath() {
+  const { courses, isLoading } = useCourseData();
   const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
   const [expandedUnit, setExpandedUnit] = useState<string | null>(null);
   const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
@@ -205,7 +173,7 @@ export default function CoursePath() {
   ) => {
     // Navigate to the exercise screen with the necessary params
     router.push({
-      pathname: `/exercise/${exerciseId}`,
+      pathname: `(index)/${exerciseId}`,
       params: { courseId, unitId, lessonId },
     });
   };
@@ -339,7 +307,6 @@ export default function CoursePath() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Your Learning Path</Text>
       {mockCourses.map(renderCourse)}
     </ScrollView>
   );

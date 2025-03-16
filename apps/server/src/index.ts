@@ -4,18 +4,8 @@ import { logger } from "hono/logger";
 import { cors } from 'hono/cors'
 import { init, authMiddleware } from './middleware'
 import course from './routes/course'
-import type{ User, Session } from './utils/auth';
-
-type Bindings = {
-  POSTGRES_URL: string
-}
-
-type Variables = { 
-  db: any,
-  auth: any,
-  user: User | null,
-  session: Session | null
-}
+import type { Variables, Bindings } from './types'; 
+import type { Auth } from './utils/auth';
 
 const app = new Hono<{ Bindings: Bindings, Variables: Variables }>({ strict: false })
 
@@ -40,7 +30,7 @@ app.use("*", cors({
 }))
 
 app.on(["POST", "GET"], "/api/auth/**", (c) => { 
-  const auth: any = c.get('auth')
+  const auth: Auth = c.get('auth')
   return auth.handler(c.req.raw)
 });
 

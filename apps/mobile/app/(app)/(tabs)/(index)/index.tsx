@@ -1,5 +1,5 @@
 import { StyleSheet, View, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState, useMemo } from "react";
 import { Colors } from "@/constants/Colors";
@@ -9,7 +9,7 @@ import CoursePathHead from "@/components/course/CoursePathHead";
 
 export default function HomeScreen() {
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const { top } = useSafeAreaInsets();
   const currentGradient = useMemo(() => {
     return (
       Colors.courseHeaderGradients[currentSlide] ||
@@ -18,7 +18,7 @@ export default function HomeScreen() {
   }, [currentSlide]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#ffffff", flex: 1 }}>
+    <View style={{ backgroundColor: "#ffffff", flex: 1, paddingTop: top }}>
       <LinearGradient
         colors={["#C089FF", "white"]}
         style={styles.fadeBackground}
@@ -44,7 +44,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

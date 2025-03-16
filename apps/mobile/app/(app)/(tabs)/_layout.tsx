@@ -12,11 +12,11 @@ export default function TabsLayout() {
           borderTopWidth: 1,
           borderTopColor: "#E5E5EA",
         },
+        animation: "none",
         headerShown: false,
         tabBarLabelStyle: {
           paddingBottom: Platform.OS === "ios" ? 0 : 2,
         },
-        lazy: false,
       }}
     >
       <Tabs.Screen
@@ -33,7 +33,7 @@ export default function TabsLayout() {
         name="words"
         options={{
           headerShown: false,
-          title: "Слова",
+          title: "Словник",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book-outline" size={size} color={color} />
           ),
@@ -43,7 +43,7 @@ export default function TabsLayout() {
         name="library"
         options={{
           headerShown: false,
-          title: "Бібліотека",
+          title: "Граматика",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="library-outline" size={size} color={color} />
           ),

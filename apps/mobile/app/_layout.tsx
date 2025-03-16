@@ -1,5 +1,5 @@
 import { useFonts } from "expo-font";
-import { Stack, useRouter } from "expo-router"; // Add useRouter
+import { Stack, useRouter, usePathname } from "expo-router"; // Add useRouter
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -12,9 +12,10 @@ SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
-export default function RootLayout() {
-  const { session, isPending } = useAuth();
+function NavigationHandler() {
   const router = useRouter();
+  const pathname = usePathname();
+  const { session, isPending } = useAuth();
 
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -22,29 +23,47 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (!isPending && !loaded) {
+    if (isPending || !loaded) {
       return;
     }
 
-    if (session && !isPending) {
-      console.log("session", session);
+    if (session && pathname === "/") {
       router.replace("/(app)");
-    } else if (!session && !isPending) {
-      console.log("no session");
-      router.replace("/(auth)");
+    } else if (!session && pathname.startsWith("/(app)")) {
+      router.replace("/");
     }
 
     SplashScreen.hideAsync();
-  }, [session, isPending, router, loaded]);
+  }, [session, isPending, router, pathname, loaded]);
 
+  if (isPending) {
+    return null;
+  }
+
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: "white" },
+      }}
+    >
+      {!session ? <Stack.Screen name="index" /> : <Stack.Screen name="(app)" />}
+      <Stack.Screen
+        name="+not-found"
+        options={{
+          title: "Oops!",
+          headerShown: true,
+        }}
+      />
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Stack>
-          <Stack.Screen name="(app)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
+        <NavigationHandler />
         <StatusBar style="auto" />
       </AuthProvider>
     </QueryClientProvider>
