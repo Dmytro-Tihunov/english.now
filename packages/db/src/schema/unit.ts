@@ -2,6 +2,7 @@ import { pgTable, text, timestamp, boolean, integer } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm";
 import { course } from "./course";
 import { lesson } from "./lesson";
+import { grammarRules } from "./grammar";
 
 export const unit = pgTable("unit", {
 	id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
@@ -15,6 +16,10 @@ export const unit = pgTable("unit", {
 });
 
 
-export const unitsRelations = relations(unit, ({ many }) => ({
+export const unitsRelations = relations(unit, ({ many, one }) => ({
 	lessons: many(lesson),
+	grammarRules: one(grammarRules, {
+		fields: [unit.id],
+		references: [grammarRules.unitId],
+	}),
 }));

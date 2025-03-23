@@ -1,15 +1,14 @@
-import { NeonHttpDatabase } from "@repo/db"
+import { NeonHttpDatabase } from "@repo/db";
 import { schema } from "@repo/db";
-import type{ User, Session } from './utils/auth';
+import type { User, Session, Auth } from "./utils/auth";
 
 export type Bindings = {
-    POSTGRES_URL: string
-}
+  POSTGRES_URL: string;
+};
 
-export type Variables = { 
-    db: NeonHttpDatabase<typeof schema>,
-    auth: any,
-    user: User | null,
-    session: Session | null
-}
-
+export type Variables = {
+  db: NeonHttpDatabase<typeof schema>;
+  auth: Auth;
+  user: User | null;
+  session: Session | null;
+};

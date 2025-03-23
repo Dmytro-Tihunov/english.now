@@ -3,8 +3,18 @@ import { user } from "./user";
 import { course } from "./course";
 import { unit } from "./unit";
 import { lesson } from "./lesson";
+import { grammarRules } from "./grammar";
 
 export const progressStatusEnum = pgEnum('progress_status', ['not_started', 'in_progress', 'completed']);
+
+export const userGrammarProgress = pgTable("user_grammar_progress", {
+    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+    userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+    grammarId: integer('grammar_id').notNull().references(() => grammarRules.id, { onDelete: 'cascade' }),
+    status: progressStatusEnum('status').notNull().default('not_started'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
 
 export const userCourseProgress = pgTable("user_course_progress", {
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),

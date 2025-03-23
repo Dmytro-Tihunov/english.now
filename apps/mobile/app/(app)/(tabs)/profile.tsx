@@ -1,20 +1,19 @@
 import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "@/context/AuthProvider";
-import Header from "@/components/Header";
-import { LinearGradient } from "expo-linear-gradient";
 
 export default function ProfileScreen() {
   const { signOut } = useAuth();
   const { top } = useSafeAreaInsets();
   return (
     <View style={[styles.container, { paddingTop: top }]}>
-      <LinearGradient
-        colors={["#FFE99C", "white"]}
-        style={styles.fadeBackground}
-      />
-      <Header />
       <ScrollView style={{ zIndex: 100, position: "relative" }}>
+        <View>
+          <View style={styles.header}>
+            <View style={styles.avatar}></View>
+            <Text style={styles.name}>John Doe</Text>
+          </View>
+        </View>
         <View style={styles.content}>
           <Text style={styles.title}>Profile</Text>
           <Button title="Sign Out" onPress={() => signOut()} />
@@ -29,24 +28,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  fadeBackground: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 0,
-    height: 200,
-    backgroundColor: "white",
+  header: {
+    flex: 1,
+    paddingHorizontal: 20,
+    gap: 20,
+    minHeight: 400,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: "bold",
   },
   content: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 40,
     gap: 20,
     minHeight: 400,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "gray",
   },
 });

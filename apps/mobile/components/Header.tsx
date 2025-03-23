@@ -1,11 +1,11 @@
 import React, { memo, useState, useRef, useEffect } from "react";
+import { Image } from "expo-image";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   Modal,
-  Image,
   Dimensions,
   Animated,
 } from "react-native";
@@ -42,7 +42,7 @@ const Header = memo(() => {
     <View style={styles.header}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
         <Image
-          source={require("../assets/images/icon.png")}
+          source={require("../assets/images/Logo.svg")}
           style={styles.logo}
         />
         <Text style={styles.title}>English Now</Text>
@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   logo: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
   },
   btn_streak: {
     backgroundColor: "#fff",

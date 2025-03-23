@@ -14,6 +14,16 @@ export default function IndexLayout() {
           gestureDirection: "horizontal",
         }}
       />
+      <Stack.Screen
+        name="grammar/[slug]"
+        options={{
+          headerShown: false,
+          presentation: "card",
+          animation: "slide_from_right",
+          gestureEnabled: true,
+          gestureDirection: "horizontal",
+        }}
+      />
     </Stack>
   );
 }

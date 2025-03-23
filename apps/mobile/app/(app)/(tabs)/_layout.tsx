@@ -40,7 +40,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="library"
+        name="grammar"
         options={{
           headerShown: false,
           title: "Граматика",

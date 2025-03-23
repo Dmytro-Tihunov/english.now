@@ -1,0 +1,1 @@
+ALTER TABLE "grammar_rules" DROP COLUMN "cerf_level";

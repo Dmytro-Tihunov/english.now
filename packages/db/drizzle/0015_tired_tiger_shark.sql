@@ -1,0 +1,1 @@
+ALTER TABLE "user_learning_state" ADD CONSTRAINT "user_learning_state_user_id_unique" UNIQUE("user_id");

@@ -10,7 +10,14 @@ import { useAuth } from "../context/AuthProvider";
 
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function NavigationHandler() {
   const router = useRouter();

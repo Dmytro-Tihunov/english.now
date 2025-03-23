@@ -33,7 +33,6 @@ export const grammarCategoryEnum = pgEnum('grammar_category', [
     title: text('title').notNull(),
     slug: text('slug').notNull().unique(),
     category: grammarCategoryEnum('category').notNull(),
-    cerfLevel: cefrLevelEnum('cerf_level').notNull(),
     isPublished: boolean('is_published').default(false),
     htmlContent: text('html_content').notNull(),
     language: text('language').notNull().default('ua'),

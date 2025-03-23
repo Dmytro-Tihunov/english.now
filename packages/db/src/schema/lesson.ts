@@ -26,9 +26,8 @@ export const lesson = pgTable('lesson', {
     isPublished: boolean('is_published').default(false),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
-  })
+})
 
-  export const lessonRelations = relations(lesson, ({ many }) => ({
-    exercises: many(exercise),
-  }))
-  
+export const lessonRelations = relations(lesson, ({ many }) => ({
+  exercises: many(exercise),
+}));

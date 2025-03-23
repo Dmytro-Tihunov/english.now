@@ -53,7 +53,7 @@ export const verification = pgTable("verification", {
 
 export const userLearningState = pgTable("user_learning_state", {
 	id: text("id").primaryKey(),
-	userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+	userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }).unique(),
 	currentCefrLevel: cefrLevelEnum('current_cefr_level').notNull(),
 	activeCourseId: integer('active_course_id').references(() => course.id),
 	lastActivityTimestamp: timestamp('last_activity_timestamp').notNull(),
