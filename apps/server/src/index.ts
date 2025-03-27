@@ -1,20 +1,64 @@
-import { Hono } from "hono";
+import type { Variables, Bindings } from "./types";
+import type { Auth } from "./utils/auth";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { swaggerUI } from "@hono/swagger-ui";
 import { requestId } from "hono/request-id";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
 import { init, authMiddleware } from "./middleware";
-import type { Variables, Bindings } from "./types";
-import type { Auth } from "./utils/auth";
 import grammar from "./routes/grammar";
 import course from "./routes/course";
 
-const app = new Hono<{ Bindings: Bindings; Variables: Variables }>({
+const app = new OpenAPIHono<{ Bindings: Bindings; Variables: Variables }>({
   strict: false,
+  defaultHook: (result, c) => {
+    if (!result.success) {
+      return c.json(
+        {
+          ok: false,
+          source: "custom_error_handler",
+        },
+        422,
+      );
+    }
+  },
 });
 
 app.notFound((c) => {
   return c.text("Custom 404 Message", 404);
+});
+
+/**
+ * Documentation
+ */
+app.get(
+  "/ui",
+  swaggerUI({
+    url: "/docs",
+  }),
+);
+
+app.doc("/docs", {
+  openapi: "3.0.0",
+  info: {
+    title: "English Now API",
+    version: "1.0.0",
+    contact: {
+      url: "https://english.now",
+      email: "support@english.now",
+    },
+  },
+  servers: [
+    {
+      url: "http://localhost:8787",
+      description: "Local Development",
+    },
+    {
+      url: "https://api.english.now",
+      description: "Production",
+    },
+  ],
 });
 
 /**
@@ -27,7 +71,7 @@ app.use("*", authMiddleware());
 app.use(
   "*",
   cors({
-    origin: ["http://localhost:8081", "exp://192.168.1.X:8081"], // Add your Expo development URLs
+    origin: ["*"], // Add your Expo development URLs
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
@@ -35,9 +79,10 @@ app.use(
     credentials: true,
   }),
 );
+
 app.use("*", prettyJSON());
 
-app.on(["POST", "GET"], "/api/auth/**", (c) => {
+app.on(["POST", "GET"], "/api/auth/*", (c) => {
   const auth: Auth = c.get("auth");
   return auth.handler(c.req.raw);
 });
@@ -56,3 +101,4 @@ app.route("/v1/course", course);
 app.route("/v1/grammar", grammar);
 
 export default app;
+export type AppType = typeof app;

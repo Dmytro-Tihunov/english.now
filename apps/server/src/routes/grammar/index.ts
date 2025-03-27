@@ -3,6 +3,7 @@ import { NeonHttpDatabase } from "@repo/db";
 import { schema, eq } from "@repo/db";
 import { z } from "zod";
 import { Variables } from "../../types";
+import { GrammarListSchema, GrammarSchema } from "./schema";
 
 const app = new OpenAPIHono<{ Variables: Variables }>();
 
@@ -15,10 +16,7 @@ const getRoute = createRoute({
       description: "Grammar Rules fetched successfully",
       content: {
         "application/json": {
-          schema: z.object({
-            message: z.string(),
-            grammar: z.array(z.any()),
-          }),
+          schema: GrammarListSchema,
         },
       },
     },
@@ -90,21 +88,18 @@ const getRouteId = createRoute({
 });
 
 app.openapi(getRoute, async (c) => {
-  const db = c.get("db") as NeonHttpDatabase<typeof schema>;
   const user = c.get("user");
+  const db = c.get("db") as NeonHttpDatabase<typeof schema>;
 
   if (!user) return c.json({ message: "Unauthorized" }, 401);
 
   try {
-    const grammar = await db
+    const data = await db
       .select()
       .from(schema.grammarRules)
       .where(eq(schema.grammarRules.isPublished, true));
 
-    return c.json({
-      message: "Grammar fetched successfully",
-      grammar,
-    });
+    return c.json(data, 200);
   } catch (error) {
     console.error("Error fetching courses:", error);
     return c.json({ message: "Failed to fetch courses" }, 400);
@@ -115,7 +110,7 @@ app.openapi(getRouteId, async (c) => {
   const db = c.get("db") as NeonHttpDatabase<typeof schema>;
   const user = c.get("user");
 
-  //   if (!user) return c.json({ message: "Unauthorized" }, 401);
+  if (!user) return c.json({ message: "Unauthorized" }, 401);
 
   try {
     const grammar = await db
@@ -133,6 +128,14 @@ app.openapi(getRouteId, async (c) => {
     console.error("Error fetching grammar rule:", error);
     return c.json({ message: "Failed to fetch grammar rule" }, 400);
   }
+});
+
+app.doc("/docs", {
+  openapi: "3.0.0",
+  info: {
+    title: "Grammar API",
+    version: "1.0.0",
+  },
 });
 
 export default app;

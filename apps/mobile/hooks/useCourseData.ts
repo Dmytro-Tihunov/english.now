@@ -9,13 +9,12 @@ export function useCourseData() {
 
   const fetchCourses = async (): Promise<any[]> => {
     if (!session) return [];
-
-    const response = await $fetch("http://localhost:8787/v1/course", {});
-
+    const response = await $fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/v1/course`,
+    );
     if (!response) {
       throw new Error("Failed to fetch courses");
     }
-
     return response;
   };
 

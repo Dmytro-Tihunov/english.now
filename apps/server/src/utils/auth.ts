@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createClient } from "@repo/db";
 import { schema } from "@repo/db";
-import { Env } from "../env";
+import { Env } from "../types";
 
 export const auth = (options: Env) => {
   return betterAuth({
@@ -11,26 +11,19 @@ export const auth = (options: Env) => {
       provider: "pg",
       schema: schema,
     }),
-    trustedOrigins: [
-      "http://localhost:8081",
-      "exp://192.168.1.X:8081",
-      "*",
-      "exp://192.168.31.X:8081",
-    ],
+    trustedOrigins: ["*"],
     emailAndPassword: {
       enabled: true,
     },
     socialProviders: {
       apple: {
-        clientId: "host.exp.Exponent",
-        clientSecret:
-          "eyJhbGciOiJFUzI1NiIsImtpZCI6IjU1Nlg1TUxSNVMifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiNkdaRjlMVlU3MiIsImlhdCI6MTc0MDE2NzA4NiwiZXhwIjoxNzU1NzE4NzQ1LCJzdWIiOiJob3N0LmV4cC5FeHBvbmVudCJ9.JuYDdyt1a9H2MzSRgIO5lzs__MYFh6_r8NS7X7PX9NOotRZ1beDfvp7Np9iao-s1wQ9yqQeBidqjWb8cH4UDVw",
+        clientId: options.APPLE_CLIENT_ID,
+        clientSecret: options.APPLE_SECRET,
         // appBundleIdentifier: 'com.english.now',
       },
       google: {
-        clientId:
-          "434428624385-c6f7ntt5bbhm8vidagapisc76dh9l0em.apps.googleusercontent.com",
-        clientSecret: "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",
+        clientId: options.GOOGLE_CLIENT_ID,
+        clientSecret: options.GOOGLE_SECRET,
       },
     },
   });

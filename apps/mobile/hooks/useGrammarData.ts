@@ -9,29 +9,23 @@ export function useGrammarData() {
 
   const fetchGrammar = async (): Promise<any[]> => {
     if (!session) return [];
-
     const response = await $fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/v1/grammar`,
     );
-
     if (!response) {
       throw new Error("Failed to fetch grammar");
     }
-
     return response.data as any;
   };
 
   const fetchGrammarDetails = async (slug: string): Promise<any> => {
     if (!session) return [];
-
     const response = await $fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/v1/grammar/${slug}`,
     );
-
     if (!response) {
       throw new Error("Failed to fetch grammar details");
     }
-
     return response.data as any;
   };
 
@@ -56,5 +50,6 @@ export function useGrammarData() {
     error,
     refetch,
     refreshGrammar,
+    fetchGrammarDetails,
   };
 }

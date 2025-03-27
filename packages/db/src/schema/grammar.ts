@@ -31,6 +31,8 @@ export const grammarCategoryEnum = pgEnum('grammar_category', [
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
     unitId: integer('unit_id').references(() => unit.id),
     title: text('title').notNull(),
+    // description: text('description'),
+    // level: cefrLevelEnum('level').notNull(),
     slug: text('slug').notNull().unique(),
     category: grammarCategoryEnum('category').notNull(),
     isPublished: boolean('is_published').default(false),

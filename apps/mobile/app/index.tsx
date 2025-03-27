@@ -6,7 +6,7 @@ import { authClient } from "../lib/auth-client";
 import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthProvider";
 
-const Welcome = () => {
+export default function Welcome() {
   const router = useRouter();
   const { session } = useAuth();
 
@@ -29,7 +29,6 @@ const Welcome = () => {
         <Text style={{ marginBottom: 20, fontSize: 16 }}>
           Час вивчати англійську мову з English.now
         </Text>
-        {session?.user ? <Text>Welcome {session?.user?.name}</Text> : null}
         <AppleAuthentication.AppleAuthenticationButton
           buttonType={
             AppleAuthentication.AppleAuthenticationButtonType.CONTINUE
@@ -45,17 +44,18 @@ const Welcome = () => {
                   AppleAuthentication.AppleAuthenticationScope.EMAIL,
                 ],
               });
-              const test = await authClient.signIn.social({
+              const data = await authClient.signIn.social({
                 provider: "apple",
                 idToken: {
-                  token: credential.identityToken,
+                  token: credential.identityToken ?? "",
                 },
               });
-              if (test) {
+              console.log(data);
+              if (data.data) {
                 router.push("/(app)");
               }
             } catch (e) {
-              if (e.code === "ERR_REQUEST_CANCELED") {
+              if (e) {
                 console.log("ERR_REQUEST_CANCELED", e);
                 // handle that the user canceled the sign-in flow
               } else {
@@ -86,9 +86,7 @@ const Welcome = () => {
       </View>
     </>
   );
-};
-
-export default Welcome;
+}
 
 const styles = StyleSheet.create({
   container: {

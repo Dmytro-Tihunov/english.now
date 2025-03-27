@@ -13,7 +13,7 @@ const courseHeaderGradients = [
   ["#C089FF", "white"],
 ];
 
-export const CourseColors = {
+export const courseColors = {
   A1: {
     background: "#C089FF",
     gradient: ["#C089FF", "white"],
@@ -21,6 +21,14 @@ export const CourseColors = {
   A2: {
     background: "#89FF91",
     gradient: ["#89FF91", "white"],
+  },
+  B1: {
+    background: "#FFD789",
+    gradient: ["#FFD789", "white"],
+  },
+  B2: {
+    background: "#C089FF",
+    gradient: ["#C089FF", "white"],
   },
 };
 

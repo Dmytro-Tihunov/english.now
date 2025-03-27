@@ -6,13 +6,14 @@ import {
   Text,
 } from "react-native";
 import { useRef } from "react";
+import { useGrammarData } from "@/hooks/useGrammarData";
 import { GrammarHeader } from "@/components/grammar/GrammarHeader";
 import GrammarEl from "@/components/grammar/GrammarEl";
-import { useGrammarData } from "@/hooks/useGrammarData";
 
 export default function GrammarScreen() {
   const { grammar, isLoading, error } = useGrammarData();
   const scrollY = useRef(new Animated.Value(0)).current;
+  console.log(grammar);
 
   return (
     <View style={{ flex: 1 }}>
@@ -36,14 +37,13 @@ export default function GrammarScreen() {
                 <Text>Error loading grammar rules</Text>
               </View>
             )}
-            {!isLoading && !error && (
+            {!isLoading && !error && grammar && (
               <View>
-                {grammar?.grammar.map((rule) => (
+                {grammar?.map((rule) => (
                   <GrammarEl
                     key={rule.id}
                     title={rule.title}
                     slug={rule.slug}
-                    description={rule.description}
                   />
                 ))}
               </View>

@@ -13,6 +13,10 @@ type FilterType = "level" | "topic";
 
 const SLIDER_BUTTONS = [
   {
+    icon: "all",
+    value: "Всі",
+  },
+  {
     icon: "A1",
     value: "Початковий",
   },

@@ -5,13 +5,14 @@ import { useAuth } from "@/context/AuthProvider";
 export default function ProfileScreen() {
   const { signOut } = useAuth();
   const { top } = useSafeAreaInsets();
+  const { session } = useAuth();
   return (
     <View style={[styles.container, { paddingTop: top }]}>
       <ScrollView style={{ zIndex: 100, position: "relative" }}>
         <View>
           <View style={styles.header}>
             <View style={styles.avatar}></View>
-            <Text style={styles.name}>John Doe</Text>
+            <Text style={styles.name}>{session?.user?.email}</Text>
           </View>
         </View>
         <View style={styles.content}>
