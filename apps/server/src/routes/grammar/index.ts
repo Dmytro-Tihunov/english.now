@@ -95,7 +95,12 @@ app.openapi(getRoute, async (c) => {
 
   try {
     const data = await db
-      .select()
+      .select({
+        id: schema.grammarRules.id,
+        title: schema.grammarRules.title,
+        slug: schema.grammarRules.slug,
+        category: schema.grammarRules.category,
+      })
       .from(schema.grammarRules)
       .where(eq(schema.grammarRules.isPublished, true));
 

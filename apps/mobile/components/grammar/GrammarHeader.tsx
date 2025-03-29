@@ -8,10 +8,11 @@ import {
   ScrollView,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import { courseColors } from "@/constants/Colors";
+import A1 from "@/components/icons/A1";
 type FilterType = "level" | "topic";
-
-const SLIDER_BUTTONS = [
+// AIzaSyDp83nXfdg6GVig4ZdlpAKkUUXDhcRt56I google map api key
+const SLIDER_BUTTONS_LEVEL = [
   {
     icon: "all",
     value: "Всі",
@@ -31,6 +32,29 @@ const SLIDER_BUTTONS = [
   {
     icon: "B2",
     value: "Високий",
+  },
+];
+
+const SLIDER_BUTTONS_TOPIC = [
+  {
+    icon: "all",
+    value: "Всі",
+  },
+  {
+    icon: "Modal verbs1",
+    value: "Модальні дієслова",
+  },
+  {
+    icon: "Modal verbs3",
+    value: "Модальні дієслова",
+  },
+  {
+    icon: "Modal verbs14",
+    value: "Модальні дієслова",
+  },
+  {
+    icon: "Modal verbs1r5",
+    value: "Модальні дієслова",
   },
 ];
 
@@ -120,26 +144,34 @@ export function GrammarHeader() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.sliderContainer}
         >
-          {SLIDER_BUTTONS.map((level) => (
-            <TouchableOpacity
-              key={level.icon}
-              style={[
-                styles.sliderButton,
-                selectedLevel === level.icon && styles.sliderButtonActive,
-              ]}
-              onPress={() => setSelectedLevel(level.icon)}
-            >
-              <Text
-                style={[
-                  styles.sliderButtonText,
-                  selectedLevel === level.icon && styles.sliderButtonTextActive,
-                ]}
-              >
-                {level.icon}
-              </Text>
-              <Text style={styles.sliderButtonValue}>{level.value}</Text>
-            </TouchableOpacity>
-          ))}
+          {activeFilter === "level"
+            ? SLIDER_BUTTONS_LEVEL.map((level) => (
+                <TouchableOpacity
+                  key={level.icon}
+                  style={[
+                    styles.sliderButton,
+                    selectedLevel === level.icon && styles.sliderButtonActive,
+                    selectedLevel === "all" && styles.sliderButtonActive,
+                    {
+                      backgroundColor:
+                        selectedLevel === level.icon || selectedLevel === "all"
+                          ? courseColors[
+                              selectedLevel as keyof typeof courseColors
+                            ].background
+                          : "transparent",
+                    },
+                  ]}
+                  onPress={() => setSelectedLevel(level.icon)}
+                >
+                  <A1 style={{ width: 24, height: 24 }} />
+                  <Text style={styles.sliderButtonValue}>{level.value}</Text>
+                </TouchableOpacity>
+              ))
+            : SLIDER_BUTTONS_TOPIC.map((topic) => (
+                <TouchableOpacity key={topic.icon} style={styles.sliderButton}>
+                  <Text style={styles.sliderButtonText}>{topic.icon}</Text>
+                </TouchableOpacity>
+              ))}
         </ScrollView>
       </View>
     </Animated.View>
