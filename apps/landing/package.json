@@ -1,0 +1,24 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.3.0",
+    "@nuxtjs/google-fonts": "3.2.0",
+    "@nuxtjs/tailwindcss": "6.13.2",
+    "canvas-confetti": "^1.9.3",
+    "nuxt": "^3.16.2",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.101.0"
+  }
+}

@@ -1,0 +1,6 @@
+name = "english-now"
+
+[env.production]
+routes = [
+  { pattern = "english.now/*", custom_domain = true }
+]
