@@ -20,11 +20,11 @@ export default function HomeScreen() {
   return (
     <View style={{ backgroundColor: "#ffffff", flex: 1, paddingTop: top }}>
       <LinearGradient
-        colors={["#C089FF", "white"]}
+        colors={["#FF603E", "white"]}
         style={styles.fadeBackground}
       />
       <Header />
-      <ScrollView style={{ zIndex: 100, position: "relative", paddingTop: 20 }}>
+      <ScrollView style={{ zIndex: 100, position: "relative", paddingTop: 10 }}>
         <View style={styles.container}>
           <View style={styles.container_secondary}>
             <CoursePathHead

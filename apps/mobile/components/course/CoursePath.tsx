@@ -40,12 +40,10 @@ interface Course {
   progress: number; // 0-100
 }
 
-// Mock data - replace with your actual data
-
 const mockCourses: Course[] = [
   {
     id: "c1",
-    title: "Essential Vocabulary",
+    title: "Present Simple",
     description: "Learn the most common words used in everyday conversations",
     progress: 45,
     units: [

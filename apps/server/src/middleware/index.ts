@@ -17,6 +17,7 @@ function init(): MiddlewareHandler {
         GOOGLE_SECRET: c.env.GOOGLE_SECRET,
       }),
     );
+    c.set("AI", c.env.AI);
     await next();
   };
 }

@@ -10,7 +10,7 @@ import {
   Animated,
 } from "react-native";
 import { IconSymbol } from "./ui/IconSymbol";
-
+import A1 from "./icons/A1";
 const Header = memo(() => {
   const [showStreakDrawer, setShowStreakDrawer] = useState(false);
   const slideAnim = useRef(
@@ -49,7 +49,7 @@ const Header = memo(() => {
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
         <TouchableOpacity style={styles.btn_course}>
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>A1</Text>
+          <A1 style={{ width: 24, height: 24 }} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: 55,
+    height: 55,
   },
   btn_streak: {
     backgroundColor: "#fff",
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   btn_course: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FF603E",
     borderRadius: 30,
     paddingHorizontal: 15,
     paddingVertical: 5,

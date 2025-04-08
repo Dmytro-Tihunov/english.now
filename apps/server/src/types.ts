@@ -1,6 +1,7 @@
 import { NeonHttpDatabase } from "@repo/db";
 import { schema } from "@repo/db";
 import type { User, Session, Auth } from "./utils/auth";
+import type { Ai } from "@cloudflare/workers-types";
 
 export interface Env {
   POSTGRES_URL: string;
@@ -14,6 +15,7 @@ export interface Env {
 export type Bindings = {
   POSTGRES_URL: string;
   BETTER_AUTH_SECRET: string;
+  AI: Ai;
 };
 
 export type Variables = {

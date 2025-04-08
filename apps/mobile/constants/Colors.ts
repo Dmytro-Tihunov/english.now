@@ -7,7 +7,7 @@ const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
 
 const courseHeaderGradients = [
-  ["#C089FF", "white"],
+  ["#FF603E", "white"],
   ["#89FF91", "white"],
   ["#FFD789", "white"],
   ["#C089FF", "white"],
@@ -15,8 +15,8 @@ const courseHeaderGradients = [
 
 export const courseColors = {
   A1: {
-    background: "#C089FF",
-    gradient: ["#C089FF", "white"],
+    background: "#FF603E",
+    gradient: ["#FF603E", "white"],
   },
   A2: {
     background: "#89FF91",

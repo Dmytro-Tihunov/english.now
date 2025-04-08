@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { courseColors } from "@/constants/Colors";
 import A1 from "@/components/icons/A1";
 type FilterType = "level" | "topic";
-// AIzaSyDp83nXfdg6GVig4ZdlpAKkUUXDhcRt56I google map api key
+
 const SLIDER_BUTTONS_LEVEL = [
   {
     icon: "all",
@@ -254,6 +254,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
     alignItems: "center",
     gap: 4,
     backgroundColor: "#f5f5f5",

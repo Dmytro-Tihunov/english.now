@@ -4,3 +4,6 @@ compatibility_date = "2025-02-04"
 compatibility_flags = ["nodejs_compat"]
 
 route = { pattern = "api.english.now", custom_domain = true, zone_name = "english.now" } 
+
+[ai]
+binding = "AI"

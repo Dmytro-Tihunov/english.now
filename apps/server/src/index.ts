@@ -94,6 +94,31 @@ app.get("/ping", (c) => {
   return c.json({ message: "pong" });
 });
 
+app.get("/ai", async (c) => {
+  const result = await c.env.AI.run(
+    "@cf/meta/llama-4-scout-17b-16e-instruct" as any,
+    {
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant that generates structured English lessons for Ukrainian learners at CEFR A1 level.",
+        },
+        {
+          role: "user",
+          content: "tell me a joke",
+        },
+      ],
+    },
+    {
+      gateway: {
+        id: "english-now",
+      },
+    },
+  );
+  return c.json({ result });
+});
+
 /**
  * API Routes v1
  */
