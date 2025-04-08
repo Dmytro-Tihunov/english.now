@@ -1,4 +1,4 @@
-![Capture-2025-04-05-203214](https://github.com/user-attachments/assets/dc680165-e5aa-4473-90bf-c01b974aed52)
+![Знімок екрана 2025-04-05 о 21 34 23](https://github.com/user-attachments/assets/36d4091a-7486-4ab0-a21d-e204a02a9961)
 
 
 # Turborepo starter
