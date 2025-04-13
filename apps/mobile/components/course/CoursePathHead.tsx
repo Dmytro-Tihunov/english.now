@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCourseData } from "@/hooks/useCourseData";
+import A1 from "../icons/A1";
 
 interface CoursePathHeadProps {
   courseId: string;
@@ -34,7 +35,7 @@ export default function CoursePathHead({
   const getBgColor = () => {
     switch (level) {
       case "A1":
-        return "#D6B4F0"; // Light purple for A1
+        return "#FF603E"; // Light purple for A1
       case "A2":
         return "#B4D6F0"; // Light blue for A2
       case "B1":
@@ -58,7 +59,7 @@ export default function CoursePathHead({
     >
       <View style={styles.content}>
         <View style={[styles.iconContainer, { backgroundColor: getBgColor() }]}>
-          <Text style={styles.levelText}>{level}</Text>
+          <A1 style={{ width: 34, height: 34 }} />
         </View>
 
         <View style={styles.infoContainer}>
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 56,
     height: 56,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: "#000",
     justifyContent: "center",
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: "100%",
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#01C159",
   },
   lessonsText: {
     fontSize: 12,

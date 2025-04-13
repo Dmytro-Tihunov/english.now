@@ -1,4 +1,10 @@
-import { StyleSheet, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState, useMemo } from "react";
@@ -6,8 +12,10 @@ import { Colors } from "@/constants/Colors";
 import Header from "@/components/Header";
 import CoursePath from "@/components/course/CoursePath";
 import CoursePathHead from "@/components/course/CoursePathHead";
+import { useCourseData } from "@/hooks/useCourseData";
 
 export default function HomeScreen() {
+  const { courses, isLoading, error, refreshCourses } = useCourseData();
   const [currentSlide, setCurrentSlide] = useState(0);
   const { top } = useSafeAreaInsets();
   const currentGradient = useMemo(() => {
@@ -27,15 +35,24 @@ export default function HomeScreen() {
       <ScrollView style={{ zIndex: 100, position: "relative", paddingTop: 10 }}>
         <View style={styles.container}>
           <View style={styles.container_secondary}>
-            <CoursePathHead
-              courseId="1"
-              title="English Now"
-              level="A1"
-              completedLessons={10}
-              progress={10}
-              totalLessons={10}
-            />
-            <CoursePath />
+            {isLoading && <ActivityIndicator color="#222" />}
+            {error && <Text>Error: {error.message}</Text>}
+            {courses.length > 0 && (
+              <>
+                <CoursePathHead
+                  courseId="1"
+                  title="English Now"
+                  level="A1"
+                  completedLessons={10}
+                  progress={10}
+                  totalLessons={10}
+                />
+                <CoursePath />
+                <View style={styles.finalTest}>
+                  <Text>Pass the final test</Text>
+                </View>
+              </>
+            )}
             {/* <View style={styles.container}>
               <DailyTasks />
             </View>
@@ -73,5 +90,11 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 0,
     height: 200,
+  },
+  finalTest: {
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 20,
   },
 });

@@ -1,6 +1,5 @@
 import { pgTable, text, integer, timestamp, boolean, pgEnum, jsonb, uuid } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { cefrLevelEnum } from "./course";
 import { unit } from "./unit";
 import { lesson } from "./lesson";
 
@@ -27,12 +26,14 @@ export const grammarCategoryEnum = pgEnum('grammar_category', [
     'PARTICIPLES'
   ])
 
+  const cefrLevelEnum = pgEnum("cefr_level", ["A1", "A2", "B1", "B2", "C1", "C2"]);
+
   export const grammarRules = pgTable('grammar_rules', {
-    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-    unitId: integer('unit_id').references(() => unit.id),
+    id: uuid('id').defaultRandom().primaryKey(),
+    unitId: uuid('unit_id').notNull().references(() =>  unit.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
-    // description: text('description'),
-    // level: cefrLevelEnum('level').notNull(),
+    description: text('description'),
+    level: cefrLevelEnum('level').notNull(),
     slug: text('slug').notNull().unique(),
     category: grammarCategoryEnum('category').notNull(),
     isPublished: boolean('is_published').default(false),

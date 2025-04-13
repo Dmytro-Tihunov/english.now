@@ -9,7 +9,7 @@ import { prettyJSON } from "hono/pretty-json";
 import { init, authMiddleware } from "./middleware";
 import grammar from "./routes/grammar";
 import course from "./routes/course";
-
+import unit from "./routes/unit";
 const app = new OpenAPIHono<{ Bindings: Bindings; Variables: Variables }>({
   strict: false,
   defaultHook: (result, c) => {
@@ -98,17 +98,31 @@ app.get("/ai", async (c) => {
   const result = await c.env.AI.run(
     "@cf/meta/llama-4-scout-17b-16e-instruct" as any,
     {
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a helpful assistant that generates structured English lessons for Ukrainian learners at CEFR A1 level.",
-        },
-        {
-          role: "user",
-          content: "tell me a joke",
-        },
-      ],
+      prompt: `Create a detailed structure for an English learning unit about Present Simple for CEFR A1 level learners.
+      The unit should be comprehensive and cover all necessary aspects of this subject.
+      
+      Return a JSON object with the following structure:
+      {
+        "title": "Unit title",
+        "description": "Detailed unit description",
+        "grammarFocus": ["Grammar point 1", "Grammar point 2"],
+        "vocabularyThemes": ["Vocabulary theme 1", "Vocabulary theme 2"],
+        "estimatedHours": total hours to complete the unit,
+        "lessons": [
+          {
+            "title": "Lesson 1 title",
+            "lessonType": "grammar or vocabulary or reading or listening or speaking or writing or mixed",
+            "estimatedMinutes": estimated minutes to complete,
+            "difficulty": 1-3 (1=easy, 2=medium, 3=hard),
+            "description": "Brief lesson description",
+            "taskCount": number of tasks to include (2-5)
+          },
+          // more lessons...
+        ]
+      }
+      
+      For a A1 level unit about Present Simple, create 3-6 lessons that progressively build understanding.
+      Each lesson should focus on a specific aspect of the subject and include appropriate tasks.`,
     },
     {
       gateway: {
@@ -123,6 +137,7 @@ app.get("/ai", async (c) => {
  * API Routes v1
  */
 app.route("/v1/course", course);
+app.route("/v1/unit", unit);
 app.route("/v1/grammar", grammar);
 
 export default app;

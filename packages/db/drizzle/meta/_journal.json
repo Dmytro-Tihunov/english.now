@@ -120,6 +120,34 @@
       "when": 1742202674750,
       "tag": "0016_lean_mentallo",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1744191591004,
+      "tag": "0017_dazzling_legion",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1744191857537,
+      "tag": "0018_silly_butterfly",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1744192140354,
+      "tag": "0019_watery_mole_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1744314929602,
+      "tag": "0020_dark_cyclops",
+      "breakpoints": true
     }
   ]
 }

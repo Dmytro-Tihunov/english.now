@@ -52,15 +52,15 @@ app.openapi(getRoute, async (c) => {
   if (!user) return c.json({ message: "Unauthorized" }, 401);
 
   try {
-    const userLearningState = await db
-      .select()
-      .from(schema.userLearningState)
-      .where(eq(schema.userLearningState.userId, user.id))
-      .then((rows) => rows[0]);
+    // const userLearningState = await db
+    //   .select()
+    //   .from(schema.userLearningState)
+    //   .where(eq(schema.userLearningState.userId, user.id))
+    //   .then((rows) => rows[0]);
 
-    if (!userLearningState) {
-      return c.json({ message: "User learning state not found" }, 400);
-    }
+    // if (!userLearningState) {
+    //   return c.json({ message: "User learning state not found" }, 400);
+    // }
 
     const courses = await db
       .select({
@@ -75,24 +75,22 @@ app.openapi(getRoute, async (c) => {
             json_build_object(
               'id', ${schema.lesson.id},
               'title', ${schema.lesson.title},
+              'type', ${schema.lesson.type},
               'orderIndex', ${schema.lesson.orderIndex},
               'isPublished', ${schema.lesson.isPublished}
             )
           )`,
-        grammarRules: sql`json_agg(
-             json_build_object(
-              'id', ${schema.grammarRules.id},
-              'slug', ${schema.grammarRules.slug}
-            )
-          )`,
+        // grammarRules: sql`json_agg(
+        //      json_build_object(
+        //       'id', ${schema.grammarRules.id},
+        //       'slug', ${schema.grammarRules.slug}
+        //     )
+        //   )`,
       })
       .from(schema.unit)
-      .leftJoin(
-        schema.grammarRules,
-        eq(schema.unit.id, schema.grammarRules.unitId),
-      )
+      .leftJoin(schema.grammarRules, eq(schema.unit.id, schema.grammarRules.unitId))
       .leftJoin(schema.lesson, eq(schema.unit.id, schema.lesson.unitId))
-      .where(eq(schema.unit.courseId, userLearningState.activeCourseId ?? 0))
+      .where(eq(schema.unit.courseId, 2 ?? 0))
       .groupBy(
         schema.unit.id,
         schema.unit.courseId,
@@ -102,6 +100,8 @@ app.openapi(getRoute, async (c) => {
         schema.unit.isPublished,
       )
       .orderBy(schema.unit.orderIndex);
+
+    console.log(courses);
 
     // const courses = await db
     //     .select()

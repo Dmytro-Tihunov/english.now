@@ -58,7 +58,7 @@ const Header = memo(() => {
         >
           <IconSymbol size={20} color="#000" name="flame.fill" />
           <View>
-            <Text style={{ fontWeight: "bold", fontSize: 10 }}>10</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 15 }}>1</Text>
           </View>
         </TouchableOpacity>
       </View>

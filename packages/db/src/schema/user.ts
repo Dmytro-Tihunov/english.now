@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { course } from "./course";
 import { lesson } from "./lesson";
@@ -61,3 +61,9 @@ export const userLearningState = pgTable("user_learning_state", {
 	longestStreak: integer('longest_streak').default(0).notNull(),
 	lastUpdated: timestamp('last_updated').notNull(),
 }); 
+
+export const userPreferences = pgTable("user_preferences", {
+	id: text("id").primaryKey(),
+	userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }).unique(),
+	preferences: jsonb('preferences').notNull(),
+});

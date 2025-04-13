@@ -15,7 +15,8 @@ export function useCourseData() {
     if (!response) {
       throw new Error("Failed to fetch courses");
     }
-    return response;
+
+    return response.data.courses;
   };
 
   const {

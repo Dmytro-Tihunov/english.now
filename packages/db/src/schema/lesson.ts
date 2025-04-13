@@ -1,4 +1,4 @@
-import { pgTable, text, integer, timestamp, uuid, boolean, pgEnum, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, uuid, boolean, pgEnum, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { unit } from "./unit";
 import { exercise } from "./exercise";
@@ -14,11 +14,10 @@ export const lessonTypeEnum = pgEnum('lesson_type', [
     'MIXED'
   ])
 
-
 export const lesson = pgTable('lesson', {
-    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-    unitId: integer('unit_id').notNull().references(() =>  unit.id, { onDelete: 'cascade' }),
-    title: text('title').notNull(),
+    id: uuid('id').defaultRandom().primaryKey(),
+    unitId: uuid('unit_id').notNull().references(() =>  unit.id, { onDelete: 'cascade' }),
+    title: varchar('title', { length: 255 }).notNull(),
     description: text('description'),
     type: lessonTypeEnum('type').notNull(),
     orderIndex: integer('order_index').notNull(),

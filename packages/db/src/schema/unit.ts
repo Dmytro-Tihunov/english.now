@@ -1,18 +1,26 @@
-import { pgTable, text, timestamp, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, uuid, varchar, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { course } from "./course";
 import { lesson } from "./lesson";
 import { grammarRules } from "./grammar";
 
 export const unit = pgTable("unit", {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+	id: uuid('id').defaultRandom().primaryKey(),
 	courseId: integer('course_id').notNull().references(() => course.id, { onDelete: 'cascade' }),
-	title: text('title').notNull(),
+	title: varchar('title', { length: 255 }).notNull(),
 	description: text('description'),
     orderIndex: integer('order_index').notNull(),
 	isPublished: boolean('is_published').notNull().default(false),
-	createdAt: timestamp('created_at').notNull(),
-	updatedAt: timestamp('updated_at').notNull(),
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow(),
+	metadata: jsonb('metadata').$type<{
+		intendedGrammarFocus: string[];
+		intendedVocabularyThemes: string[];
+		ukrainianTitle: string;
+		ukrainianDescription: string;
+		version: number;
+		modelUsed: string;
+      }>(),
 });
 
 
