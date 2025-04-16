@@ -9,7 +9,7 @@ import {
   Animated,
 } from "react-native";
 import { IconSymbol } from "./ui/IconSymbol";
-import A1 from "./icons/A1";
+import Course from "./icons/Course";
 import CommonBottomSheet from "./common/CommonBottomSheet";
 import AppBottomSheetCourseContent from "./app/AppBottomSheetCourseContent";
 import AppBottomSheetStreakContent from "./app/AppBottomSheetStreakContent";
@@ -59,7 +59,9 @@ const Header = memo(() => {
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
         <Pressable style={styles.btn_course} onPress={toggleCourseBottomSheet}>
-          <A1 style={{ width: 24, height: 24 }} />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Course course="A1" />
+          </View>
         </Pressable>
 
         <Pressable style={styles.btn_streak} onPress={toggleStreakDrawer}>
@@ -109,6 +111,7 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     display: "flex",
     flexDirection: "row",
+    height: 35,
     alignItems: "center",
     paddingHorizontal: 15,
     paddingVertical: 5,
@@ -117,6 +120,7 @@ const styles = StyleSheet.create({
   btn_course: {
     backgroundColor: "#FF603E",
     borderRadius: 30,
+    height: 35,
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderWidth: 1,

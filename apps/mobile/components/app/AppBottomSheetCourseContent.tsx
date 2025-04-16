@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { useCourseData } from "@/hooks/useCourseData";
 import { courseColors } from "@/constants/Colors";
+import Course from "../icons/Course";
 
 export default function AppBottomSheetCourseContent() {
   const { allCourses, isLoadingAllCourses, errorAllCourses } = useCourseData();
@@ -32,7 +33,7 @@ export default function AppBottomSheetCourseContent() {
               style={[
                 styles.course,
                 {
-                  backgroundColor: `${courseColor(course.level).background}40`,
+                  backgroundColor: `${courseColor(course.level).background}30`,
                 },
               ]}
             >
@@ -44,7 +45,7 @@ export default function AppBottomSheetCourseContent() {
                   },
                 ]}
               >
-                <Text>{course.level}</Text>
+                <Course course={course.level} />
               </View>
               <View style={styles.courseContent}>
                 <Text style={styles.courseTitle}>{course.title}</Text>
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   course: {
-    padding: 10,
+    padding: 14,
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 10,
