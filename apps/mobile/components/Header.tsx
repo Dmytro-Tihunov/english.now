@@ -3,18 +3,17 @@ import { Image } from "expo-image";
 import {
   View,
   Text,
-  TouchableOpacity,
   Pressable,
   StyleSheet,
-  Modal,
   Dimensions,
   Animated,
 } from "react-native";
 import { IconSymbol } from "./ui/IconSymbol";
 import A1 from "./icons/A1";
-import CustomBottomSheet from "./CustomBottomSheet";
 import CommonBottomSheet from "./common/CommonBottomSheet";
 import AppBottomSheetCourseContent from "./app/AppBottomSheetCourseContent";
+import AppBottomSheetStreakContent from "./app/AppBottomSheetStreakContent";
+
 const Header = memo(() => {
   const [showStreakDrawer, setShowStreakDrawer] = useState(false);
   const [showCourseBottomSheet, setShowCourseBottomSheet] = useState(false);
@@ -72,26 +71,16 @@ const Header = memo(() => {
       </View>
 
       {/* Course Bottom Sheet */}
-      <CustomBottomSheet
+      <CommonBottomSheet
         isVisible={showCourseBottomSheet}
         onClose={closeCourseBottomSheet}
       >
         <AppBottomSheetCourseContent />
-      </CustomBottomSheet>
+      </CommonBottomSheet>
 
       {/* Streak Bottom Sheet */}
       <CommonBottomSheet isVisible={showStreakDrawer} onClose={closeDrawer}>
-        <Text style={styles.drawerTitle}>Your Streak</Text>
-
-        <View style={styles.streakInfo}>
-          <IconSymbol size={40} color="#FF9500" name="flame.fill" />
-          <Text style={styles.streakCount}>10</Text>
-          <Text style={styles.streakText}>days</Text>
-        </View>
-
-        <Text style={styles.streakMessage}>
-          Keep learning daily to maintain your streak!
-        </Text>
+        <AppBottomSheetStreakContent />
       </CommonBottomSheet>
     </View>
   );

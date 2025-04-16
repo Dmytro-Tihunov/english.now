@@ -91,7 +91,18 @@ app.openapi(getAllCoursesRoute, async (c) => {
   if (!user) return c.json({ message: "Unauthorized" }, 401);
 
   try {
-    const courses = await db.select().from(schema.course);
+    const courses = await db
+      .select({
+        id: schema.course.id,
+        title: schema.course.title,
+        description: schema.course.description,
+        level: schema.course.level,
+      })
+      .from(schema.course)
+      .where(eq(schema.course.isPublished, true))
+      .orderBy(schema.course.id);
+
+    console.log(courses);
     return c.json({ message: "Courses fetched successfully", courses });
   } catch (error) {
     console.error("Error fetching courses:", error);
