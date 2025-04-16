@@ -7,7 +7,6 @@ import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import WelcomeContent from "../components/welcome/WelcomeContent";
 import * as Linking from "expo-linking";
-
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,

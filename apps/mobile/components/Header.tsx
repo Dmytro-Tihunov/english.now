@@ -4,6 +4,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Pressable,
   StyleSheet,
   Modal,
   Dimensions,
@@ -11,9 +12,12 @@ import {
 } from "react-native";
 import { IconSymbol } from "./ui/IconSymbol";
 import A1 from "./icons/A1";
-
+import CustomBottomSheet from "./CustomBottomSheet";
+import CommonBottomSheet from "./common/CommonBottomSheet";
+import AppBottomSheetCourseContent from "./app/AppBottomSheetCourseContent";
 const Header = memo(() => {
   const [showStreakDrawer, setShowStreakDrawer] = useState(false);
+  const [showCourseBottomSheet, setShowCourseBottomSheet] = useState(false);
   const slideAnim = useRef(
     new Animated.Value(Dimensions.get("window").height * 0.5),
   ).current;
@@ -22,16 +26,22 @@ const Header = memo(() => {
     setShowStreakDrawer(!showStreakDrawer);
   };
 
+  const toggleCourseBottomSheet = () => {
+    setShowCourseBottomSheet(!showCourseBottomSheet);
+  };
+
   const closeDrawer = () => {
     setShowStreakDrawer(false);
   };
 
+  const closeCourseBottomSheet = () => {
+    setShowCourseBottomSheet(false);
+  };
+
   useEffect(() => {
-    // Reset animation value before starting new animation
     slideAnim.setValue(
       showStreakDrawer ? Dimensions.get("window").height * 0.5 : 0,
     );
-
     Animated.timing(slideAnim, {
       toValue: showStreakDrawer ? 0 : Dimensions.get("window").height * 0.5,
       duration: 300,
@@ -49,67 +59,40 @@ const Header = memo(() => {
         <Text style={styles.title}>English Now</Text>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-        <TouchableOpacity style={styles.btn_course}>
+        <Pressable style={styles.btn_course} onPress={toggleCourseBottomSheet}>
           <A1 style={{ width: 24, height: 24 }} />
-        </TouchableOpacity>
+        </Pressable>
 
-        <TouchableOpacity
-          style={styles.btn_streak}
-          onPress={toggleStreakDrawer}
-        >
+        <Pressable style={styles.btn_streak} onPress={toggleStreakDrawer}>
           <IconSymbol size={20} color="#000" name="flame.fill" />
           <View>
             <Text style={{ fontWeight: "bold", fontSize: 15 }}>1</Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
-      {/* Streak Drawer Modal */}
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={showStreakDrawer}
-        onRequestClose={closeDrawer}
+      {/* Course Bottom Sheet */}
+      <CustomBottomSheet
+        isVisible={showCourseBottomSheet}
+        onClose={closeCourseBottomSheet}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={closeDrawer}
-        >
-          <Animated.View
-            style={[
-              styles.drawerContainer,
-              { transform: [{ translateY: slideAnim }] },
-            ]}
-          >
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={(e) => e.stopPropagation()}
-              style={styles.drawer}
-            >
-              <View style={styles.drawerHeader}>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={closeDrawer}
-                >
-                  <IconSymbol size={24} color="#666" name="xmark" />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.drawerTitle}>Your Streak</Text>
+        <AppBottomSheetCourseContent />
+      </CustomBottomSheet>
 
-              <View style={styles.streakInfo}>
-                <IconSymbol size={40} color="#FF9500" name="flame.fill" />
-                <Text style={styles.streakCount}>10</Text>
-                <Text style={styles.streakText}>days</Text>
-              </View>
+      {/* Streak Bottom Sheet */}
+      <CommonBottomSheet isVisible={showStreakDrawer} onClose={closeDrawer}>
+        <Text style={styles.drawerTitle}>Your Streak</Text>
 
-              <Text style={styles.streakMessage}>
-                Keep learning daily to maintain your streak!
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </TouchableOpacity>
-      </Modal>
+        <View style={styles.streakInfo}>
+          <IconSymbol size={40} color="#FF9500" name="flame.fill" />
+          <Text style={styles.streakCount}>10</Text>
+          <Text style={styles.streakText}>days</Text>
+        </View>
+
+        <Text style={styles.streakMessage}>
+          Keep learning daily to maintain your streak!
+        </Text>
+      </CommonBottomSheet>
     </View>
   );
 });

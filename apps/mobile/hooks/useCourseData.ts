@@ -7,6 +7,13 @@ export function useCourseData() {
   const { session } = useAuth();
   const queryClient = useQueryClient();
 
+  const fetchAllCourses = async (): Promise<any[]> => {
+    const response = await $fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/v1/course/list`,
+    );
+    return response.data.courses as any;
+  };
+
   const fetchCourses = async (): Promise<any[]> => {
     if (!session) return [];
     const response = await $fetch(
@@ -30,8 +37,23 @@ export function useCourseData() {
     enabled: !!session, // Only run the query when session exists
   });
 
+  const {
+    data: allCourses = [],
+    isLoading: isLoadingAllCourses,
+    error: errorAllCourses,
+    refetch: refetchAllCourses,
+  } = useQuery({
+    queryKey: ["allCourses"],
+    queryFn: fetchAllCourses,
+    enabled: !!session,
+  });
+
   const refreshCourses = () => {
     return queryClient.invalidateQueries({ queryKey: ["courses"] });
+  };
+
+  const refreshAllCourses = () => {
+    return queryClient.invalidateQueries({ queryKey: ["allCourses"] });
   };
 
   return {
@@ -39,5 +61,10 @@ export function useCourseData() {
     isLoading,
     error,
     refreshCourses,
+    allCourses,
+    isLoadingAllCourses,
+    errorAllCourses,
+    refetchAllCourses,
+    refreshAllCourses,
   };
 }

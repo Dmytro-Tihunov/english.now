@@ -6,6 +6,45 @@ import { Variables } from "../../types";
 
 const app = new OpenAPIHono<{ Variables: Variables }>();
 
+const getAllCoursesRoute = createRoute({
+  method: "get",
+  path: "/list",
+  summary: "Get all courses",
+  responses: {
+    200: {
+      description: "Courses fetched successfully",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+            courses: z.array(z.any()),
+          }),
+        },
+      },
+    },
+    400: {
+      description: "Bad Request",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+          }),
+        },
+      },
+    },
+    401: {
+      description: "Unauthorized",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string(),
+          }),
+        },
+      },
+    },
+  },
+});
+
 const getRoute = createRoute({
   method: "get",
   path: "/",
@@ -43,6 +82,21 @@ const getRoute = createRoute({
       },
     },
   },
+});
+
+app.openapi(getAllCoursesRoute, async (c) => {
+  const db = c.get("db") as NeonHttpDatabase<typeof schema>;
+  const user = c.get("user");
+
+  if (!user) return c.json({ message: "Unauthorized" }, 401);
+
+  try {
+    const courses = await db.select().from(schema.course);
+    return c.json({ message: "Courses fetched successfully", courses });
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    return c.json({ message: "Failed to fetch courses" }, 400);
+  }
 });
 
 app.openapi(getRoute, async (c) => {

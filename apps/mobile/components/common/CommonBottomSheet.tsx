@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   Animated,
   TouchableOpacity,
@@ -13,13 +12,13 @@ import {
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const BOTTOM_SHEET_HEIGHT = SCREEN_HEIGHT * 0.5;
 
-interface CustomBottomSheetProps {
+interface CommonBottomSheetProps {
   isVisible: boolean;
   onClose: () => void;
   children: React.ReactNode;
 }
 
-const CustomBottomSheet: React.FC<CustomBottomSheetProps> = ({
+const CommonBottomSheet: React.FC<CommonBottomSheetProps> = ({
   isVisible,
   onClose,
   children,
@@ -142,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomBottomSheet;
+export default CommonBottomSheet;
