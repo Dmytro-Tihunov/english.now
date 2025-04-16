@@ -1,47 +1,19 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Button,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import React from "react";
+import { StyleSheet, ScrollView } from "react-native";
 import { useCourseData } from "@/hooks/useCourseData";
 import CoursePathUnit from "./CoursePathUnit";
 import { Unit } from "@/types";
-
-interface Lesson {
-  id: string;
-  title: string;
-  type: string;
-  completed: boolean;
-}
 
 interface Course {
   id: string;
   title: string;
   description: string;
   units: Unit[];
-  progress: number; // 0-100
+  progress: number;
 }
 
 export default function CoursePath() {
   const { courses } = useCourseData();
-  const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
-  const [expandedUnit, setExpandedUnit] = useState<string | null>(null);
-  const router = useRouter();
-
-  const toggleCourse = (courseId: string) => {
-    setExpandedCourse(expandedCourse === courseId ? null : courseId);
-    setExpandedUnit(null);
-  };
-
-  const toggleUnit = (unitId: string) => {
-    setExpandedUnit(expandedUnit === unitId ? null : unitId);
-  };
 
   // const navigateToExercise = (
   //   courseId: string,
@@ -55,49 +27,6 @@ export default function CoursePath() {
   //     params: { courseId, unitId, lessonId },
   //   });
   // };
-
-  const renderUnit = (lesson: Lesson, courseId: string) => {
-    const isExpanded = expandedUnit === lesson.id;
-
-    return (
-      <View key={lesson.id} style={styles.unitContainer}>
-        <TouchableOpacity
-          style={styles.unitHeader}
-          onPress={() => toggleUnit(lesson.id)}
-        >
-          <View style={styles.unitTitleContainer}>
-            {lesson.type === "GRAMMAR" ? (
-              <View style={styles.grammarIcon}>
-                <Ionicons name="book-outline" size={20} color="#4CAF50" />
-              </View>
-            ) : (
-              <View style={styles.grammarIcon}>
-                <Ionicons name="flash-outline" size={20} color="#4CAF50" />
-              </View>
-            )}
-            <View style={styles.lessonTitleContainer}>
-              <View>
-                {lesson.type === "GRAMMAR" ? (
-                  <Text>Grammar</Text>
-                ) : (
-                  <Text>Vocabulary</Text>
-                )}
-              </View>
-              <View>
-                <Text style={styles.unitTitle}>{lesson.title}</Text>
-              </View>
-            </View>
-          </View>
-          <Button
-            title="start"
-            onPress={() => {
-              router.push(`/course/${courseId}/${lesson.id}`);
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  };
 
   return (
     <ScrollView style={styles.container}>

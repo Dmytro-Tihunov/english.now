@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCourseData } from "@/hooks/useCourseData";
+
 import A1 from "../icons/A1";
 
 interface CoursePathHeadProps {
@@ -58,10 +59,9 @@ export default function CoursePathHead({
       activeOpacity={onPress ? 0.7 : 1}
     >
       <View style={styles.content}>
-        <View style={[styles.iconContainer, { backgroundColor: getBgColor() }]}>
+        {/* <View style={[styles.iconContainer, { backgroundColor: getBgColor() }]}>
           <A1 style={{ width: 34, height: 34 }} />
-        </View>
-
+        </View> */}
         <View style={styles.infoContainer}>
           <View style={styles.titleRow}>
             <Text style={styles.title}>Курс: {title}</Text>

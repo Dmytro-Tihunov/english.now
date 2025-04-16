@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Unit, Lesson } from "@/types";
 import CoursePathLesson from "./CoursePathLesson";
 import { Ionicons } from "@expo/vector-icons";
+import Svg, { Circle } from "react-native-svg";
 
 interface CoursePathUnitProps extends Unit {
   index: number;
@@ -19,15 +20,57 @@ export default function CoursePathUnit({
     setExpandedUnit(expandedUnit === unitId ? null : unitId);
   };
 
+  // Calculate progress based on completed lessons
+  const completedLessons = unit.lessons.filter(
+    (lesson) => lesson.completed,
+  ).length;
+  const totalLessons = unit.lessons.length;
+  const progressPercentage =
+    totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+
+  // SVG circle parameters
+  const size = 45;
+  const strokeWidth = 3;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const progressOffset =
+    circumference - (progressPercentage / 100) * circumference;
+
   return (
     <View style={styles.unit}>
       <TouchableOpacity
         style={styles.courseHeader}
         onPress={() => toggleUnit(unit.id)}
       >
-        {/* <View style={styles.unitRound}>
-          <Text style={styles.unitNumber}>{index + 1}</Text>
-        </View> */}
+        <View style={styles.unitRound}>
+          <Svg width={size} height={size}>
+            {/* Background circle */}
+            <Circle
+              cx={size / 2}
+              cy={size / 2}
+              r={radius}
+              stroke="#E0E0E0"
+              strokeWidth={strokeWidth}
+              fill="none"
+            />
+            {/* Progress circle */}
+            <Circle
+              cx={size / 2}
+              cy={size / 2}
+              r={radius}
+              stroke="#4CAF50"
+              strokeWidth={strokeWidth}
+              fill="none"
+              strokeDasharray={circumference}
+              strokeDashoffset={progressOffset}
+              strokeLinecap="round"
+              transform={`rotate(-90 ${size / 2} ${size / 2})`}
+            />
+          </Svg>
+          <View style={styles.unitRoundInner}>
+            <Text style={styles.unitNumber}>{index + 1}</Text>
+          </View>
+        </View>
         <View>
           <Text style={styles.unitTitle}>Частина {index + 1}</Text>
           <Text style={styles.courseTitle}>{unit.title}</Text>
@@ -56,14 +99,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
   },
+  unitTitle: {
+    fontSize: 11,
+    color: "#FF603E",
+    marginBottom: 4,
+  },
   unitRound: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#4CAF50",
+    width: 45,
+    height: 45,
+    borderRadius: 30,
+    backgroundColor: "#ffffff",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
+    position: "relative",
+  },
+  unitRoundInner: {
+    width: 35,
+    height: 35,
+    borderRadius: 20,
+    backgroundColor: "#FF603E",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
   },
   unitNumber: {
     color: "white",
@@ -72,6 +130,7 @@ const styles = StyleSheet.create({
   },
   lessonContainer: {
     marginVertical: 6,
+    paddingHorizontal: 16,
   },
   courseHeader: {
     flexDirection: "row",

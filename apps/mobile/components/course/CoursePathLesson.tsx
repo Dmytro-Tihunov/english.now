@@ -7,7 +7,7 @@ export default function CoursePathLesson(lesson: Lesson) {
   return (
     <View style={styles.lesson}>
       <TouchableOpacity
-        style={styles.unitHeader}
+        style={styles.lessonHeader}
         onPress={() => {
           router.push(`/${lesson.id}`);
         }}
@@ -35,12 +35,14 @@ export default function CoursePathLesson(lesson: Lesson) {
             </View>
           </View>
         </View>
-        <Button
-          title="start"
+        <TouchableOpacity
+          style={styles.lessonButton}
           onPress={() => {
             router.push(`/${lesson.id}`);
           }}
-        />
+        >
+          <Text style={styles.lessonButtonText}>Почати</Text>
+        </TouchableOpacity>
       </TouchableOpacity>
     </View>
   );
@@ -48,9 +50,9 @@ export default function CoursePathLesson(lesson: Lesson) {
 
 const styles = StyleSheet.create({
   lesson: {
-    padding: 16,
+    padding: 0,
   },
-  unitHeader: {
+  lessonHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -68,5 +70,13 @@ const styles = StyleSheet.create({
   },
   unitTitle: {
     fontSize: 16,
+  },
+  lessonButton: {
+    backgroundColor: "#202937",
+    padding: 4,
+    borderRadius: 30,
+  },
+  lessonButtonText: {
+    color: "#fff",
   },
 });

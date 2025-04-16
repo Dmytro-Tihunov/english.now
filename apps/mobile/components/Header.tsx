@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { IconSymbol } from "./ui/IconSymbol";
 import A1 from "./icons/A1";
+
 const Header = memo(() => {
   const [showStreakDrawer, setShowStreakDrawer] = useState(false);
   const slideAnim = useRef(

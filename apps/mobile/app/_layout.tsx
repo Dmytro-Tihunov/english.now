@@ -4,6 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthProvider";
 import { useAuth } from "../context/AuthProvider";
@@ -26,6 +27,7 @@ function NavigationHandler() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Chevy: require("../assets/fonts/Chewy-Regular.ttf"),
+    DelaGothicOne: require("../assets/fonts/DelaGothicOne-Regular.ttf"),
   });
 
   useEffect(() => {
@@ -67,11 +69,13 @@ function NavigationHandler() {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <NavigationHandler />
-        <StatusBar style="auto" />
-      </AuthProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <NavigationHandler />
+          <StatusBar style="auto" />
+        </AuthProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }
