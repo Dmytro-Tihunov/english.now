@@ -13,7 +13,7 @@ import Course from "./icons/Course";
 import CommonBottomSheet from "./common/CommonBottomSheet";
 import AppBottomSheetCourseContent from "./app/AppBottomSheetCourseContent";
 import AppBottomSheetStreakContent from "./app/AppBottomSheetStreakContent";
-
+import Heroes1 from "./icons/heroes/Heroes1";
 const Header = memo(() => {
   const [showStreakDrawer, setShowStreakDrawer] = useState(false);
   const [showCourseBottomSheet, setShowCourseBottomSheet] = useState(false);
@@ -51,10 +51,9 @@ const Header = memo(() => {
   return (
     <View style={styles.header}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-        <Image
-          source={require("../assets/images/Logo.svg")}
-          style={styles.logo}
-        />
+        <View style={{ width: 55, height: 55 }}>
+          <Heroes1 />
+        </View>
         <Text style={styles.title}>English Now</Text>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>

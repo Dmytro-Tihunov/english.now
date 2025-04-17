@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { courseColors } from "@/constants/Colors";
-import A1 from "@/components/icons/A1";
+import Course from "../icons/Course";
+
 type FilterType = "level" | "topic";
 
 const SLIDER_BUTTONS_LEVEL = [
@@ -163,7 +164,7 @@ export function GrammarHeader() {
                   ]}
                   onPress={() => setSelectedLevel(level.icon)}
                 >
-                  <A1 style={{ width: 24, height: 24 }} />
+                  <Course course={level.icon} />
                   <Text style={styles.sliderButtonValue}>{level.value}</Text>
                 </TouchableOpacity>
               ))

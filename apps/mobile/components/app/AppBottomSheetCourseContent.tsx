@@ -8,7 +8,7 @@ import {
 import { useCourseData } from "@/hooks/useCourseData";
 import { courseColors } from "@/constants/Colors";
 import Course from "../icons/Course";
-
+import Logo from "../icons/Logo";
 export default function AppBottomSheetCourseContent() {
   const { allCourses, isLoadingAllCourses, errorAllCourses } = useCourseData();
 
@@ -21,7 +21,7 @@ export default function AppBottomSheetCourseContent() {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1, paddingTop: 10 }}>
       {/* <Text style={styles.title}>Курси:</Text> */}
       {isLoadingAllCourses && <ActivityIndicator color="#111111" />}
       {errorAllCourses && <Text>Error: {errorAllCourses.message}</Text>}
@@ -53,6 +53,9 @@ export default function AppBottomSheetCourseContent() {
                   {course.description}
                 </Text>
               </View>
+              <View style={styles.logoContainer}>
+                <Logo course={course.level} rotation={-20} />
+              </View>
             </View>
           ))}
         </View>
@@ -73,7 +76,9 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   course: {
-    padding: 14,
+    position: "relative",
+    overflow: "hidden",
+    padding: 20,
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 10,
@@ -115,5 +120,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#222222",
     flexWrap: "wrap",
+  },
+  logoContainer: {
+    position: "absolute",
+    right: -20,
+    top: -35,
   },
 });

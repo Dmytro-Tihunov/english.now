@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, Pressable, Animated } from "react-native";
 import { useRouter } from "expo-router";
 import { courseColors } from "@/constants/Colors";
 import { useRef } from "react";
-import A1 from "../icons/A1";
+import Course from "../icons/Course";
 
 export default function GrammarEl({
   title,
@@ -40,7 +40,7 @@ export default function GrammarEl({
         <Text style={styles.description}>Майбутній тривалий час</Text>
         <View style={styles.buttonContainer}>
           <View style={styles.buttonText}>
-            <A1 style={{ width: 24, height: 24 }} />
+            <Course course="A1" />
           </View>
         </View>
       </Pressable>
