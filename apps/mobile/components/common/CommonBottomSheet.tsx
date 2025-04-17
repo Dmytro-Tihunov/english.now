@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
-const BOTTOM_SHEET_HEIGHT = SCREEN_HEIGHT * 0.5;
+const BOTTOM_SHEET_HEIGHT = SCREEN_HEIGHT * 0.62;
 
 interface CommonBottomSheetProps {
   isVisible: boolean;

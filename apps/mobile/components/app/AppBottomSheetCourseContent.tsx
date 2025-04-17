@@ -9,15 +9,18 @@ import { useCourseData } from "@/hooks/useCourseData";
 import { courseColors } from "@/constants/Colors";
 import Course from "../icons/Course";
 import Logo from "../icons/Logo";
+import { useState } from "react";
+
 export default function AppBottomSheetCourseContent() {
   const { allCourses, isLoadingAllCourses, errorAllCourses } = useCourseData();
+  const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
 
   const courseColor = (courseLevel: string) => {
     return courseColors[courseLevel as keyof typeof courseColors];
   };
 
   const handleCourseSelection = (courseId: number) => {
-    console.log(`Selected course ID: ${courseId}`);
+    setSelectedCourse(courseId);
   };
 
   return (
@@ -28,12 +31,15 @@ export default function AppBottomSheetCourseContent() {
       {allCourses.length > 0 && (
         <View style={styles.container}>
           {allCourses.map((course) => (
-            <View
+            <Pressable
+              onPress={() => handleCourseSelection(course.id)}
               key={course.id}
               style={[
                 styles.course,
                 {
-                  backgroundColor: `${courseColor(course.level).background}30`,
+                  backgroundColor: `${courseColor(course.level).background}20`,
+                  borderWidth: selectedCourse === course.id ? 1 : 0,
+                  borderColor: "#222",
                 },
               ]}
             >
@@ -56,13 +62,14 @@ export default function AppBottomSheetCourseContent() {
               <View style={styles.logoContainer}>
                 <Logo course={course.level} rotation={-20} />
               </View>
-            </View>
+            </Pressable>
           ))}
         </View>
       )}
       <Pressable
         onPress={() => handleCourseSelection(allCourses[0].id)}
-        style={styles.button}
+        disabled={selectedCourse === null}
+        style={[styles.button, selectedCourse === null && { opacity: 0.5 }]}
       >
         <Text style={styles.buttonText}>Обрати</Text>
       </Pressable>
@@ -76,6 +83,8 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   course: {
+    borderWidth: 1,
+    borderColor: "#222",
     position: "relative",
     overflow: "hidden",
     padding: 20,

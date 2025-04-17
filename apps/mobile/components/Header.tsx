@@ -14,6 +14,7 @@ import CommonBottomSheet from "./common/CommonBottomSheet";
 import AppBottomSheetCourseContent from "./app/AppBottomSheetCourseContent";
 import AppBottomSheetStreakContent from "./app/AppBottomSheetStreakContent";
 import Heroes1 from "./icons/heroes/Heroes1";
+
 const Header = memo(() => {
   const [showStreakDrawer, setShowStreakDrawer] = useState(false);
   const [showCourseBottomSheet, setShowCourseBottomSheet] = useState(false);
@@ -135,28 +136,6 @@ const styles = StyleSheet.create({
   settingsText: {
     color: "#007BFF",
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "flex-end",
-  },
-  drawerContainer: {
-    height: height * 0.5, // 50% of screen height
-    width: "100%",
-  },
-  drawer: {
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    height: "100%",
-    alignItems: "center",
-  },
-  drawerTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
   streakInfo: {
     alignItems: "center",
     marginVertical: 20,
@@ -176,20 +155,6 @@ const styles = StyleSheet.create({
     color: "#666",
     marginTop: 20,
     paddingHorizontal: 20,
-  },
-  drawerHeader: {
-    width: "100%",
-    flexDirection: "row" as const,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative" as const,
-    marginBottom: 20,
-  },
-  closeButton: {
-    position: "absolute" as const,
-    right: 0,
-    top: 0,
-    padding: 10,
   },
 });
 
