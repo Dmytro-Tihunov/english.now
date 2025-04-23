@@ -10,6 +10,7 @@ import { init, authMiddleware } from "./middleware";
 import grammar from "./routes/grammar";
 import course from "./routes/course";
 import unit from "./routes/unit";
+import lesson from "./routes/lesson";
 const app = new OpenAPIHono<{ Bindings: Bindings; Variables: Variables }>({
   strict: false,
   defaultHook: (result, c) => {
@@ -139,6 +140,7 @@ app.get("/ai", async (c) => {
 app.route("/v1/course", course);
 app.route("/v1/unit", unit);
 app.route("/v1/grammar", grammar);
+app.route("/v1/lesson", lesson);
 
 export default app;
 export type AppType = typeof app;

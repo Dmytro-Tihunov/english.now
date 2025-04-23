@@ -1,9 +1,9 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { useState } from "react";
 import { Unit, Lesson } from "@/types";
 import CoursePathLesson from "./CoursePathLesson";
-import { Ionicons } from "@expo/vector-icons";
 import Svg, { Circle } from "react-native-svg";
+import { Ionicons } from "@expo/vector-icons";
 
 interface CoursePathUnitProps extends Unit {
   index: number;
@@ -29,7 +29,7 @@ export default function CoursePathUnit({
     totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
   // SVG circle parameters
-  const size = 45;
+  const size = 50;
   const strokeWidth = 3;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -67,19 +67,43 @@ export default function CoursePathUnit({
               transform={`rotate(-90 ${size / 2} ${size / 2})`}
             />
           </Svg>
-          <View style={styles.unitRoundInner}>
-            <Text style={styles.unitNumber}>{index + 1}</Text>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{
+                uri:
+                  unit.imageUrl ||
+                  `https://picsum.photos/100/100?random=${unit.id}`,
+              }}
+              style={styles.unitImage}
+            />
+          </View>
+          <View style={styles.markContainer}>
+            <Ionicons name="checkmark" size={15} color="white" />
           </View>
         </View>
-        <View>
+        <View style={styles.titleContainer}>
           <Text style={styles.unitTitle}>Частина {index + 1}</Text>
-          <Text style={styles.courseTitle}>{unit.title}</Text>
+          <Text style={styles.courseTitle} numberOfLines={2}>
+            {unit.title}
+          </Text>
+        </View>
+        <View style={styles.courseRightContainer}>
+          <Ionicons
+            name={isExpanded ? "chevron-up" : "chevron-down"}
+            size={20}
+            color="#333"
+          />
         </View>
       </TouchableOpacity>
       {isExpanded && (
         <View style={styles.lessonContainer}>
-          {unit.lessons.map((lesson: Lesson) => (
-            <CoursePathLesson key={lesson.id} {...lesson} />
+          {unit.lessons.map((lesson: Lesson, index: number) => (
+            <View key={lesson.id} style={styles.lessonWrapper}>
+              <CoursePathLesson {...lesson} />
+              {index < unit.lessons.length - 1 && (
+                <View style={styles.verticalDivider} />
+              )}
+            </View>
           ))}
         </View>
       )}
@@ -101,8 +125,8 @@ const styles = StyleSheet.create({
   },
   unitTitle: {
     fontSize: 11,
-    color: "#FF603E",
     marginBottom: 4,
+    color: "#6B7280",
   },
   unitRound: {
     width: 45,
@@ -114,23 +138,58 @@ const styles = StyleSheet.create({
     marginRight: 12,
     position: "relative",
   },
-  unitRoundInner: {
-    width: 35,
-    height: 35,
+  markContainer: {
+    width: 25,
+    height: 25,
+    borderRadius: 20,
+    backgroundColor: "#E0E0E0",
+    borderWidth: 2,
+    borderColor: "#ffffff",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    right: -5,
+    bottom: -5,
+  },
+  mark: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  courseRightContainer: {
+    justifyContent: "center",
+  },
+  imageContainer: {
+    width: 40,
+    height: 40,
+    overflow: "hidden",
     borderRadius: 20,
     backgroundColor: "#FF603E",
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
   },
-  unitNumber: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+  unitImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   lessonContainer: {
-    marginVertical: 6,
+    flex: 1,
+    gap: 10,
+    marginVertical: 16,
     paddingHorizontal: 16,
+  },
+  lessonWrapper: {
+    position: "relative",
+  },
+  verticalDivider: {
+    position: "absolute",
+    left: 28,
+    top: "100%",
+    width: 1,
+    height: 10,
+    backgroundColor: "#E0E0E0",
   },
   courseHeader: {
     flexDirection: "row",
@@ -139,13 +198,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
   },
+  titleContainer: {
+    flex: 1,
+    marginRight: 0,
+  },
   courseTitle: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#333",
-  },
-  courseRightContainer: {
-    alignItems: "flex-end",
   },
   progressText: {
     fontSize: 12,

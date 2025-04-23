@@ -52,7 +52,7 @@ const Header = memo(() => {
   return (
     <View style={styles.header}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-        <View style={{ width: 55, height: 55 }}>
+        <View style={{ width: 50, height: 50 }}>
           <Heroes1 />
         </View>
         <Text style={styles.title}>English Now</Text>

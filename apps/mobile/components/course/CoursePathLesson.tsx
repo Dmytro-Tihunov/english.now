@@ -1,35 +1,31 @@
-import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Lesson } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 
 export default function CoursePathLesson(lesson: Lesson) {
   return (
     <View style={styles.lesson}>
-      <TouchableOpacity
-        style={styles.lessonHeader}
-        onPress={() => {
-          router.push(`/${lesson.id}`);
-        }}
-      >
+      <View style={styles.lessonHeader}>
         <View style={styles.unitTitleContainer}>
           {lesson.type === "GRAMMAR" ? (
             <View style={styles.grammarIcon}>
-              <Ionicons name="book-outline" size={20} color="#4CAF50" />
+              <Ionicons name="book" size={18} color="#ffffff" />
             </View>
           ) : (
             <View style={styles.grammarIcon}>
-              <Ionicons name="flash-outline" size={20} color="#4CAF50" />
+              <Ionicons name="flash" size={18} color="#ffffff" />
             </View>
           )}
           <View style={styles.lessonTitleContainer}>
-            <View>
+            {/* <View>
               {lesson.type === "GRAMMAR" ? (
-                <Text>Grammar</Text>
+                <Text style={styles.lessonType}>Граматика</Text>
               ) : (
-                <Text>Vocabulary</Text>
+                <Text style={styles.lessonType}>Словник</Text>
               )}
-            </View>
+            </View> */}
             <View>
               <Text style={styles.unitTitle}>{lesson.title}</Text>
             </View>
@@ -38,19 +34,22 @@ export default function CoursePathLesson(lesson: Lesson) {
         <TouchableOpacity
           style={styles.lessonButton}
           onPress={() => {
-            router.push(`/${lesson.id}`);
+            router.push(`/lessons/${lesson.id}`);
           }}
         >
           <Text style={styles.lessonButtonText}>Почати</Text>
         </TouchableOpacity>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   lesson: {
-    padding: 0,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    padding: 10,
+    borderRadius: 10,
   },
   lessonHeader: {
     flexDirection: "row",
@@ -62,18 +61,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   lessonTitleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
   },
   grammarIcon: {
+    width: 35,
+    height: 35,
     marginRight: 10,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FF603E",
+    padding: 4,
   },
   unitTitle: {
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#202937",
+  },
+  lessonType: {
+    fontSize: 12,
+    color: "#6B7280",
   },
   lessonButton: {
     backgroundColor: "#202937",
     padding: 4,
+    paddingHorizontal: 10,
     borderRadius: 30,
   },
   lessonButtonText: {

@@ -9,7 +9,12 @@ export const auth = (options: Env) => {
     secret: options.BETTER_AUTH_SECRET,
     database: drizzleAdapter(createClient(options.POSTGRES_URL), {
       provider: "pg",
-      schema: schema,
+      schema: {
+        ...schema,
+        users: {
+          isOnboarded: schema.user.isOnboarded,
+        },
+      },
     }),
     trustedOrigins: ["*"],
     emailAndPassword: {

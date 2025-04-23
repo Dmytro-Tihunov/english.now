@@ -9,6 +9,7 @@ export interface Unit {
   id: string;
   title: string;
   lessons: Lesson[];
+  imageUrl: string;
   completed: boolean;
 }
 

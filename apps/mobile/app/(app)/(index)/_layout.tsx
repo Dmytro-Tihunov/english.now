@@ -24,6 +24,15 @@ export default function IndexLayout() {
           gestureDirection: "horizontal",
         }}
       />
+      <Stack.Screen
+        name="lessons/[slug]"
+        options={{
+          headerShown: false,
+          presentation: "card",
+          animation: "slide_from_right",
+          gestureEnabled: false,
+        }}
+      />
     </Stack>
   );
 }

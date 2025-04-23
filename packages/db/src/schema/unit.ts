@@ -9,6 +9,7 @@ export const unit = pgTable("unit", {
 	courseId: integer('course_id').notNull().references(() => course.id, { onDelete: 'cascade' }),
 	title: varchar('title', { length: 255 }).notNull(),
 	description: text('description'),
+	imageUrl: text('image_url'),
     orderIndex: integer('order_index').notNull(),
 	isPublished: boolean('is_published').notNull().default(false),
 	createdAt: timestamp('created_at').defaultNow(),

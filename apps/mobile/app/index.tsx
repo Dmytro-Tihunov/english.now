@@ -48,7 +48,40 @@ export default function Welcome() {
           locations={[0, 0.2, 0.7]}
           style={styles.fadeBackground}
         />
+
         <WelcomeContent handleOpenPress={handleOpenPress} />
+        <Pressable
+          onPress={async () => {
+            try {
+              const credential = await AppleAuthentication.signInAsync({
+                requestedScopes: [
+                  AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                  AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                ],
+              });
+              const data = await authClient.signIn.social({
+                provider: "apple",
+                idToken: {
+                  token: credential.identityToken ?? "",
+                },
+              });
+              console.log(data);
+              if (data.data) {
+                router.push("/(app)");
+              }
+            } catch (e) {
+              if (e) {
+                console.log("ERR_REQUEST_CANCELED", e);
+                // handle that the user canceled the sign-in flow
+              } else {
+                // handle other errors
+                console.log(e);
+              }
+            }
+          }}
+        >
+          <Text>Apple</Text>
+        </Pressable>
         <BottomSheet
           ref={bottomSheetRef}
           index={-1}
