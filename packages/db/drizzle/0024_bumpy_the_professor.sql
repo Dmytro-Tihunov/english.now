@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "current_course_id" SET DATA TYPE integer;

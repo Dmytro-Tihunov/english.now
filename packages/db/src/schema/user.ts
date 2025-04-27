@@ -1,8 +1,6 @@
 import { pgTable, text, timestamp, boolean, integer, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { course } from "./course";
-import { lesson } from "./lesson";
-import { unit } from "./unit";
 import { cefrLevelEnum } from "./course";
 
 export const user = pgTable("user", {
@@ -11,6 +9,14 @@ export const user = pgTable("user", {
 	email: text('email').notNull().unique(),
 	emailVerified: boolean('email_verified').notNull(),
 	image: text('image'),
+	// App Settings
+	language: text('language').notNull().default('ua'),
+	theme: text('theme').notNull().default('light'),
+	// Engagement Metrics
+	currentStreak: integer('current_streak').default(0).notNull(),
+	longestStreak: integer('longest_streak').default(0).notNull(),
+	// Personalization & OnBoarding
+	currentCourseId: integer('current_course_id').default(0).notNull(),
 	isOnboarded: boolean('is_onboarded').notNull().default(false),
 	createdAt: timestamp('created_at').notNull(),
 	updatedAt: timestamp('updated_at').notNull()
@@ -43,28 +49,11 @@ export const account = pgTable("account", {
 	updatedAt: timestamp('updated_at').notNull()
 });
 
-export const verification = pgTable("verification", {
+export const verification = pgTable("verification", { 
 	id: text("id").primaryKey(),
 	identifier: text('identifier').notNull(),
 	value: text('value').notNull(),
 	expiresAt: timestamp('expires_at').notNull(),
 	createdAt: timestamp('created_at'),
 	updatedAt: timestamp('updated_at')
-});
-
-export const userLearningState = pgTable("user_learning_state", {
-	id: text("id").primaryKey(),
-	userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }).unique(),
-	currentCefrLevel: cefrLevelEnum('current_cefr_level').notNull(),
-	activeCourseId: integer('active_course_id').references(() => course.id),
-	lastActivityTimestamp: timestamp('last_activity_timestamp').notNull(),
-	currentStreak: integer('current_streak').default(0).notNull(),
-	longestStreak: integer('longest_streak').default(0).notNull(),
-	lastUpdated: timestamp('last_updated').notNull(),
-}); 
-
-export const userPreferences = pgTable("user_preferences", {
-	id: text("id").primaryKey(),
-	userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }).unique(),
-	preferences: jsonb('preferences').notNull(),
 });

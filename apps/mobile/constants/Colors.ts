@@ -16,27 +16,27 @@ const courseHeaderGradients = [
 export const courseColors = {
   A1: {
     background: "#FF603E",
-    gradient: ["#FF603E", "white"],
+    gradient: ["#FF603E", "#EDE9E6"],
   },
   A2: {
     background: "#FFDC61",
-    gradient: ["#FFDC61", "white"],
+    gradient: ["#FFDC61", "#EDE9E6"],
   },
   B1: {
     background: "#10CD7E",
-    gradient: ["#10CD7E", "white"],
+    gradient: ["#10CD7E", "#EDE9E6"],
   },
   B2: {
     background: "#1FA2FF",
-    gradient: ["#1FA2FF", "white"],
+    gradient: ["#1FA2FF", "#EDE9E6"],
   },
   C1: {
     background: "#FFD789",
-    gradient: ["#FFD789", "white"],
+    gradient: ["#FFD789", "#EDE9E6"],
   },
   C2: {
     background: "#FF603E",
-    gradient: ["#FF603E", "white"],
+    gradient: ["#FF603E", "#EDE9E6"],
   },
 };
 

@@ -5,16 +5,30 @@ import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 
 export default function CoursePathLesson(lesson: Lesson) {
+  const getLessonColor = () => {
+    return lesson.type === "GRAMMAR" ? "#FF8B4A" : "#4CAF50";
+  };
+
   return (
     <View style={styles.lesson}>
       <View style={styles.lessonHeader}>
         <View style={styles.unitTitleContainer}>
           {lesson.type === "GRAMMAR" ? (
-            <View style={styles.grammarIcon}>
+            <View
+              style={[
+                styles.grammarIcon,
+                { backgroundColor: getLessonColor() },
+              ]}
+            >
               <Ionicons name="book" size={18} color="#ffffff" />
             </View>
           ) : (
-            <View style={styles.grammarIcon}>
+            <View
+              style={[
+                styles.grammarIcon,
+                { backgroundColor: getLessonColor() },
+              ]}
+            >
               <Ionicons name="flash" size={18} color="#ffffff" />
             </View>
           )}
@@ -71,7 +85,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FF603E",
     padding: 4,
   },
   unitTitle: {

@@ -3,10 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCourseData } from "@/hooks/useCourseData";
 
-import A1 from "../icons/A1";
-
 interface CoursePathHeadProps {
-  courseId: string;
+  courseId: number;
   title: string;
   level: string;
   progress: number;

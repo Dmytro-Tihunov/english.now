@@ -16,7 +16,8 @@ export function useCourseData() {
 
   const fetchCourses = async (): Promise<any[]> => {
     if (!session) return [];
-    const response = await $fetch(
+    if (!session.user.currentCourseId) return [];
+    const response = await $fetch<any>(
       `${process.env.EXPO_PUBLIC_API_URL}/v1/course`,
     );
     if (!response) {

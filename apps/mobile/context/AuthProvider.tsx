@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { authClient } from "../lib/auth-client";
-import type { Session } from "../lib/auth-client";
+import type { Session } from "../types/auth";
+
 interface AuthContextType {
   isPending: boolean;
   session: Session | null;
@@ -28,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         isPending,
-        session,
+        session: session as Session | null,
         signOut,
       }}
     >

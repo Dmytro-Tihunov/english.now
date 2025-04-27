@@ -7,40 +7,43 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState, useMemo } from "react";
-import { Colors } from "@/constants/Colors";
+import { Colors, courseColors } from "@/constants/Colors";
 import Header from "@/components/Header";
 import CoursePath from "@/components/course/CoursePath";
 import CoursePathHead from "@/components/course/CoursePathHead";
 import { useCourseData } from "@/hooks/useCourseData";
+import { useAuth } from "@/context/AuthProvider";
+import AppSelectCourse from "@/components/app/AppSelectCourse";
 
 export default function HomeScreen() {
+  const { session } = useAuth();
   const { courses, isLoading, error, refreshCourses } = useCourseData();
-  const [currentSlide, setCurrentSlide] = useState(0);
   const { top } = useSafeAreaInsets();
-  const currentGradient = useMemo(() => {
-    return (
-      Colors.courseHeaderGradients[currentSlide] ||
-      Colors.courseHeaderGradients[0]
-    );
-  }, [currentSlide]);
+
+  // const currentGradient = useMemo(() => {
+  //   return (
+  //     Colors.courseHeaderGradients[currentSlide] ||
+  //     Colors.courseHeaderGradients[0]
+  //   );
+  // }, [currentSlide]);
 
   return (
-    <View style={{ backgroundColor: "#ffffff", flex: 1, paddingTop: top }}>
-      <LinearGradient
-        colors={["#FF603E", "white"]}
+    <View style={{ backgroundColor: "#EDE9E6", flex: 1, paddingTop: top }}>
+      {/* <LinearGradient
+        colors={["#FF603E", "#F2F2F0"]}
         style={styles.fadeBackground}
-      />
+        locations={[0, 1]}
+      /> */}
       <Header />
       <ScrollView style={{ zIndex: 100, position: "relative", paddingTop: 10 }}>
         <View style={styles.container}>
           <View style={styles.container_secondary}>
             {isLoading && <ActivityIndicator color="#222" />}
             {error && <Text>Error: {error.message}</Text>}
-            {courses.length > 0 && (
+            {session?.user.currentCourseId && courses.length > 0 && (
               <>
                 <CoursePathHead
-                  courseId="1"
+                  courseId={session?.user.currentCourseId}
                   title="English Now"
                   level="A1"
                   completedLessons={10}
@@ -53,6 +56,8 @@ export default function HomeScreen() {
                 </View>
               </>
             )}
+
+            {!session?.user.currentCourseId && <AppSelectCourse />}
             {/* <View style={styles.container}>
               <DailyTasks />
             </View>
@@ -79,7 +84,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     paddingTop: 20,
     paddingHorizontal: 20,
-    backgroundColor: Colors.light.background_secondary,
+    backgroundColor: "#F5F2F0",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },

@@ -7,13 +7,32 @@ import { Env } from "../types";
 export const auth = (options: Env) => {
   return betterAuth({
     secret: options.BETTER_AUTH_SECRET,
+    user: {
+      additionalFields: {
+        language: {
+          type: "string",
+        },
+        theme: {
+          type: "string",
+        },
+        isOnboarded: {
+          type: "boolean",
+        },
+        currentCourseId: {
+          type: "number",
+        },
+        currentStreak: {
+          type: "number",
+        },
+        longestStreak: {
+          type: "number",
+        },
+      },
+    },
     database: drizzleAdapter(createClient(options.POSTGRES_URL), {
       provider: "pg",
       schema: {
         ...schema,
-        users: {
-          isOnboarded: schema.user.isOnboarded,
-        },
       },
     }),
     trustedOrigins: ["*"],

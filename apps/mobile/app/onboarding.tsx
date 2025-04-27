@@ -12,6 +12,7 @@ import { Stack, router } from "expo-router";
 import { Colors } from "../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { authClient } from "../lib/auth-client";
 
 // Define types for our onboarding flow
 type StepOption = {
@@ -85,11 +86,6 @@ const STEPS: StepOption[] = [
     ],
     multiSelect: true,
   },
-  {
-    id: "auth",
-    title: "Create an account",
-    subtitle: "Save your progress and access personalized content",
-  },
 ];
 
 export default function OnboardingScreen() {
@@ -103,12 +99,33 @@ export default function OnboardingScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Navigate to the main app
-      router.replace("/");
+      try {
+        // Save user preferences
+        await authClient.$fetch(
+          `${process.env.EXPO_PUBLIC_API_URL}/v1/user/preferences`,
+          {
+            method: "POST",
+            body: JSON.stringify(userData),
+          },
+        );
+
+        // Update user's onboarding status
+        await authClient.$fetch(
+          `${process.env.EXPO_PUBLIC_API_URL}/v1/user/onboarding`,
+          {
+            method: "POST",
+          },
+        );
+
+        // Navigate to the main app
+        router.replace("/(app)");
+      } catch (error) {
+        console.error("Error completing onboarding:", error);
+      }
     }
   };
 

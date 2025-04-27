@@ -1,5 +1,5 @@
 import { useFonts } from "expo-font";
-import { Stack, useRouter, usePathname } from "expo-router"; // Add useRouter
+import { Stack, useRouter, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";

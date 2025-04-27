@@ -48,15 +48,15 @@ const getAllCoursesRoute = createRoute({
 const getRoute = createRoute({
   method: "get",
   path: "/",
-  summary: "Get courses",
+  summary: "Get course",
   responses: {
     200: {
-      description: "Courses fetched s uccessfully",
+      description: "Course fetched successfully",
       content: {
         "application/json": {
           schema: z.object({
             message: z.string(),
-            courses: z.array(z.any()),
+            course: z.any(),
           }),
         },
       },
@@ -102,7 +102,7 @@ app.openapi(getAllCoursesRoute, async (c) => {
       .where(eq(schema.course.isPublished, true))
       .orderBy(schema.course.id);
 
-    console.log(courses);
+    // console.log(courses);
     return c.json({ message: "Courses fetched successfully", courses });
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -117,15 +117,16 @@ app.openapi(getRoute, async (c) => {
   if (!user) return c.json({ message: "Unauthorized" }, 401);
 
   try {
+    const courseId = user.currentCourseId;
+
+    if (!courseId) {
+      return c.json({ message: "No current course", course: null }, 200);
+    }
     // const userLearningState = await db
     //   .select()
     //   .from(schema.userLearningState)
     //   .where(eq(schema.userLearningState.userId, user.id))
     //   .then((rows) => rows[0]);
-
-    // if (!userLearningState) {
-    //   return c.json({ message: "User learning state not found" }, 400);
-    // }
 
     const courses = await db
       .select({
