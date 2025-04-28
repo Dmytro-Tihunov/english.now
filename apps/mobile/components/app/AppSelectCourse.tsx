@@ -59,6 +59,16 @@ export default function AppSelectCourse() {
                         selectedCourse === course.id
                           ? color.background
                           : "#EDE9E6",
+                      shadowColor:
+                        selectedCourse === course.id
+                          ? color.background
+                          : "transparent",
+                      shadowOffset: {
+                        width: 0,
+                        height: 2,
+                      },
+                      shadowRadius: 3,
+                      elevation: 5,
                     },
                   ]}
                   onPress={() => handleCourseSelection(course.id)}
@@ -176,7 +186,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     position: "absolute",
     top: 0,
-    right: 0,
+    right: -60,
   },
   courseInfo: {
     gap: 8,

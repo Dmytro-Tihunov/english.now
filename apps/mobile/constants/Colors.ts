@@ -23,12 +23,12 @@ export const courseColors = {
     gradient: ["#FFDC61", "#EDE9E6"],
   },
   B1: {
-    background: "#10CD7E",
-    gradient: ["#10CD7E", "#EDE9E6"],
+    background: "#FF8B4A",
+    gradient: ["#FF8B4A", "#EDE9E6"],
   },
   B2: {
-    background: "#1FA2FF",
-    gradient: ["#1FA2FF", "#EDE9E6"],
+    background: "#A056FF",
+    gradient: ["#A056FF", "#EDE9E6"],
   },
   C1: {
     background: "#FFD789",

@@ -30,10 +30,6 @@ const Header = memo(() => {
     setShowStreakDrawer(!showStreakDrawer);
   };
 
-  const toggleCourseBottomSheet = () => {
-    setShowCourseBottomSheet(!showCourseBottomSheet);
-  };
-
   const closeDrawer = () => {
     setShowStreakDrawer(false);
   };
@@ -57,20 +53,10 @@ const Header = memo(() => {
     <View style={styles.header}>
       <AppHeaderLogo />
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-        {session?.user.currentCourseId && (
-          <Pressable
-            style={styles.btn_course}
-            onPress={toggleCourseBottomSheet}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Course course="A1" />
-            </View>
-          </Pressable>
-        )}
         <Pressable style={styles.btn_streak} onPress={toggleStreakDrawer}>
-          <Ionicons size={20} color="#000" name="flame" />
+          <Ionicons size={19} color="#999" name="flame" />
           <View>
-            <Text style={{ fontWeight: "bold" }}>
+            <Text style={{ fontWeight: "bold", color: "#999" }}>
               {session?.user.currentStreak}
             </Text>
           </View>
@@ -124,26 +110,15 @@ const styles = StyleSheet.create({
     height: 55,
   },
   btn_streak: {
-    backgroundColor: "#fff",
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "#000",
     display: "flex",
     flexDirection: "row",
     height: 35,
     alignItems: "center",
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    justifyContent: "center",
-  },
-  btn_course: {
-    backgroundColor: "#FF603E",
     borderRadius: 30,
-    height: 35,
-    paddingHorizontal: 15,
-    paddingVertical: 5,
     borderWidth: 1,
-    borderColor: "#000",
+    borderColor: "#999",
+    paddingHorizontal: 10,
+    justifyContent: "center",
   },
   btn_pro: {
     display: "flex",
