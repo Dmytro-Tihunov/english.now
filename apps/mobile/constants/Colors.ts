@@ -6,14 +6,19 @@
 const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
 
-const courseHeaderGradients = [
-  ["#FF603E", "white"],
-  ["#89FF91", "white"],
-  ["#FFD789", "white"],
-  ["#C089FF", "white"],
-];
+export const courseID: Record<number, string> = {
+  2: "A1",
+  3: "A2",
+  4: "B1",
+  5: "B2",
+  6: "C1",
+  7: "C2",
+};
 
-export const courseColors = {
+export const courseColors: Record<
+  string,
+  { background: string; gradient: string[] }
+> = {
   A1: {
     background: "#FF603E",
     gradient: ["#FF603E", "#EDE9E6"],
@@ -59,5 +64,4 @@ export const Colors = {
     tabIconDefault: "#9BA1A6",
     tabIconSelected: tintColorDark,
   },
-  courseHeaderGradients,
 };

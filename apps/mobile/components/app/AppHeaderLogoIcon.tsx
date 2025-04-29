@@ -1,14 +1,20 @@
 import { View, StyleSheet } from "react-native";
 import Svg, { Path, Circle } from "react-native-svg";
+import { courseColors, courseID } from "../../constants/Colors";
 import Logo from "../icons/Logo";
 
-export default function AppHeaderLogoIcon({
-  courseId,
-}: {
-  courseId: number | undefined;
-}) {
+export default function AppHeaderLogoIcon({ courseId }: { courseId: number }) {
   return (
-    <View style={styles.icon}>
+    <View
+      style={[
+        styles.icon,
+        {
+          backgroundColor: `${courseColors[courseID[courseId]].background}40`,
+          borderColor: courseColors[courseID[courseId]].background,
+          borderWidth: 1,
+        },
+      ]}
+    >
       <View style={styles.icon_hero_wrapper}>
         {courseId === 0 && (
           <Svg viewBox="0 0 235 235" fill="none">
@@ -50,20 +56,25 @@ export default function AppHeaderLogoIcon({
 
 const styles = StyleSheet.create({
   icon: {
-    width: 40,
-    height: 40,
-    padding: 2,
+    width: 42,
+    height: 42,
     position: "relative",
     backgroundColor: "white",
     borderRadius: 15,
-    shadowColor: "#000",
     overflow: "hidden",
+    shadowColor: "red",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 3,
+    elevation: 5,
+  },
+  icon_hero: {
+    position: "absolute",
+    right: 0,
+    bottom: 0,
   },
   icon_hero_wrapper: {
     position: "absolute",
@@ -71,10 +82,5 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     bottom: -17,
-  },
-  icon_hero: {
-    position: "absolute",
-    right: 0,
-    bottom: 0,
   },
 });

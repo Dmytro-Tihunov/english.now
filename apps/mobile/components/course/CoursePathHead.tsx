@@ -1,7 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useCourseData } from "@/hooks/useCourseData";
+import CommonBottomSheet from "../common/CommonBottomSheet";
+import AppBottomSheetCourseContent from "../app/AppBottomSheetCourseContent";
 
 interface CoursePathHeadProps {
   courseId: number;
@@ -24,52 +27,67 @@ export default function CoursePathHead({
   onInfoPress,
   onPress,
 }: CoursePathHeadProps) {
+  const [showCourseBottomSheet, setShowCourseBottomSheet] = useState(false);
+
+  const closeCourseBottomSheet = () => {
+    setShowCourseBottomSheet(false);
+  };
   const { courses, isLoading } = useCourseData();
-  // Calculate progress percentage
+
   const progressPercentage = Math.round(
     (completedLessons / totalLessons) * 100,
   );
 
-  // Determine background color based on level
-  const getBgColor = () => {
-    switch (level) {
-      case "A1":
-        return "#FF603E"; // Light purple for A1
-      case "A2":
-        return "#B4D6F0"; // Light blue for A2
-      case "B1":
-        return "#B4F0C5"; // Light green for B1
-      case "B2":
-        return "#F0E2B4"; // Light yellow for B2
-      case "C1":
-        return "#F0B4B4"; // Light red for C1
-      case "C2":
-        return "#E2B4F0"; // Light pink for C2
-      default:
-        return "#D6B4F0"; // Default to A1 color
-    }
-  };
-
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={onPress}
-      activeOpacity={onPress ? 0.7 : 1}
-    >
+    <View style={styles.container}>
       <View style={styles.content}>
         {/* <View style={[styles.iconContainer, { backgroundColor: getBgColor() }]}>
           <A1 style={{ width: 34, height: 34 }} />
         </View> */}
         <View style={styles.infoContainer}>
           <View style={styles.titleRow}>
-            <Text style={styles.title}>Курс: {title}</Text>
-            <TouchableOpacity onPress={onInfoPress} style={styles.infoButton}>
+            <Pressable
+              onPress={() => setShowCourseBottomSheet(true)}
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+            >
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
+              >
+                <Text style={styles.title}>{level} -</Text>
+                <Text style={styles.title}>{title}</Text>
+              </View>
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#fff",
+                  padding: 2,
+                  borderRadius: 100,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1,
+                  },
+                  shadowOpacity: 0.2,
+                  shadowRadius: 3,
+                  elevation: 5,
+                }}
+              >
+                {showCourseBottomSheet ? (
+                  <Ionicons name="chevron-up" size={14} color="#000" />
+                ) : (
+                  <Ionicons name="chevron-down" size={14} color="#000" />
+                )}
+              </View>
+            </Pressable>
+
+            <Pressable onPress={onInfoPress} style={styles.infoButton}>
               <Ionicons
                 name="information-circle-outline"
                 size={22}
                 color="#999"
               />
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           <View style={styles.progressBarContainer}>
@@ -89,7 +107,15 @@ export default function CoursePathHead({
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+
+      {/* Course Bottom Sheet */}
+      <CommonBottomSheet
+        isVisible={showCourseBottomSheet}
+        onClose={closeCourseBottomSheet}
+      >
+        <AppBottomSheetCourseContent />
+      </CommonBottomSheet>
+    </View>
   );
 }
 

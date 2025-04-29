@@ -46,9 +46,9 @@ export default function HomeScreen() {
                   courseId={session?.user.currentCourseId}
                   title="English Now"
                   level="A1"
-                  completedLessons={10}
+                  completedLessons={11}
                   progress={10}
-                  totalLessons={10}
+                  totalLessons={103}
                 />
                 <CoursePath />
                 <View style={styles.finalTest}>
