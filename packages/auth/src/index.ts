@@ -1,18 +1,23 @@
-import { expo } from '@better-auth/expo';
-import { betterAuth, type BetterAuthOptions } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { expo } from "@better-auth/expo";
 import { db } from "@english.now/db";
 import * as schema from "@english.now/db/schema/auth";
+import { type BetterAuthOptions, betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export const auth = betterAuth<BetterAuthOptions>({
 	database: drizzleAdapter(db, {
 		provider: "pg",
-
 		schema: schema,
 	}),
 	trustedOrigins: [process.env.CORS_ORIGIN || "", "mybettertapp://", "exp://"],
 	emailAndPassword: {
 		enabled: true,
+	},
+	socialProviders: {
+		google: {
+			clientId: process.env.GOOGLE_CLIENT_ID || "",
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+		},
 	},
 	advanced: {
 		defaultCookieAttributes: {
@@ -21,5 +26,5 @@ export const auth = betterAuth<BetterAuthOptions>({
 			httpOnly: true,
 		},
 	},
-  plugins: [expo()]
+	plugins: [expo()],
 });

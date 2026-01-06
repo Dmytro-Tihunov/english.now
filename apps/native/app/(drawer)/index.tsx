@@ -1,10 +1,9 @@
-import { authClient } from "@/lib/auth-client";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-
 import { Container } from "@/components/container";
 import { SignIn } from "@/components/sign-in";
 import { SignUp } from "@/components/sign-up";
+import { authClient } from "@/lib/auth-client";
 import { queryClient, trpc } from "@/utils/trpc";
 
 export default function Home() {
@@ -16,29 +15,29 @@ export default function Home() {
 		<Container>
 			<ScrollView className="flex-1">
 				<View className="px-4">
-					<Text className="font-mono text-foreground text-3xl font-bold mb-4">
+					<Text className="mb-4 font-bold font-mono text-3xl text-foreground">
 						BETTER T STACK
 					</Text>
 					{session?.user ? (
-						<View className="mb-6 p-4 bg-card rounded-lg border border-border">
-							<View className="flex-row justify-between items-center mb-2">
-								<Text className="text-foreground text-base">
+						<View className="mb-6 rounded-lg border border-border bg-card p-4">
+							<View className="mb-2 flex-row items-center justify-between">
+								<Text className="text-base text-foreground">
 									Welcome,{" "}
 									<Text className="font-medium">{session.user.name}</Text>
 								</Text>
 							</View>
-							<Text className="text-muted-foreground text-sm mb-4">
+							<Text className="mb-4 text-muted-foreground text-sm">
 								{session.user.email}
 							</Text>
 
 							<TouchableOpacity
-								className="bg-destructive py-2 px-4 rounded-md self-start"
+								className="self-start rounded-md bg-destructive px-4 py-2"
 								onPress={() => {
 									authClient.signOut();
 									queryClient.invalidateQueries();
 								}}
 							>
-								<Text className="text-white font-medium">Sign Out</Text>
+								<Text className="font-medium text-white">Sign Out</Text>
 							</TouchableOpacity>
 						</View>
 					) : null}

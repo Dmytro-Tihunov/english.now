@@ -1,51 +1,37 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import Footer from "@/components/footer";
+import { Compare } from "@/components/home/compare";
+import { Demo } from "@/components/home/demo";
+import FAQ from "@/components/home/faq";
+import { Features } from "@/components/home/features";
+import { Hero } from "@/components/home/hero";
+import { Pricing } from "@/components/home/pricing";
 import { useTRPC } from "@/utils/trpc";
 
 export const Route = createFileRoute("/")({
-	component: HomeComponent,
+  component: HomeComponent,
 });
 
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
-
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
-
 function HomeComponent() {
-	const trpc = useTRPC();
-	const healthCheck = useQuery(trpc.healthCheck.queryOptions());
+  const trpc = useTRPC();
+  useQuery(trpc.healthCheck.queryOptions());
 
-	return (
-		<div className="container mx-auto max-w-3xl px-4 py-2">
-			<pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
-			<div className="grid gap-6">
-				<section className="rounded-lg border p-4">
-					<h2 className="mb-2 font-medium">API Status</h2>
-					<div className="flex items-center gap-2">
-						<div
-							className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
-						/>
-						<span className="text-muted-foreground text-sm">
-							{healthCheck.isLoading
-								? "Checking..."
-								: healthCheck.data
-									? "Connected"
-									: "Disconnected"}
-						</span>
-					</div>
-				</section>
-			</div>
-		</div>
-	);
+  return (
+    <div className="relative h-full">
+      <div className="container relative z-10 mx-auto max-w-5xl px-4 py-2 pt-18">
+        <Hero />
+        <Demo />
+        {/* <AI /> */}
+        {/* <UseCases /> */}
+        <Features />
+        {/* <Letter /> */}
+        <Compare />
+        <Pricing />
+        <FAQ />
+        {/* <Start /> */}
+      </div>
+      <Footer />
+    </div>
+  );
 }

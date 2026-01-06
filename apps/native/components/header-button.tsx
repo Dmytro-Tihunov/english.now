@@ -9,7 +9,7 @@ export const HeaderButton = forwardRef<
 	return (
 		<Pressable
 			onPress={onPress}
-			className="p-2 mr-2 rounded-lg bg-secondary/50 active:bg-secondary"
+			className="mr-2 rounded-lg bg-secondary/50 p-2 active:bg-secondary"
 		>
 			{({ pressed }) => (
 				<FontAwesome
