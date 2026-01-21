@@ -6,6 +6,7 @@ import { trpcServer } from "@hono/trpc-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import conversationRoutes from "./routes/conversation";
 
 const app = new Hono();
 
@@ -21,6 +22,9 @@ app.use(
 );
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+
+// REST API routes for conversation (streaming support)
+app.route("/api/conversation", conversationRoutes);
 
 app.use(
 	"/trpc/*",

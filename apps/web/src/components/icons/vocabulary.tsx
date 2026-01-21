@@ -2,7 +2,7 @@ export function VocabularyIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="size-8"
+      className="size-6.5"
       fill="none"
       viewBox="0 0 56 52"
       aria-hidden="true"

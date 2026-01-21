@@ -10,6 +10,7 @@
 	"dependencies": {
 		"@english.now/api": "workspace:*",
 		"@english.now/auth": "workspace:*",
+		"@radix-ui/react-popover": "^1.1.15",
 		"@tailwindcss/vite": "^4.1.16",
 		"@tanstack/react-form": "^1.23.8",
 		"@tanstack/react-query": "^5.90.5",
@@ -25,6 +26,7 @@
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"lucide-react": "^0.525.0",
+		"motion": "^12.27.2",
 		"next-themes": "^0.4.6",
 		"radix-ui": "^1.4.3",
 		"react": "19.1.0",

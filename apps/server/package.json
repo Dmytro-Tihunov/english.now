@@ -17,6 +17,7 @@
 		"better-auth": "catalog:",
 		"dotenv": "catalog:",
 		"zod": "catalog:",
+		"drizzle-orm": "^0.44.2",
 		"@english.now/api": "workspace:*",
 		"@english.now/auth": "workspace:*",
 		"@english.now/db": "workspace:*"

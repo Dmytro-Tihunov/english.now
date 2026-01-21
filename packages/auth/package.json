@@ -25,6 +25,7 @@
 		"@better-auth/expo": "^1.3.28",
 		"dotenv": "catalog:",
 		"zod": "catalog:",
-		"@english.now/db": "workspace:*"
+		"@english.now/db": "workspace:*",
+		"@english.now/email": "workspace:*"
 	}
 }

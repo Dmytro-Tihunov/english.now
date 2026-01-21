@@ -1,7 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import Header from "./header";
+import HeaderSidebar from "./header-sidebar";
 import Upgrade from "./sidebar/upgrade";
 import UserMenu from "./user-menu";
 
@@ -394,7 +394,7 @@ export default function Sidebar() {
     <div className="group hidden h-svh md:block">
       <div className="relative h-svh w-68 bg-transparent">
         <div className="fixed inset-y-0 left-0 z-10 hidden h-svh w-68 flex-col border-[#e5e0df] border-r p-4 md:flex">
-          <Header />
+          <HeaderSidebar />
           <div className="mt-4 flex min-h-0 flex-1 flex-col gap-6">
             <div className="flex items-center justify-center">
               <div className="flex w-full flex-col justify-between">
@@ -439,31 +439,29 @@ export default function Sidebar() {
                   </button>
                 </Link> */}
 
-                {session && (
-                  <div className="mb-4 flex w-full flex-col justify-between border-[#e5e0df]">
-                    <div className="mt-2 flex flex-col gap-2">
-                      {_dashboardLinks.map(({ to, label, icon }) => {
-                        return (
-                          <Link
-                            key={to}
-                            to={to as any}
-                            className={cn(
-                              "flex items-center gap-2 rounded-xl p-1.5 px-3.5 disabled:opacity-50",
-                              _location.pathname === to
-                                ? "bg-gray-100"
-                                : "bg-transparent"
-                            )}
-                          >
-                            <div className="size-4.5">{icon}</div>
-                            {label}
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+                <nav className="mt-2 flex w-full flex-col divide-y rounded-xl border border-slate-200 bg-white shadow-xs">
+                  {_dashboardLinks.map(({ to, label, icon }) => {
+                    return (
+                      <Link
+                        to={to as any}
+                        key={to}
+                        className={cn(
+                          "flex w-full items-center justify-between gap-1.5 p-2 px-2.5 transition-all duration-300 first:rounded-t-xl last:rounded-b-xl disabled:opacity-50",
+                          _location.pathname === to
+                            ? "bg-gray-100"
+                            : "bg-transparent"
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div>{icon}</div>
+                          {label}
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </nav>
 
-                <span className="px-2 font-display font-medium text-xs uppercase opacity-60">
+                <span className="mt-4 px-2 font-display font-medium text-xs uppercase opacity-60">
                   Products
                 </span>
                 <nav className="mt-2 flex w-full flex-col divide-y rounded-xl border border-slate-200 bg-white shadow-xs">
@@ -473,7 +471,7 @@ export default function Sidebar() {
                         key={to}
                         to={to as any}
                         className={cn(
-                          "flex w-full items-center justify-between gap-2 p-2.5 transition-all duration-300 first:rounded-t-xl last:rounded-b-xl disabled:opacity-50",
+                          "flex w-full items-center justify-between gap-1.5 p-2 px-2.5 transition-all duration-300 first:rounded-t-xl last:rounded-b-xl disabled:opacity-50",
                           _location.pathname === to
                             ? "bg-gray-100"
                             : "bg-transparent",

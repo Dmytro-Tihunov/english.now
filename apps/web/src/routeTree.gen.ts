@@ -9,355 +9,560 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VocabularyRouteImport } from './routes/vocabulary'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as HomeRouteImport } from './routes/home'
-import { Route as GrammarRouteImport } from './routes/grammar'
-import { Route as FluencyRouteImport } from './routes/fluency'
-import { Route as CoursesRouteImport } from './routes/courses'
-import { Route as ChatRouteImport } from './routes/chat'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as CoursesIndexRouteImport } from './routes/courses.index'
-import { Route as LearnConversationRouteImport } from './routes/learn/conversation'
-import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as DashboardRouteImport } from './routes/_dashboard'
+import { Route as ConversationRouteImport } from './routes/_conversation'
+import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as PublicTermsRouteImport } from './routes/_public.terms'
+import { Route as PublicSignupRouteImport } from './routes/_public.signup'
+import { Route as PublicRefundRouteImport } from './routes/_public.refund'
+import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
+import { Route as PublicPricingRouteImport } from './routes/_public.pricing'
+import { Route as PublicLoginRouteImport } from './routes/_public.login'
+import { Route as PublicForgotPasswordRouteImport } from './routes/_public.forgot-password'
+import { Route as PublicBlogRouteImport } from './routes/_public.blog'
+import { Route as PublicAboutRouteImport } from './routes/_public.about'
+import { Route as DashboardVocabularyRouteImport } from './routes/_dashboard.vocabulary'
+import { Route as DashboardPronunciationRouteImport } from './routes/_dashboard.pronunciation'
+import { Route as DashboardPracticeRouteImport } from './routes/_dashboard.practice'
+import { Route as DashboardHomeRouteImport } from './routes/_dashboard.home'
+import { Route as DashboardGrammarRouteImport } from './routes/_dashboard.grammar'
+import { Route as DashboardFluencyRouteImport } from './routes/_dashboard.fluency'
+import { Route as DashboardCoursesRouteImport } from './routes/_dashboard.courses'
+import { Route as ConversationConversationRouteImport } from './routes/_conversation.conversation'
+import { Route as DashboardCoursesIndexRouteImport } from './routes/_dashboard.courses.index'
+import { Route as DashboardCoursesCourseIdRouteImport } from './routes/_dashboard.courses.$courseId'
 
-const VocabularyRoute = VocabularyRouteImport.update({
-  id: '/vocabulary',
-  path: '/vocabulary',
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TermsRoute = TermsRouteImport.update({
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/_dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConversationRoute = ConversationRouteImport.update({
+  id: '/_conversation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicTermsRoute = PublicTermsRouteImport.update({
   id: '/terms',
   path: '/terms',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const PrivacyRoute = PrivacyRouteImport.update({
+const PublicSignupRoute = PublicSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicRefundRoute = PublicRefundRouteImport.update({
+  id: '/refund',
+  path: '/refund',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPrivacyRoute = PublicPrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const PricingRoute = PricingRouteImport.update({
+const PublicPricingRoute = PublicPricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const LoginRoute = LoginRouteImport.update({
+const PublicLoginRoute = PublicLoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => rootRouteImport,
+const PublicForgotPasswordRoute = PublicForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => PublicRoute,
 } as any)
-const GrammarRoute = GrammarRouteImport.update({
-  id: '/grammar',
-  path: '/grammar',
-  getParentRoute: () => rootRouteImport,
+const PublicBlogRoute = PublicBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => PublicRoute,
 } as any)
-const FluencyRoute = FluencyRouteImport.update({
-  id: '/fluency',
-  path: '/fluency',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CoursesRoute = CoursesRouteImport.update({
-  id: '/courses',
-  path: '/courses',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChatRoute = ChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
+const PublicAboutRoute = PublicAboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const DashboardVocabularyRoute = DashboardVocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPronunciationRoute = DashboardPronunciationRouteImport.update({
+  id: '/pronunciation',
+  path: '/pronunciation',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPracticeRoute = DashboardPracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardHomeRoute = DashboardHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardGrammarRoute = DashboardGrammarRouteImport.update({
+  id: '/grammar',
+  path: '/grammar',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardFluencyRoute = DashboardFluencyRouteImport.update({
+  id: '/fluency',
+  path: '/fluency',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCoursesRoute = DashboardCoursesRouteImport.update({
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const ConversationConversationRoute =
+  ConversationConversationRouteImport.update({
+    id: '/conversation',
+    path: '/conversation',
+    getParentRoute: () => ConversationRoute,
+  } as any)
+const DashboardCoursesIndexRoute = DashboardCoursesIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => DashboardCoursesRoute,
 } as any)
-const CoursesIndexRoute = CoursesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => CoursesRoute,
-} as any)
-const LearnConversationRoute = LearnConversationRouteImport.update({
-  id: '/learn/conversation',
-  path: '/learn/conversation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
-  id: '/$courseId',
-  path: '/$courseId',
-  getParentRoute: () => CoursesRoute,
-} as any)
+const DashboardCoursesCourseIdRoute =
+  DashboardCoursesCourseIdRouteImport.update({
+    id: '/$courseId',
+    path: '/$courseId',
+    getParentRoute: () => DashboardCoursesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/chat': typeof ChatRoute
-  '/courses': typeof CoursesRouteWithChildren
-  '/fluency': typeof FluencyRoute
-  '/grammar': typeof GrammarRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/pricing': typeof PricingRoute
-  '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
-  '/vocabulary': typeof VocabularyRoute
-  '/courses/$courseId': typeof CoursesCourseIdRoute
-  '/learn/conversation': typeof LearnConversationRoute
-  '/courses/': typeof CoursesIndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/conversation': typeof ConversationConversationRoute
+  '/courses': typeof DashboardCoursesRouteWithChildren
+  '/fluency': typeof DashboardFluencyRoute
+  '/grammar': typeof DashboardGrammarRoute
+  '/home': typeof DashboardHomeRoute
+  '/practice': typeof DashboardPracticeRoute
+  '/pronunciation': typeof DashboardPronunciationRoute
+  '/vocabulary': typeof DashboardVocabularyRoute
+  '/about': typeof PublicAboutRoute
+  '/blog': typeof PublicBlogRoute
+  '/forgot-password': typeof PublicForgotPasswordRoute
+  '/login': typeof PublicLoginRoute
+  '/pricing': typeof PublicPricingRoute
+  '/privacy': typeof PublicPrivacyRoute
+  '/refund': typeof PublicRefundRoute
+  '/signup': typeof PublicSignupRoute
+  '/terms': typeof PublicTermsRoute
+  '/': typeof PublicIndexRoute
+  '/courses/$courseId': typeof DashboardCoursesCourseIdRoute
+  '/courses/': typeof DashboardCoursesIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/chat': typeof ChatRoute
-  '/fluency': typeof FluencyRoute
-  '/grammar': typeof GrammarRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/pricing': typeof PricingRoute
-  '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
-  '/vocabulary': typeof VocabularyRoute
-  '/courses/$courseId': typeof CoursesCourseIdRoute
-  '/learn/conversation': typeof LearnConversationRoute
-  '/courses': typeof CoursesIndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/conversation': typeof ConversationConversationRoute
+  '/fluency': typeof DashboardFluencyRoute
+  '/grammar': typeof DashboardGrammarRoute
+  '/home': typeof DashboardHomeRoute
+  '/practice': typeof DashboardPracticeRoute
+  '/pronunciation': typeof DashboardPronunciationRoute
+  '/vocabulary': typeof DashboardVocabularyRoute
+  '/about': typeof PublicAboutRoute
+  '/blog': typeof PublicBlogRoute
+  '/forgot-password': typeof PublicForgotPasswordRoute
+  '/login': typeof PublicLoginRoute
+  '/pricing': typeof PublicPricingRoute
+  '/privacy': typeof PublicPrivacyRoute
+  '/refund': typeof PublicRefundRoute
+  '/signup': typeof PublicSignupRoute
+  '/terms': typeof PublicTermsRoute
+  '/': typeof PublicIndexRoute
+  '/courses/$courseId': typeof DashboardCoursesCourseIdRoute
+  '/courses': typeof DashboardCoursesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/chat': typeof ChatRoute
-  '/courses': typeof CoursesRouteWithChildren
-  '/fluency': typeof FluencyRoute
-  '/grammar': typeof GrammarRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/pricing': typeof PricingRoute
-  '/privacy': typeof PrivacyRoute
-  '/terms': typeof TermsRoute
-  '/vocabulary': typeof VocabularyRoute
-  '/courses/$courseId': typeof CoursesCourseIdRoute
-  '/learn/conversation': typeof LearnConversationRoute
-  '/courses/': typeof CoursesIndexRoute
+  '/_conversation': typeof ConversationRouteWithChildren
+  '/_dashboard': typeof DashboardRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/_conversation/conversation': typeof ConversationConversationRoute
+  '/_dashboard/courses': typeof DashboardCoursesRouteWithChildren
+  '/_dashboard/fluency': typeof DashboardFluencyRoute
+  '/_dashboard/grammar': typeof DashboardGrammarRoute
+  '/_dashboard/home': typeof DashboardHomeRoute
+  '/_dashboard/practice': typeof DashboardPracticeRoute
+  '/_dashboard/pronunciation': typeof DashboardPronunciationRoute
+  '/_dashboard/vocabulary': typeof DashboardVocabularyRoute
+  '/_public/about': typeof PublicAboutRoute
+  '/_public/blog': typeof PublicBlogRoute
+  '/_public/forgot-password': typeof PublicForgotPasswordRoute
+  '/_public/login': typeof PublicLoginRoute
+  '/_public/pricing': typeof PublicPricingRoute
+  '/_public/privacy': typeof PublicPrivacyRoute
+  '/_public/refund': typeof PublicRefundRoute
+  '/_public/signup': typeof PublicSignupRoute
+  '/_public/terms': typeof PublicTermsRoute
+  '/_public/': typeof PublicIndexRoute
+  '/_dashboard/courses/$courseId': typeof DashboardCoursesCourseIdRoute
+  '/_dashboard/courses/': typeof DashboardCoursesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/about'
-    | '/chat'
+    | '/onboarding'
+    | '/conversation'
     | '/courses'
     | '/fluency'
     | '/grammar'
     | '/home'
+    | '/practice'
+    | '/pronunciation'
+    | '/vocabulary'
+    | '/about'
+    | '/blog'
+    | '/forgot-password'
     | '/login'
     | '/pricing'
     | '/privacy'
+    | '/refund'
+    | '/signup'
     | '/terms'
-    | '/vocabulary'
+    | '/'
     | '/courses/$courseId'
-    | '/learn/conversation'
     | '/courses/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/about'
-    | '/chat'
+    | '/onboarding'
+    | '/conversation'
     | '/fluency'
     | '/grammar'
     | '/home'
+    | '/practice'
+    | '/pronunciation'
+    | '/vocabulary'
+    | '/about'
+    | '/blog'
+    | '/forgot-password'
     | '/login'
     | '/pricing'
     | '/privacy'
+    | '/refund'
+    | '/signup'
     | '/terms'
-    | '/vocabulary'
+    | '/'
     | '/courses/$courseId'
-    | '/learn/conversation'
     | '/courses'
   id:
     | '__root__'
-    | '/'
-    | '/about'
-    | '/chat'
-    | '/courses'
-    | '/fluency'
-    | '/grammar'
-    | '/home'
-    | '/login'
-    | '/pricing'
-    | '/privacy'
-    | '/terms'
-    | '/vocabulary'
-    | '/courses/$courseId'
-    | '/learn/conversation'
-    | '/courses/'
+    | '/_conversation'
+    | '/_dashboard'
+    | '/_public'
+    | '/onboarding'
+    | '/_conversation/conversation'
+    | '/_dashboard/courses'
+    | '/_dashboard/fluency'
+    | '/_dashboard/grammar'
+    | '/_dashboard/home'
+    | '/_dashboard/practice'
+    | '/_dashboard/pronunciation'
+    | '/_dashboard/vocabulary'
+    | '/_public/about'
+    | '/_public/blog'
+    | '/_public/forgot-password'
+    | '/_public/login'
+    | '/_public/pricing'
+    | '/_public/privacy'
+    | '/_public/refund'
+    | '/_public/signup'
+    | '/_public/terms'
+    | '/_public/'
+    | '/_dashboard/courses/$courseId'
+    | '/_dashboard/courses/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  ChatRoute: typeof ChatRoute
-  CoursesRoute: typeof CoursesRouteWithChildren
-  FluencyRoute: typeof FluencyRoute
-  GrammarRoute: typeof GrammarRoute
-  HomeRoute: typeof HomeRoute
-  LoginRoute: typeof LoginRoute
-  PricingRoute: typeof PricingRoute
-  PrivacyRoute: typeof PrivacyRoute
-  TermsRoute: typeof TermsRoute
-  VocabularyRoute: typeof VocabularyRoute
-  LearnConversationRoute: typeof LearnConversationRoute
+  ConversationRoute: typeof ConversationRouteWithChildren
+  DashboardRoute: typeof DashboardRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/vocabulary': {
-      id: '/vocabulary'
-      path: '/vocabulary'
-      fullPath: '/vocabulary'
-      preLoaderRoute: typeof VocabularyRouteImport
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
+    '/_dashboard': {
+      id: '/_dashboard'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
+    '/_conversation': {
+      id: '/_conversation'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ConversationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/grammar': {
-      id: '/grammar'
-      path: '/grammar'
-      fullPath: '/grammar'
-      preLoaderRoute: typeof GrammarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fluency': {
-      id: '/fluency'
-      path: '/fluency'
-      fullPath: '/fluency'
-      preLoaderRoute: typeof FluencyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/courses': {
-      id: '/courses'
-      path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof CoursesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chat': {
-      id: '/chat'
-      path: '/chat'
-      fullPath: '/chat'
-      preLoaderRoute: typeof ChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/courses/': {
-      id: '/courses/'
+    '/_public/terms': {
+      id: '/_public/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof PublicTermsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/signup': {
+      id: '/_public/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof PublicSignupRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/refund': {
+      id: '/_public/refund'
+      path: '/refund'
+      fullPath: '/refund'
+      preLoaderRoute: typeof PublicRefundRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/privacy': {
+      id: '/_public/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PublicPrivacyRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/pricing': {
+      id: '/_public/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PublicPricingRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/forgot-password': {
+      id: '/_public/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof PublicForgotPasswordRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/blog': {
+      id: '/_public/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof PublicBlogRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/about': {
+      id: '/_public/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof PublicAboutRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_dashboard/vocabulary': {
+      id: '/_dashboard/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/vocabulary'
+      preLoaderRoute: typeof DashboardVocabularyRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/pronunciation': {
+      id: '/_dashboard/pronunciation'
+      path: '/pronunciation'
+      fullPath: '/pronunciation'
+      preLoaderRoute: typeof DashboardPronunciationRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/practice': {
+      id: '/_dashboard/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof DashboardPracticeRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/home': {
+      id: '/_dashboard/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof DashboardHomeRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/grammar': {
+      id: '/_dashboard/grammar'
+      path: '/grammar'
+      fullPath: '/grammar'
+      preLoaderRoute: typeof DashboardGrammarRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/fluency': {
+      id: '/_dashboard/fluency'
+      path: '/fluency'
+      fullPath: '/fluency'
+      preLoaderRoute: typeof DashboardFluencyRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/courses': {
+      id: '/_dashboard/courses'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof DashboardCoursesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_conversation/conversation': {
+      id: '/_conversation/conversation'
+      path: '/conversation'
+      fullPath: '/conversation'
+      preLoaderRoute: typeof ConversationConversationRouteImport
+      parentRoute: typeof ConversationRoute
+    }
+    '/_dashboard/courses/': {
+      id: '/_dashboard/courses/'
       path: '/'
       fullPath: '/courses/'
-      preLoaderRoute: typeof CoursesIndexRouteImport
-      parentRoute: typeof CoursesRoute
+      preLoaderRoute: typeof DashboardCoursesIndexRouteImport
+      parentRoute: typeof DashboardCoursesRoute
     }
-    '/learn/conversation': {
-      id: '/learn/conversation'
-      path: '/learn/conversation'
-      fullPath: '/learn/conversation'
-      preLoaderRoute: typeof LearnConversationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/courses/$courseId': {
-      id: '/courses/$courseId'
+    '/_dashboard/courses/$courseId': {
+      id: '/_dashboard/courses/$courseId'
       path: '/$courseId'
       fullPath: '/courses/$courseId'
-      preLoaderRoute: typeof CoursesCourseIdRouteImport
-      parentRoute: typeof CoursesRoute
+      preLoaderRoute: typeof DashboardCoursesCourseIdRouteImport
+      parentRoute: typeof DashboardCoursesRoute
     }
   }
 }
 
-interface CoursesRouteChildren {
-  CoursesCourseIdRoute: typeof CoursesCourseIdRoute
-  CoursesIndexRoute: typeof CoursesIndexRoute
+interface ConversationRouteChildren {
+  ConversationConversationRoute: typeof ConversationConversationRoute
 }
 
-const CoursesRouteChildren: CoursesRouteChildren = {
-  CoursesCourseIdRoute: CoursesCourseIdRoute,
-  CoursesIndexRoute: CoursesIndexRoute,
+const ConversationRouteChildren: ConversationRouteChildren = {
+  ConversationConversationRoute: ConversationConversationRoute,
 }
 
-const CoursesRouteWithChildren =
-  CoursesRoute._addFileChildren(CoursesRouteChildren)
+const ConversationRouteWithChildren = ConversationRoute._addFileChildren(
+  ConversationRouteChildren,
+)
+
+interface DashboardCoursesRouteChildren {
+  DashboardCoursesCourseIdRoute: typeof DashboardCoursesCourseIdRoute
+  DashboardCoursesIndexRoute: typeof DashboardCoursesIndexRoute
+}
+
+const DashboardCoursesRouteChildren: DashboardCoursesRouteChildren = {
+  DashboardCoursesCourseIdRoute: DashboardCoursesCourseIdRoute,
+  DashboardCoursesIndexRoute: DashboardCoursesIndexRoute,
+}
+
+const DashboardCoursesRouteWithChildren =
+  DashboardCoursesRoute._addFileChildren(DashboardCoursesRouteChildren)
+
+interface DashboardRouteChildren {
+  DashboardCoursesRoute: typeof DashboardCoursesRouteWithChildren
+  DashboardFluencyRoute: typeof DashboardFluencyRoute
+  DashboardGrammarRoute: typeof DashboardGrammarRoute
+  DashboardHomeRoute: typeof DashboardHomeRoute
+  DashboardPracticeRoute: typeof DashboardPracticeRoute
+  DashboardPronunciationRoute: typeof DashboardPronunciationRoute
+  DashboardVocabularyRoute: typeof DashboardVocabularyRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardCoursesRoute: DashboardCoursesRouteWithChildren,
+  DashboardFluencyRoute: DashboardFluencyRoute,
+  DashboardGrammarRoute: DashboardGrammarRoute,
+  DashboardHomeRoute: DashboardHomeRoute,
+  DashboardPracticeRoute: DashboardPracticeRoute,
+  DashboardPronunciationRoute: DashboardPronunciationRoute,
+  DashboardVocabularyRoute: DashboardVocabularyRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
+interface PublicRouteChildren {
+  PublicAboutRoute: typeof PublicAboutRoute
+  PublicBlogRoute: typeof PublicBlogRoute
+  PublicForgotPasswordRoute: typeof PublicForgotPasswordRoute
+  PublicLoginRoute: typeof PublicLoginRoute
+  PublicPricingRoute: typeof PublicPricingRoute
+  PublicPrivacyRoute: typeof PublicPrivacyRoute
+  PublicRefundRoute: typeof PublicRefundRoute
+  PublicSignupRoute: typeof PublicSignupRoute
+  PublicTermsRoute: typeof PublicTermsRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicAboutRoute: PublicAboutRoute,
+  PublicBlogRoute: PublicBlogRoute,
+  PublicForgotPasswordRoute: PublicForgotPasswordRoute,
+  PublicLoginRoute: PublicLoginRoute,
+  PublicPricingRoute: PublicPricingRoute,
+  PublicPrivacyRoute: PublicPrivacyRoute,
+  PublicRefundRoute: PublicRefundRoute,
+  PublicSignupRoute: PublicSignupRoute,
+  PublicTermsRoute: PublicTermsRoute,
+  PublicIndexRoute: PublicIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  ChatRoute: ChatRoute,
-  CoursesRoute: CoursesRouteWithChildren,
-  FluencyRoute: FluencyRoute,
-  GrammarRoute: GrammarRoute,
-  HomeRoute: HomeRoute,
-  LoginRoute: LoginRoute,
-  PricingRoute: PricingRoute,
-  PrivacyRoute: PrivacyRoute,
-  TermsRoute: TermsRoute,
-  VocabularyRoute: VocabularyRoute,
-  LearnConversationRoute: LearnConversationRoute,
+  ConversationRoute: ConversationRouteWithChildren,
+  DashboardRoute: DashboardRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

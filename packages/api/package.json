@@ -26,6 +26,7 @@
 		"hono": "catalog:",
 		"dotenv": "catalog:",
 		"zod": "catalog:",
+		"drizzle-orm": "^0.44.2",
 		"@english.now/auth": "workspace:*",
 		"@english.now/db": "workspace:*"
 	}
