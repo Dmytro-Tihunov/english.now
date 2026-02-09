@@ -1,0 +1,27 @@
+{
+  "name": "@english.now/i18n",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "translate": "tsx scripts/translate.ts"
+  },
+  "dependencies": {
+    "i18next": "^24.2.3",
+    "react-i18next": "^15.4.1"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:",
+    "@types/react": "~19.1.17",
+    "tsx": "^4.19.0"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "typescript": "^5"
+  }
+}

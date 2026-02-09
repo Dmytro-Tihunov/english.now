@@ -1,0 +1,1 @@
+ALTER TABLE "user_profile" ALTER COLUMN "daily_goal" DROP DEFAULT;

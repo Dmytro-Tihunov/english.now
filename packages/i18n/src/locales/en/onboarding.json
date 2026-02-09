@@ -1,0 +1,161 @@
+{
+  "steps": {
+    "welcome": "Welcome",
+    "nativeLanguage": "Native Language",
+    "level": "Your Level",
+    "goal": "Your Goal",
+    "time": "Daily Time",
+    "focus": "Focus Areas",
+    "plan": "Your Plan",
+    "paywall": "Get Started"
+  },
+  "welcome": {
+    "title": "Learn English, The Smart Way ",
+    "titleHighlight": "The Smart Way",
+    "subtitle": "Practice English with AI, build vocabulary, and master grammar - all personalized for you.",
+    "features": {
+      "conversations": "AI-powered conversations",
+      "personalizedPath": "Personalized learning path",
+      "trackProgress": "Track your progress"
+    }
+  },
+  "level": {
+    "title": "What's your English level?",
+    "subtitle": "This helps us personalize your learning experience",
+    "options": {
+      "beginner": {
+        "name": "Beginner",
+        "description": "I know some basic words and phrases"
+      },
+      "elementary": {
+        "name": "Elementary",
+        "description": "I can have simple conversations"
+      },
+      "intermediate": {
+        "name": "Intermediate",
+        "description": "I can discuss various topics"
+      },
+      "upperIntermediate": {
+        "name": "Upper Intermediate",
+        "description": "I'm comfortable in most situations"
+      },
+      "advanced": {
+        "name": "Advanced",
+        "description": "I want to perfect my English"
+      }
+    }
+  },
+  "goal": {
+    "title": "What's your main goal?",
+    "subtitle": "We'll create a learning path tailored to your needs",
+    "options": {
+      "career": {
+        "name": "Career Growth",
+        "description": "Get better job opportunities"
+      },
+      "travel": {
+        "name": "Travel",
+        "description": "Communicate while traveling"
+      },
+      "education": {
+        "name": "Education",
+        "description": "Study abroad or pass exams"
+      },
+      "social": {
+        "name": "Social",
+        "description": "Make friends and connect"
+      },
+      "personal": {
+        "name": "Personal Growth",
+        "description": "Challenge myself to learn"
+      },
+      "content": {
+        "name": "Entertainment",
+        "description": "Enjoy movies, books & music"
+      }
+    }
+  },
+  "time": {
+    "title": "How much time can you practice daily?",
+    "subtitle": "Consistency is key to language learning",
+    "options": {
+      "5": {
+        "name": "5 minutes",
+        "description": "Quick daily practice"
+      },
+      "15": {
+        "name": "15 minutes",
+        "description": "Steady progress"
+      },
+      "30": {
+        "name": "30 minutes",
+        "description": "Serious learning"
+      },
+      "60": {
+        "name": "60+ minutes",
+        "description": "Intensive study"
+      }
+    }
+  },
+  "focus": {
+    "title": "What do you want to focus on?",
+    "subtitle": "Select all that apply — you can change this later",
+    "options": {
+      "speaking": "Speaking",
+      "vocabulary": "Vocabulary",
+      "grammar": "Grammar",
+      "pronunciation": "Pronunciation"
+    }
+  },
+  "planSummary": {
+    "title": "Your Personal Plan is Ready!",
+    "subtitle": "Based on your preferences, we've created a custom learning path",
+    "profileTitle": "Your Learning Profile",
+    "currentLevel": "Current Level",
+    "mainGoal": "Main Goal",
+    "dailyPractice": "Daily Practice",
+    "focusAreas": "Focus Areas",
+    "all": "All",
+    "minutes": "minutes",
+    "projection": "With {{time}} min/day, you could reach the next level in ~8 weeks",
+    "startLearning": "Start Learning"
+  },
+  "paywall": {
+    "title": "Unlock Your Full Potential",
+    "subtitle": "Join thousands of learners improving their English every day",
+    "learnersThisMonth": "learners this month",
+    "mostPopular": "Most Popular",
+    "bestValue": "Best Value",
+    "startTrial": "Start 7-Day Free Trial",
+    "trialNote": "Cancel anytime. No credit card required for trial.",
+    "skipToLimited": "Continue with limited features",
+    "securePayment": "Secure payment",
+    "moneyBack": "30-day money back",
+    "cancelAnytime": "Cancel anytime",
+    "plans": {
+      "weekly": {
+        "name": "Weekly",
+        "period": "week"
+      },
+      "yearly": {
+        "name": "Yearly",
+        "period": "year"
+      },
+      "lifetime": {
+        "name": "Lifetime",
+        "period": "once"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "Unlimited AI conversations",
+      "personalizedPath": "Personalized learning path",
+      "progressTracking": "Progress tracking",
+      "save77": "Save 77%",
+      "prioritySupport": "Priority support",
+      "offlineAccess": "Offline access",
+      "payOnce": "Pay once, own forever",
+      "futureUpdates": "All future updates",
+      "premiumSupport": "Premium support"
+    }
+  }
+}

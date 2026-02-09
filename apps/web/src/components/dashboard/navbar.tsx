@@ -1,9 +1,12 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { CheckIcon, FlameIcon, LogOutIcon, Settings, Zap } from "lucide-react";
+import { CheckIcon, LogOutIcon, Settings, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import Loader from "@/components/loader";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
+import { openCheckout } from "@/lib/paddle";
 import { cn } from "@/lib/utils";
 import SettingsModal from "../settings-modal";
 import {
@@ -26,112 +29,16 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Skeleton } from "../ui/skeleton";
 
-const WEEK_DAYS = [
-	{ key: "sat", label: "S" },
-	{ key: "sun", label: "S" },
-	{ key: "mon", label: "M" },
-	{ key: "tue", label: "T" },
-	{ key: "wed", label: "W" },
-	{ key: "thu", label: "T" },
-	{ key: "fri", label: "F" },
-] as const;
-
-function StreakDropdown() {
-	const today = new Date().getDay();
-	// Convert: Sunday=0 -> index 1, Saturday=6 -> index 0, others shift by +1
-	const todayIndex = today === 0 ? 1 : today === 6 ? 0 : today + 1;
-
-	// Mock data - in real app this would come from props/API
-	const streak = 0;
-	const completedDays: string[] = []; // keys of completed days
-
-	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<button
-					type="button"
-					className="flex cursor-pointer items-center justify-center gap-0.5 rounded-xl px-3 py-2 font-medium text-orange-400 text-sm transition-colors hover:bg-orange-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
-				>
-					<FlameIcon className="size-4" fill="currentColor" />
-					{streak}
-				</button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent
-				align="end"
-				className="w-[320px] rounded-3xl border border-border/50 p-2.5 shadow-none"
-				sideOffset={23}
-				side="bottom"
-			>
-				{/* Header */}
-				<div className="rounded-xl border border-border/50 p-4">
-					<div className="mb-4 flex items-start justify-between">
-						<div>
-							<h3 className="font-semibold text-orange-500 text-xl">
-								{streak} day streak
-							</h3>
-							<p className="mt-0.5 text-muted-foreground text-sm">
-								Time to start your first lesson!
-							</p>
-						</div>
-						<div className="rounded-xl bg-radial from-orange-400 to-orange-500 p-2">
-							<FlameIcon className="size-6 text-white" fill="white" />
-						</div>
-					</div>
-
-					{/* Week Progress */}
-					<div className="mb-6 flex items-center justify-between">
-						{WEEK_DAYS.map((day, index) => {
-							const isToday = index === todayIndex;
-							const isCompleted = completedDays.includes(day.key);
-
-							return (
-								<div key={day.key} className="flex flex-col items-center gap-2">
-									<span className="font-medium text-neutral-500 text-xs">
-										{day.label}
-									</span>
-									<div
-										className={cn(
-											"flex size-9 items-center justify-center rounded-full transition-all",
-											isCompleted
-												? "bg-[#EA580C]"
-												: isToday
-													? "border-2 border-orange-300 bg-transparent"
-													: "bg-gray-100",
-										)}
-									>
-										{isCompleted && (
-											<FlameIcon className="size-4 text-white" fill="white" />
-										)}
-									</div>
-								</div>
-							);
-						})}
-					</div>
-				</div>
-				{/* Stats Grid */}
-				<div className="grid grid-cols-2 gap-4 px-4 py-2.5 pb-0">
-					<div className="flex flex-col">
-						<div className="mb-1 flex items-center font-medium text-muted-foreground text-xs">
-							Current Streak
-						</div>
-						<span className="font-semibold text-gray-900 text-lg">1</span>
-					</div>
-
-					<div className="flex flex-col">
-						<div className="mb-1 flex items-center font-medium text-muted-foreground text-xs">
-							Longest Streak
-						</div>
-						<span className="font-semibold text-gray-900 text-lg">1</span>
-					</div>
-				</div>
-			</DropdownMenuContent>
-		</DropdownMenu>
-	);
-}
+const PADDLE_PRICE_IDS = {
+	monthly: import.meta.env.VITE_PADDLE_PRICE_MONTHLY ?? "",
+	yearly: import.meta.env.VITE_PADDLE_PRICE_YEARLY ?? "",
+} as const;
 
 function UpgradeDialog() {
+	const [isLoading, setIsLoading] = useState(false);
 	const [plan, setPlan] = useState<"monthly" | "yearly">("monthly");
-	// const [freeTrial, setFreeTrial] = useState(true);
+	const { data: session } = authClient.useSession();
+
 	const features = [
 		"Unlimited AI conversations",
 		"Advanced AI feedback",
@@ -145,10 +52,10 @@ function UpgradeDialog() {
 				<button
 					type="button"
 					aria-label="Upgrade now"
-					className="group flex w-full cursor-pointer items-center justify-center gap-0.5 whitespace-nowrap rounded-xl px-2 py-2 font-medium text-lime-700 text-sm shadow-none transition duration-150 ease-in-out will-change-transform hover:bg-lime-700/10 focus:shadow-none focus:outline-none focus-visible:shadow-none focus-visible:shadow-outline-indigo active:scale-97"
+					className="flex cursor-pointer items-center gap-0.5 whitespace-nowrap rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] px-2.5 py-1.5 font-medium text-lime-900 text-sm italic shadow-none transition duration-150 ease-in-out will-change-transform hover:bg-lime-700/10 hover:brightness-95 focus:shadow-none focus:outline-none focus-visible:shadow-none"
 				>
 					<Zap fill="currentColor" className="size-3.5" />
-					Upgrade
+					PRO{" "}
 				</button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
@@ -195,7 +102,7 @@ function UpgradeDialog() {
 									Yearly
 								</span>
 								<span className="rounded-md bg-lime-100 bg-radial px-2 py-1 font-medium text-lime-700 text-xs">
-									Save 20%
+									Save 30%
 								</span>
 							</div>
 							<div>
@@ -226,7 +133,7 @@ function UpgradeDialog() {
 							</div>
 							<div>
 								<span className="font-bold text-lg text-slate-900 dark:text-white">
-									$10
+									$12
 								</span>
 								<span className="ml-1 font-light text-muted-foreground text-xs md:text-sm md:leading-7">
 									/month
@@ -235,23 +142,30 @@ function UpgradeDialog() {
 						</div>
 					</Label>
 				</RadioGroup>
-				{/* <div className="flex items-center justify-between rounded-xl border border-slate-200 p-4 dark:border-slate-700">
-          <div className="flex flex-col">
-            <span className="font-medium text-slate-900 text-sm dark:text-white">
-              Include free trial
-            </span>
-            <span className="text-slate-500 text-xs dark:text-slate-400">
-              7 days free, cancel anytime
-            </span>
-          </div>
-          <Switch checked={freeTrial} onCheckedChange={setFreeTrial} />
-        </div> */}
-				{/* <div className="text-center text-neutral-500 text-xs dark:text-neutral-400">
-        Cancel anytime. We’ll remind you 7 days before your trial ends.
-        </div> */}
+
 				<div className="mt-1 flex">
-					<Button className="relative inline-flex h-12 w-full shrink-0 cursor-pointer items-center overflow-hidden whitespace-nowrap rounded-2xl bg-linear-to-t from-[#202020] to-[#2F2F2F] text-base text-white shadow-[inset_0_1px_4px_0_rgba(255,255,255,0.4)] outline-none transition-all hover:opacity-90 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40 has-[>svg]:px-2.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:from-[rgb(192,192,192)] dark:to-[rgb(255,255,255)] dark:shadow-[inset_0_1px_4px_0_rgba(128,128,128,0.2)] dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none">
-						Start 7-Day Free Trial
+					<Button
+						disabled={isLoading}
+						className="en-button-gradient h-14 w-full rounded-2xl text-base text-lime-900"
+						onClick={async () => {
+							if (!session?.user) return;
+							setIsLoading(true);
+							await openCheckout({
+								priceId:
+									plan === "yearly"
+										? PADDLE_PRICE_IDS.yearly
+										: PADDLE_PRICE_IDS.monthly,
+								userId: session.user.id,
+								email: session.user.email,
+								onSuccess: (data) => {
+									console.log(data);
+									setIsLoading(false);
+									toast.success("Subscription successful");
+								},
+							});
+						}}
+					>
+						{isLoading ? <Loader /> : "Start 7-Day Free Trial"}
 					</Button>
 				</div>
 				<div>
@@ -341,6 +255,10 @@ export default function Navbar() {
 			label: "Home",
 		},
 		{
+			to: "/lessons",
+			label: "Lessons",
+		},
+		{
 			to: "/practice",
 			label: "Practice",
 		},
@@ -379,7 +297,7 @@ export default function Navbar() {
 									key={link.to}
 									to={link.to}
 									className={cn(
-										"w-auto rounded-xl px-3 py-2 font-medium transition-all duration-300 hover:bg-neutral-200/60 md:inline-flex md:items-center md:justify-center md:text-sm",
+										"w-auto rounded-xl px-2.5 py-2 font-medium transition-all duration-300 hover:bg-neutral-200/60 md:inline-flex md:items-center md:justify-center md:text-sm",
 										location.pathname === link.to ? "" : "bg-transparent",
 									)}
 								>
@@ -389,22 +307,42 @@ export default function Navbar() {
 						</div>
 					</div>
 
-					<div className="relative z-50 flex items-center justify-end gap-1">
-						{/* <UpgradeDialog /> */}
-						<StreakDropdown />
+					<div className="relative flex items-center justify-end gap-2">
+						<UpgradeDialog />
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<div className="ml-2 flex w-full cursor-pointer flex-col items-start transition-opacity hover:opacity-80">
 									<div className="flex flex-row items-center gap-2">
 										{isPending || !session ? (
-											<Skeleton className="size-8 rounded-full" />
+											<Skeleton className="size-8.5 rounded-full" />
 										) : (
 											<div className="relative flex items-center gap-2">
-												<img
-													src={session.user.image ?? undefined}
-													alt={session.user.name ?? ""}
-													className="size-8.5 rounded-full"
-												/>
+												{!session.user.image ? (
+													<div className="relative flex size-8.5 items-center justify-center space-x-0 overflow-hidden rounded-full border border-neutral-300 bg-neutral-200 font-bold font-lyon text-neutral-400 uppercase">
+														<svg
+															className="absolute bottom-[-5px] h-full w-full object-contain"
+															width="147"
+															height="182"
+															viewBox="0 0 147 182"
+															fill="currentColor"
+															stroke="currentColor"
+															strokeWidth={2.5}
+															xmlns="http://www.w3.org/2000/svg"
+															aria-hidden="true"
+														>
+															<path
+																d="M67.334 5.42313C63.3714 11.1355 58.8324 16.7032 48.0974 28.7064C35.129 43.2404 29.7975 51.9897 28.2125 61.0282L27.3479 65.9452L25.4747 62.2575C24.466 60.1605 21.7282 56.5451 19.3507 54.1589C14.3074 48.8804 14.7397 48.5912 9.91253 60.0882C-1.25475 86.6977 -3.12797 114.97 5.01333 135.361C14.3794 158.861 33.1837 174.697 59.1927 181.06C61.6422 181.638 67.334 182 73.9623 182C83.4004 181.928 85.6339 181.711 91.974 179.975C119.496 172.383 139.669 151.269 145.793 123.575C147.018 117.79 147.162 115.187 146.874 104.269C146.297 85.2515 142.767 70.8621 134.121 53.2189C129.871 44.3973 120.649 29.791 115.894 24.3679L113.444 21.5479L110.274 23.6448C105.015 27.1156 98.8905 33.768 96.8012 38.2511L94.8559 42.445L94.4236 37.7449C93.8472 32.2495 92.9827 29.6464 89.6685 23.7171C87.363 19.6679 80.3745 10.557 73.8182 3.18157L71.0804 4.05312e-06L67.334 5.42313ZM43.0541 115.187C50.7632 119.67 57.0312 123.503 57.0312 123.792C57.0312 124.081 56.0946 125.6 54.9419 127.19C52.4202 130.733 48.8899 132.469 44.2789 132.469C37.8667 132.397 33.0396 129.07 29.5093 122.056C27.3479 117.79 26.6995 107.161 28.6447 107.161C28.9329 107.161 35.4172 110.776 43.0541 115.187ZM119.568 111.789C120.288 125.889 107.968 136.518 97.0173 131.312C94.7118 130.227 90.1728 125.238 90.1728 123.792C90.1728 123.069 117.839 107.161 118.631 107.378C119.064 107.522 119.424 109.475 119.568 111.789Z"
+																fill="transparent"
+															/>
+														</svg>
+													</div>
+												) : (
+													<img
+														src={session.user.image ?? undefined}
+														alt={session.user.name ?? ""}
+														className="size-8.5 rounded-full"
+													/>
+												)}
 											</div>
 										)}
 									</div>
@@ -412,30 +350,35 @@ export default function Navbar() {
 							</DropdownMenuTrigger>
 							<DropdownMenuContent
 								align="end"
-								className="w-[220px] rounded-xl shadow-sm"
+								className="w-[200px] rounded-xl shadow-sm"
 								sideOffset={8}
 								side="bottom"
 							>
 								<DropdownMenuLabel>
-									<div className="flex flex-col text-gray-500 text-xs">
-										Signed in as
-										<span className="font-medium">{session?.user.email}</span>
+									<div className="flex flex-col text-xs">
+										{session?.user.name}
+										<span className="font-medium text-gray-500">
+											{session?.user.email}
+										</span>
 									</div>
 								</DropdownMenuLabel>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem asChild>
 									<Button
+										asChild
 										variant="ghost"
-										className="w-full text-left"
-										onClick={() => setSettingsOpen(true)}
+										className="w-full justify-start rounded-lg border-none text-left hover:border-none hover:bg-neutral-100"
+										// onClick={() => setSettingsOpen(true)}
 									>
-										<Settings className="size-4" />
-										Settings
+										<Link to="/settings">
+											<Settings className="size-4" />
+											Settings
+										</Link>
 									</Button>
 								</DropdownMenuItem>
 								<DropdownMenuItem asChild>
 									<Button
-										className="w-full"
+										className="w-full justify-start rounded-lg border-none text-left hover:border-none hover:bg-neutral-100"
 										variant="ghost"
 										onClick={() => {
 											authClient.signOut({

@@ -10,37 +10,54 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as SessionRouteImport } from './routes/_session'
 import { Route as PublicRouteImport } from './routes/_public'
+import { Route as LoginRouteImport } from './routes/_login'
 import { Route as DashboardRouteImport } from './routes/_dashboard'
 import { Route as ConversationRouteImport } from './routes/_conversation'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicTermsRouteImport } from './routes/_public.terms'
-import { Route as PublicSignupRouteImport } from './routes/_public.signup'
 import { Route as PublicRefundRouteImport } from './routes/_public.refund'
 import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
 import { Route as PublicPricingRouteImport } from './routes/_public.pricing'
-import { Route as PublicLoginRouteImport } from './routes/_public.login'
-import { Route as PublicForgotPasswordRouteImport } from './routes/_public.forgot-password'
+import { Route as PublicFeaturesRouteImport } from './routes/_public.features'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
+import { Route as LoginVerifyRouteImport } from './routes/_login.verify'
+import { Route as LoginSignupRouteImport } from './routes/_login.signup'
+import { Route as LoginResetPasswordRouteImport } from './routes/_login.reset-password'
+import { Route as LoginLoginRouteImport } from './routes/_login.login'
+import { Route as LoginForgotPasswordRouteImport } from './routes/_login.forgot-password'
 import { Route as DashboardVocabularyRouteImport } from './routes/_dashboard.vocabulary'
+import { Route as DashboardSettingsRouteImport } from './routes/_dashboard.settings'
 import { Route as DashboardPronunciationRouteImport } from './routes/_dashboard.pronunciation'
 import { Route as DashboardPracticeRouteImport } from './routes/_dashboard.practice'
+import { Route as DashboardLessonsRouteImport } from './routes/_dashboard.lessons'
 import { Route as DashboardHomeRouteImport } from './routes/_dashboard.home'
 import { Route as DashboardGrammarRouteImport } from './routes/_dashboard.grammar'
 import { Route as DashboardFluencyRouteImport } from './routes/_dashboard.fluency'
 import { Route as DashboardCoursesRouteImport } from './routes/_dashboard.courses'
-import { Route as ConversationConversationRouteImport } from './routes/_conversation.conversation'
 import { Route as DashboardCoursesIndexRouteImport } from './routes/_dashboard.courses.index'
+import { Route as ConversationConversationIndexRouteImport } from './routes/_conversation.conversation.index'
+import { Route as SessionSessionSessionIdRouteImport } from './routes/_session.session.$sessionId'
 import { Route as DashboardCoursesCourseIdRouteImport } from './routes/_dashboard.courses.$courseId'
+import { Route as ConversationConversationSessionIdRouteImport } from './routes/_conversation.conversation.$sessionId'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SessionRoute = SessionRouteImport.update({
+  id: '/_session',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/_login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -61,11 +78,6 @@ const PublicTermsRoute = PublicTermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => PublicRoute,
 } as any)
-const PublicSignupRoute = PublicSignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => PublicRoute,
-} as any)
 const PublicRefundRoute = PublicRefundRouteImport.update({
   id: '/refund',
   path: '/refund',
@@ -81,14 +93,9 @@ const PublicPricingRoute = PublicPricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => PublicRoute,
 } as any)
-const PublicLoginRoute = PublicLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicForgotPasswordRoute = PublicForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
+const PublicFeaturesRoute = PublicFeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicBlogRoute = PublicBlogRouteImport.update({
@@ -101,9 +108,39 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => PublicRoute,
 } as any)
+const LoginVerifyRoute = LoginVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => LoginRoute,
+} as any)
+const LoginSignupRoute = LoginSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => LoginRoute,
+} as any)
+const LoginResetPasswordRoute = LoginResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => LoginRoute,
+} as any)
+const LoginLoginRoute = LoginLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => LoginRoute,
+} as any)
+const LoginForgotPasswordRoute = LoginForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => LoginRoute,
+} as any)
 const DashboardVocabularyRoute = DashboardVocabularyRouteImport.update({
   id: '/vocabulary',
   path: '/vocabulary',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardPronunciationRoute = DashboardPronunciationRouteImport.update({
@@ -114,6 +151,11 @@ const DashboardPronunciationRoute = DashboardPronunciationRouteImport.update({
 const DashboardPracticeRoute = DashboardPracticeRouteImport.update({
   id: '/practice',
   path: '/practice',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLessonsRoute = DashboardLessonsRouteImport.update({
+  id: '/lessons',
+  path: '/lessons',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardHomeRoute = DashboardHomeRouteImport.update({
@@ -136,16 +178,21 @@ const DashboardCoursesRoute = DashboardCoursesRouteImport.update({
   path: '/courses',
   getParentRoute: () => DashboardRoute,
 } as any)
-const ConversationConversationRoute =
-  ConversationConversationRouteImport.update({
-    id: '/conversation',
-    path: '/conversation',
-    getParentRoute: () => ConversationRoute,
-  } as any)
 const DashboardCoursesIndexRoute = DashboardCoursesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardCoursesRoute,
+} as any)
+const ConversationConversationIndexRoute =
+  ConversationConversationIndexRouteImport.update({
+    id: '/conversation/',
+    path: '/conversation/',
+    getParentRoute: () => ConversationRoute,
+  } as any)
+const SessionSessionSessionIdRoute = SessionSessionSessionIdRouteImport.update({
+  id: '/session/$sessionId',
+  path: '/session/$sessionId',
+  getParentRoute: () => SessionRoute,
 } as any)
 const DashboardCoursesCourseIdRoute =
   DashboardCoursesCourseIdRouteImport.update({
@@ -153,157 +200,211 @@ const DashboardCoursesCourseIdRoute =
     path: '/$courseId',
     getParentRoute: () => DashboardCoursesRoute,
   } as any)
+const ConversationConversationSessionIdRoute =
+  ConversationConversationSessionIdRouteImport.update({
+    id: '/conversation/$sessionId',
+    path: '/conversation/$sessionId',
+    getParentRoute: () => ConversationRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
-  '/conversation': typeof ConversationConversationRoute
   '/courses': typeof DashboardCoursesRouteWithChildren
   '/fluency': typeof DashboardFluencyRoute
   '/grammar': typeof DashboardGrammarRoute
   '/home': typeof DashboardHomeRoute
+  '/lessons': typeof DashboardLessonsRoute
   '/practice': typeof DashboardPracticeRoute
   '/pronunciation': typeof DashboardPronunciationRoute
+  '/settings': typeof DashboardSettingsRoute
   '/vocabulary': typeof DashboardVocabularyRoute
+  '/forgot-password': typeof LoginForgotPasswordRoute
+  '/login': typeof LoginLoginRoute
+  '/reset-password': typeof LoginResetPasswordRoute
+  '/signup': typeof LoginSignupRoute
+  '/verify': typeof LoginVerifyRoute
   '/about': typeof PublicAboutRoute
   '/blog': typeof PublicBlogRoute
-  '/forgot-password': typeof PublicForgotPasswordRoute
-  '/login': typeof PublicLoginRoute
+  '/features': typeof PublicFeaturesRoute
   '/pricing': typeof PublicPricingRoute
   '/privacy': typeof PublicPrivacyRoute
   '/refund': typeof PublicRefundRoute
-  '/signup': typeof PublicSignupRoute
   '/terms': typeof PublicTermsRoute
   '/': typeof PublicIndexRoute
+  '/conversation/$sessionId': typeof ConversationConversationSessionIdRoute
   '/courses/$courseId': typeof DashboardCoursesCourseIdRoute
+  '/session/$sessionId': typeof SessionSessionSessionIdRoute
+  '/conversation': typeof ConversationConversationIndexRoute
   '/courses/': typeof DashboardCoursesIndexRoute
 }
 export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
-  '/conversation': typeof ConversationConversationRoute
   '/fluency': typeof DashboardFluencyRoute
   '/grammar': typeof DashboardGrammarRoute
   '/home': typeof DashboardHomeRoute
+  '/lessons': typeof DashboardLessonsRoute
   '/practice': typeof DashboardPracticeRoute
   '/pronunciation': typeof DashboardPronunciationRoute
+  '/settings': typeof DashboardSettingsRoute
   '/vocabulary': typeof DashboardVocabularyRoute
+  '/forgot-password': typeof LoginForgotPasswordRoute
+  '/login': typeof LoginLoginRoute
+  '/reset-password': typeof LoginResetPasswordRoute
+  '/signup': typeof LoginSignupRoute
+  '/verify': typeof LoginVerifyRoute
   '/about': typeof PublicAboutRoute
   '/blog': typeof PublicBlogRoute
-  '/forgot-password': typeof PublicForgotPasswordRoute
-  '/login': typeof PublicLoginRoute
+  '/features': typeof PublicFeaturesRoute
   '/pricing': typeof PublicPricingRoute
   '/privacy': typeof PublicPrivacyRoute
   '/refund': typeof PublicRefundRoute
-  '/signup': typeof PublicSignupRoute
   '/terms': typeof PublicTermsRoute
   '/': typeof PublicIndexRoute
+  '/conversation/$sessionId': typeof ConversationConversationSessionIdRoute
   '/courses/$courseId': typeof DashboardCoursesCourseIdRoute
+  '/session/$sessionId': typeof SessionSessionSessionIdRoute
+  '/conversation': typeof ConversationConversationIndexRoute
   '/courses': typeof DashboardCoursesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_conversation': typeof ConversationRouteWithChildren
   '/_dashboard': typeof DashboardRouteWithChildren
+  '/_login': typeof LoginRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/_session': typeof SessionRouteWithChildren
   '/onboarding': typeof OnboardingRoute
-  '/_conversation/conversation': typeof ConversationConversationRoute
   '/_dashboard/courses': typeof DashboardCoursesRouteWithChildren
   '/_dashboard/fluency': typeof DashboardFluencyRoute
   '/_dashboard/grammar': typeof DashboardGrammarRoute
   '/_dashboard/home': typeof DashboardHomeRoute
+  '/_dashboard/lessons': typeof DashboardLessonsRoute
   '/_dashboard/practice': typeof DashboardPracticeRoute
   '/_dashboard/pronunciation': typeof DashboardPronunciationRoute
+  '/_dashboard/settings': typeof DashboardSettingsRoute
   '/_dashboard/vocabulary': typeof DashboardVocabularyRoute
+  '/_login/forgot-password': typeof LoginForgotPasswordRoute
+  '/_login/login': typeof LoginLoginRoute
+  '/_login/reset-password': typeof LoginResetPasswordRoute
+  '/_login/signup': typeof LoginSignupRoute
+  '/_login/verify': typeof LoginVerifyRoute
   '/_public/about': typeof PublicAboutRoute
   '/_public/blog': typeof PublicBlogRoute
-  '/_public/forgot-password': typeof PublicForgotPasswordRoute
-  '/_public/login': typeof PublicLoginRoute
+  '/_public/features': typeof PublicFeaturesRoute
   '/_public/pricing': typeof PublicPricingRoute
   '/_public/privacy': typeof PublicPrivacyRoute
   '/_public/refund': typeof PublicRefundRoute
-  '/_public/signup': typeof PublicSignupRoute
   '/_public/terms': typeof PublicTermsRoute
   '/_public/': typeof PublicIndexRoute
+  '/_conversation/conversation/$sessionId': typeof ConversationConversationSessionIdRoute
   '/_dashboard/courses/$courseId': typeof DashboardCoursesCourseIdRoute
+  '/_session/session/$sessionId': typeof SessionSessionSessionIdRoute
+  '/_conversation/conversation/': typeof ConversationConversationIndexRoute
   '/_dashboard/courses/': typeof DashboardCoursesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/onboarding'
-    | '/conversation'
     | '/courses'
     | '/fluency'
     | '/grammar'
     | '/home'
+    | '/lessons'
     | '/practice'
     | '/pronunciation'
+    | '/settings'
     | '/vocabulary'
-    | '/about'
-    | '/blog'
     | '/forgot-password'
     | '/login'
+    | '/reset-password'
+    | '/signup'
+    | '/verify'
+    | '/about'
+    | '/blog'
+    | '/features'
     | '/pricing'
     | '/privacy'
     | '/refund'
-    | '/signup'
     | '/terms'
     | '/'
+    | '/conversation/$sessionId'
     | '/courses/$courseId'
+    | '/session/$sessionId'
+    | '/conversation'
     | '/courses/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/onboarding'
-    | '/conversation'
     | '/fluency'
     | '/grammar'
     | '/home'
+    | '/lessons'
     | '/practice'
     | '/pronunciation'
+    | '/settings'
     | '/vocabulary'
-    | '/about'
-    | '/blog'
     | '/forgot-password'
     | '/login'
+    | '/reset-password'
+    | '/signup'
+    | '/verify'
+    | '/about'
+    | '/blog'
+    | '/features'
     | '/pricing'
     | '/privacy'
     | '/refund'
-    | '/signup'
     | '/terms'
     | '/'
+    | '/conversation/$sessionId'
     | '/courses/$courseId'
+    | '/session/$sessionId'
+    | '/conversation'
     | '/courses'
   id:
     | '__root__'
     | '/_conversation'
     | '/_dashboard'
+    | '/_login'
     | '/_public'
+    | '/_session'
     | '/onboarding'
-    | '/_conversation/conversation'
     | '/_dashboard/courses'
     | '/_dashboard/fluency'
     | '/_dashboard/grammar'
     | '/_dashboard/home'
+    | '/_dashboard/lessons'
     | '/_dashboard/practice'
     | '/_dashboard/pronunciation'
+    | '/_dashboard/settings'
     | '/_dashboard/vocabulary'
+    | '/_login/forgot-password'
+    | '/_login/login'
+    | '/_login/reset-password'
+    | '/_login/signup'
+    | '/_login/verify'
     | '/_public/about'
     | '/_public/blog'
-    | '/_public/forgot-password'
-    | '/_public/login'
+    | '/_public/features'
     | '/_public/pricing'
     | '/_public/privacy'
     | '/_public/refund'
-    | '/_public/signup'
     | '/_public/terms'
     | '/_public/'
+    | '/_conversation/conversation/$sessionId'
     | '/_dashboard/courses/$courseId'
+    | '/_session/session/$sessionId'
+    | '/_conversation/conversation/'
     | '/_dashboard/courses/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   ConversationRoute: typeof ConversationRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
+  LoginRoute: typeof LoginRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
+  SessionRoute: typeof SessionRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
 }
 
@@ -316,11 +417,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_session': {
+      id: '/_session'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof SessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public': {
       id: '/_public'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_login': {
+      id: '/_login'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_dashboard': {
@@ -351,13 +466,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicTermsRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/signup': {
-      id: '/_public/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof PublicSignupRouteImport
-      parentRoute: typeof PublicRoute
-    }
     '/_public/refund': {
       id: '/_public/refund'
       path: '/refund'
@@ -379,18 +487,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPricingRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/login': {
-      id: '/_public/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof PublicLoginRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/forgot-password': {
-      id: '/_public/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof PublicForgotPasswordRouteImport
+    '/_public/features': {
+      id: '/_public/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof PublicFeaturesRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/blog': {
@@ -407,11 +508,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAboutRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_login/verify': {
+      id: '/_login/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof LoginVerifyRouteImport
+      parentRoute: typeof LoginRoute
+    }
+    '/_login/signup': {
+      id: '/_login/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof LoginSignupRouteImport
+      parentRoute: typeof LoginRoute
+    }
+    '/_login/reset-password': {
+      id: '/_login/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof LoginResetPasswordRouteImport
+      parentRoute: typeof LoginRoute
+    }
+    '/_login/login': {
+      id: '/_login/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginLoginRouteImport
+      parentRoute: typeof LoginRoute
+    }
+    '/_login/forgot-password': {
+      id: '/_login/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof LoginForgotPasswordRouteImport
+      parentRoute: typeof LoginRoute
+    }
     '/_dashboard/vocabulary': {
       id: '/_dashboard/vocabulary'
       path: '/vocabulary'
       fullPath: '/vocabulary'
       preLoaderRoute: typeof DashboardVocabularyRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/settings': {
+      id: '/_dashboard/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/_dashboard/pronunciation': {
@@ -426,6 +569,13 @@ declare module '@tanstack/react-router' {
       path: '/practice'
       fullPath: '/practice'
       preLoaderRoute: typeof DashboardPracticeRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/lessons': {
+      id: '/_dashboard/lessons'
+      path: '/lessons'
+      fullPath: '/lessons'
+      preLoaderRoute: typeof DashboardLessonsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/_dashboard/home': {
@@ -456,19 +606,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCoursesRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/_conversation/conversation': {
-      id: '/_conversation/conversation'
-      path: '/conversation'
-      fullPath: '/conversation'
-      preLoaderRoute: typeof ConversationConversationRouteImport
-      parentRoute: typeof ConversationRoute
-    }
     '/_dashboard/courses/': {
       id: '/_dashboard/courses/'
       path: '/'
       fullPath: '/courses/'
       preLoaderRoute: typeof DashboardCoursesIndexRouteImport
       parentRoute: typeof DashboardCoursesRoute
+    }
+    '/_conversation/conversation/': {
+      id: '/_conversation/conversation/'
+      path: '/conversation'
+      fullPath: '/conversation'
+      preLoaderRoute: typeof ConversationConversationIndexRouteImport
+      parentRoute: typeof ConversationRoute
+    }
+    '/_session/session/$sessionId': {
+      id: '/_session/session/$sessionId'
+      path: '/session/$sessionId'
+      fullPath: '/session/$sessionId'
+      preLoaderRoute: typeof SessionSessionSessionIdRouteImport
+      parentRoute: typeof SessionRoute
     }
     '/_dashboard/courses/$courseId': {
       id: '/_dashboard/courses/$courseId'
@@ -477,15 +634,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCoursesCourseIdRouteImport
       parentRoute: typeof DashboardCoursesRoute
     }
+    '/_conversation/conversation/$sessionId': {
+      id: '/_conversation/conversation/$sessionId'
+      path: '/conversation/$sessionId'
+      fullPath: '/conversation/$sessionId'
+      preLoaderRoute: typeof ConversationConversationSessionIdRouteImport
+      parentRoute: typeof ConversationRoute
+    }
   }
 }
 
 interface ConversationRouteChildren {
-  ConversationConversationRoute: typeof ConversationConversationRoute
+  ConversationConversationSessionIdRoute: typeof ConversationConversationSessionIdRoute
+  ConversationConversationIndexRoute: typeof ConversationConversationIndexRoute
 }
 
 const ConversationRouteChildren: ConversationRouteChildren = {
-  ConversationConversationRoute: ConversationConversationRoute,
+  ConversationConversationSessionIdRoute:
+    ConversationConversationSessionIdRoute,
+  ConversationConversationIndexRoute: ConversationConversationIndexRoute,
 }
 
 const ConversationRouteWithChildren = ConversationRoute._addFileChildren(
@@ -510,8 +677,10 @@ interface DashboardRouteChildren {
   DashboardFluencyRoute: typeof DashboardFluencyRoute
   DashboardGrammarRoute: typeof DashboardGrammarRoute
   DashboardHomeRoute: typeof DashboardHomeRoute
+  DashboardLessonsRoute: typeof DashboardLessonsRoute
   DashboardPracticeRoute: typeof DashboardPracticeRoute
   DashboardPronunciationRoute: typeof DashboardPronunciationRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardVocabularyRoute: typeof DashboardVocabularyRoute
 }
 
@@ -520,8 +689,10 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardFluencyRoute: DashboardFluencyRoute,
   DashboardGrammarRoute: DashboardGrammarRoute,
   DashboardHomeRoute: DashboardHomeRoute,
+  DashboardLessonsRoute: DashboardLessonsRoute,
   DashboardPracticeRoute: DashboardPracticeRoute,
   DashboardPronunciationRoute: DashboardPronunciationRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardVocabularyRoute: DashboardVocabularyRoute,
 }
 
@@ -529,15 +700,31 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
 
+interface LoginRouteChildren {
+  LoginForgotPasswordRoute: typeof LoginForgotPasswordRoute
+  LoginLoginRoute: typeof LoginLoginRoute
+  LoginResetPasswordRoute: typeof LoginResetPasswordRoute
+  LoginSignupRoute: typeof LoginSignupRoute
+  LoginVerifyRoute: typeof LoginVerifyRoute
+}
+
+const LoginRouteChildren: LoginRouteChildren = {
+  LoginForgotPasswordRoute: LoginForgotPasswordRoute,
+  LoginLoginRoute: LoginLoginRoute,
+  LoginResetPasswordRoute: LoginResetPasswordRoute,
+  LoginSignupRoute: LoginSignupRoute,
+  LoginVerifyRoute: LoginVerifyRoute,
+}
+
+const LoginRouteWithChildren = LoginRoute._addFileChildren(LoginRouteChildren)
+
 interface PublicRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
   PublicBlogRoute: typeof PublicBlogRoute
-  PublicForgotPasswordRoute: typeof PublicForgotPasswordRoute
-  PublicLoginRoute: typeof PublicLoginRoute
+  PublicFeaturesRoute: typeof PublicFeaturesRoute
   PublicPricingRoute: typeof PublicPricingRoute
   PublicPrivacyRoute: typeof PublicPrivacyRoute
   PublicRefundRoute: typeof PublicRefundRoute
-  PublicSignupRoute: typeof PublicSignupRoute
   PublicTermsRoute: typeof PublicTermsRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
@@ -545,12 +732,10 @@ interface PublicRouteChildren {
 const PublicRouteChildren: PublicRouteChildren = {
   PublicAboutRoute: PublicAboutRoute,
   PublicBlogRoute: PublicBlogRoute,
-  PublicForgotPasswordRoute: PublicForgotPasswordRoute,
-  PublicLoginRoute: PublicLoginRoute,
+  PublicFeaturesRoute: PublicFeaturesRoute,
   PublicPricingRoute: PublicPricingRoute,
   PublicPrivacyRoute: PublicPrivacyRoute,
   PublicRefundRoute: PublicRefundRoute,
-  PublicSignupRoute: PublicSignupRoute,
   PublicTermsRoute: PublicTermsRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
@@ -558,10 +743,23 @@ const PublicRouteChildren: PublicRouteChildren = {
 const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
+interface SessionRouteChildren {
+  SessionSessionSessionIdRoute: typeof SessionSessionSessionIdRoute
+}
+
+const SessionRouteChildren: SessionRouteChildren = {
+  SessionSessionSessionIdRoute: SessionSessionSessionIdRoute,
+}
+
+const SessionRouteWithChildren =
+  SessionRoute._addFileChildren(SessionRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   ConversationRoute: ConversationRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
+  LoginRoute: LoginRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
+  SessionRoute: SessionRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport

@@ -22,7 +22,7 @@ function HomeComponent() {
 		<div className="container relative z-10 mx-auto max-w-5xl px-4">
 			<Hero />
 			<hr className="my-16 border-border/50 border-t md:my-24" />
-			<Features />
+			{/* <Features /> */}
 			{/* <UseCases /> */}
 			<Compare />
 			<Letter />

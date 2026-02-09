@@ -1,31 +1,32 @@
 {
-	"name": "@english.now/auth",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./src/index.ts"
-		},
-		"./*": {
-			"types": "./dist/*.d.ts",
-			"default": "./src/*.ts"
-		}
-	},
-	"type": "module",
-	"scripts": {
-		"build": "tsdown"
-	},
-	"devDependencies": {
-		"tsdown": "catalog:"
-	},
-	"peerDependencies": {
-		"typescript": "^5"
-	},
-	"dependencies": {
-		"better-auth": "catalog:",
-		"@better-auth/expo": "^1.3.28",
-		"dotenv": "catalog:",
-		"zod": "catalog:",
-		"@english.now/db": "workspace:*",
-		"@english.now/email": "workspace:*"
-	}
+  "name": "@english.now/auth",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "default": "./src/*.ts"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@better-auth/expo": "^1.3.28",
+    "@english.now/db": "workspace:*",
+    "@english.now/email": "workspace:*",
+    "@english.now/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  }
 }

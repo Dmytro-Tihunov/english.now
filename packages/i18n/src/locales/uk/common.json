@@ -1,0 +1,40 @@
+{
+  "app": {
+    "name": "English.now"
+  },
+  "actions": {
+    "continue": "Продовжити",
+    "back": "Назад",
+    "skip": "Пропустити",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "confirm": "Підтвердити",
+    "delete": "Видалити",
+    "edit": "Редагувати",
+    "close": "Закрити",
+    "getStarted": "Почати"
+  },
+  "errors": {
+    "required": "Це поле обов'язкове",
+    "generic": "Щось пішло не так",
+    "networkError": "Помилка мережі. Спробуйте ще раз."
+  },
+  "auth": {
+    "signIn": "Увійти",
+    "signUp": "Зареєструватися",
+    "signOut": "Вийти",
+    "forgotPassword": "Забули пароль?",
+    "resetPassword": "Скинути пароль",
+    "alreadyHaveAccount": "У мене вже є акаунт"
+  },
+  "nav": {
+    "home": "Головна",
+    "practice": "Практика",
+    "vocabulary": "Словник",
+    "lessons": "Уроки",
+    "settings": "Налаштування",
+    "pricing": "Ціни",
+    "about": "Про нас",
+    "features": "Можливості"
+  }
+}

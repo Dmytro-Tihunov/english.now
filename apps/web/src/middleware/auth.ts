@@ -9,8 +9,25 @@ export const authMiddleware = createMiddleware().server(
 				throw: true,
 			},
 		});
+
+		let profile = null;
+		if (session?.user?.id) {
+			const profileResponse = await fetch(
+				`${process.env.VITE_SERVER_URL}/api/profile`,
+				{
+					method: "GET",
+					headers: {
+						cookie: request.headers.get("cookie") || "",
+					},
+				},
+			);
+			if (profileResponse.ok) {
+				profile = await profileResponse.json();
+			}
+		}
+
 		return next({
-			context: { session },
+			context: { session, profile },
 		});
 	},
 );

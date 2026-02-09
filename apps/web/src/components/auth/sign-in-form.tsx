@@ -1,19 +1,20 @@
 import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { authClient } from "@/lib/auth-client";
-import Loader from "../loader";
+import Logo from "../logo";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-
 export default function SignInForm() {
 	const navigate = useNavigate({
 		from: "/",
 	});
-	const { isPending } = authClient.useSession();
-
+	const [showPassword, setShowPassword] = useState(false);
 	const form = useForm({
 		defaultValues: {
 			email: "",
@@ -33,6 +34,18 @@ export default function SignInForm() {
 						toast.success("Sign in successful");
 					},
 					onError: (error) => {
+						if (error.error.status === 403) {
+							authClient.sendVerificationEmail({
+								email: value.email,
+								callbackURL: `${window.location.origin}/home`,
+							});
+							navigate({
+								to: "/verify",
+								search: {
+									email: value.email,
+								},
+							});
+						}
 						toast.error(error.error.message || error.error.statusText);
 					},
 				},
@@ -46,33 +59,28 @@ export default function SignInForm() {
 		},
 	});
 
-	if (isPending) {
-		return <Loader />;
-	}
-
 	return (
-		<div
-			className="mx-auto mt-10 w-full max-w-sm rounded-3xl bg-white p-6"
+		<motion.div
+			initial={{ opacity: 0, y: 10 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.2, ease: "easeInOut", delay: 0.1 }}
+			className="mx-auto w-full max-w-sm rounded-3xl bg-white p-6"
 			style={{
 				boxShadow:
 					"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
 			}}
 		>
-			<Link to="/" className="flex items-center gap-3">
-				<div className="relative size-10 overflow-hidden rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
-					<img
-						className="absolute bottom-[-5px] h-full w-full object-contain"
-						src="/logo.svg"
-						alt="English Now Logo"
-						width={62}
-						height={62}
-					/>
-				</div>
-			</Link>
+			<Logo />
 			<div className="mt-4 mb-6">
 				<h1 className="mb-1 font-bold font-lyon text-3xl">Welcome Back</h1>
 				<p className="text-neutral-500 text-sm">
-					Sign in to your account to continue
+					Don't have an account?{" "}
+					<Link
+						to="/signup"
+						className="cursor-pointer text-lime-600 underline hover:text-lime-600/80"
+					>
+						Sign Up
+					</Link>
 				</p>
 			</div>
 			<div className="flex flex-col gap-3">
@@ -84,7 +92,12 @@ export default function SignInForm() {
 						boxShadow:
 							"0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgb(255, 255, 255, 1) inset, 0px 1px 2px 1px rgba(0, 0, 0, 0.06)",
 					}}
-					onClick={() => authClient.signIn.social({ provider: "google" })}
+					onClick={() =>
+						authClient.signIn.social({
+							provider: "google",
+							callbackURL: "http://localhost:3001/home",
+						})
+					}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +139,12 @@ export default function SignInForm() {
 							"0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgb(255, 255, 255, 1) inset, 0px 1px 2px 1px rgba(0, 0, 0, 0.06)",
 					}}
 					className="w-full cursor-pointer text-black hover:brightness-95"
-					onClick={() => authClient.signIn.social({ provider: "google" })}
+					onClick={() =>
+						authClient.signIn.social({
+							provider: "apple",
+							callbackURL: "http://localhost:3001/home",
+						})
+					}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +186,9 @@ export default function SignInForm() {
 					<form.Field name="email">
 						{(field) => (
 							<div className="space-y-2">
-								<Label htmlFor={field.name}>Email</Label>
+								<Label className="gap-0" htmlFor={field.name}>
+									Email<span className="text-rose-500">&nbsp;*</span>
+								</Label>
 								<Input
 									id={field.name}
 									name={field.name}
@@ -178,7 +198,7 @@ export default function SignInForm() {
 									onChange={(e) => field.handleChange(e.target.value)}
 								/>
 								{field.state.meta.errors.map((error) => (
-									<p key={error?.message} className="text-red-500">
+									<p key={error?.message} className="text-red-500 text-sm">
 										{error?.message}
 									</p>
 								))}
@@ -191,25 +211,40 @@ export default function SignInForm() {
 					<form.Field name="password">
 						{(field) => (
 							<div className="space-y-2">
-								<div className="flex justify-between">
-									<Label htmlFor={field.name}>Password</Label>
+								<div className="flex items-center justify-between">
+									<Label className="gap-0" htmlFor={field.name}>
+										Password <span className="text-rose-500">&nbsp;*</span>
+									</Label>
 									<Link
 										to="/forgot-password"
-										className="cursor-pointer text-lime-700 text-sm underline hover:text-lime-700/80"
+										className="cursor-pointer text-lime-600 text-sm hover:text-lime-600/80"
 									>
 										Forgot password?
 									</Link>
 								</div>
-								<Input
-									id={field.name}
-									name={field.name}
-									type="password"
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-								/>
+								<div className="relative">
+									<button
+										type="button"
+										onClick={() => setShowPassword(!showPassword)}
+										className="-translate-y-1/2 absolute top-1/2 right-0.5 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center gap-3 overflow-hidden whitespace-nowrap rounded-0 rounded-sm font-medium text-muted-foreground outline-none transition-all hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:hover:bg-accent/50 [&_svg]:pointer-events-none"
+									>
+										{showPassword ? (
+											<EyeIcon className="size-4" />
+										) : (
+											<EyeOffIcon className="size-4" />
+										)}
+									</button>
+									<Input
+										id={field.name}
+										name={field.name}
+										type={showPassword ? "text" : "password"}
+										value={field.state.value}
+										onBlur={field.handleBlur}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+								</div>
 								{field.state.meta.errors.map((error) => (
-									<p key={error?.message} className="text-red-500">
+									<p key={error?.message} className="text-red-500 text-sm">
 										{error?.message}
 									</p>
 								))}
@@ -220,26 +255,49 @@ export default function SignInForm() {
 
 				<form.Subscribe>
 					{(state) => (
-						<Button
+						<button
 							type="submit"
-							className="group flex h-9 w-full cursor-pointer items-center justify-center gap-1 whitespace-nowrap rounded-lg border-0 border-transparent bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] px-3 py-1 font-semibold text-slate-900 text-sm shadow-none transition duration-150 ease-in-out will-change-transform hover:bg-slate-100 hover:brightness-95 focus:shadow-none focus:outline-none focus-visible:shadow-none focus-visible:shadow-outline-indigo active:scale-97 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:text-white"
+							className="flex h-10 w-full cursor-pointer items-center justify-center rounded-lg border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] px-3 py-1 font-semibold text-lime-900 text-sm transition-all duration-150 ease-in-out hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={!state.canSubmit || state.isSubmitting}
 						>
-							{state.isSubmitting ? "Submitting..." : "Sign In"}
-						</Button>
+							{state.isSubmitting ? (
+								<svg
+									aria-hidden="true"
+									className="size-5 animate-spin"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+								>
+									<path
+										fill="currentColor"
+										d="M12 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1m0 15a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1m8.66-10a1 1 0 0 1-.366 1.366l-2.598 1.5a1 1 0 1 1-1-1.732l2.598-1.5A1 1 0 0 1 20.66 7M7.67 14.5a1 1 0 0 1-.367 1.366l-2.598 1.5a1 1 0 1 1-1-1.732l2.598-1.5a1 1 0 0 1 1.366.366M20.66 17a1 1 0 0 1-1.366.366l-2.598-1.5a1 1 0 0 1 1-1.732l2.598 1.5A1 1 0 0 1 20.66 17M7.67 9.5a1 1 0 0 1-1.367.366l-2.598-1.5a1 1 0 1 1 1-1.732l2.598 1.5A1 1 0 0 1 7.67 9.5"
+									/>
+								</svg>
+							) : (
+								"Sign In"
+							)}
+						</button>
 					)}
 				</form.Subscribe>
 			</form>
-
-			<div className="mt-4 text-center">
-				<Button
-					variant="link"
-					onClick={() => navigate({ to: "/signup" })}
-					className="cursor-pointer text-lime-700 hover:text-lime-700/80"
+			<p className="mt-4 text-center text-neutral-500 text-xs">
+				By creating or entering an account, you agree to the <br />
+				<Link
+					to="/terms"
+					target="_blank"
+					className="cursor-pointer text-lime-600 underline hover:text-lime-600/80"
 				>
-					Need an account? Sign Up
-				</Button>
-			</div>
-		</div>
+					Terms of Service
+				</Link>{" "}
+				and{" "}
+				<Link
+					to="/privacy"
+					target="_blank"
+					className="cursor-pointer text-lime-600 underline hover:text-lime-600/80"
+				>
+					Privacy Policy
+				</Link>
+				.
+			</p>
+		</motion.div>
 	);
 }

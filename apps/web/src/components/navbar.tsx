@@ -1,15 +1,21 @@
+import { useTranslation } from "@english.now/i18n";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import Logo from "@/components/logo";
 import { Button } from "./ui/button";
 
 export default function Navbar() {
+	const { t } = useTranslation("common");
 	const [isScrolled, setIsScrolled] = useState(false);
 
 	const _links = [
 		{
 			to: "/about",
 			label: "About",
+		},
+		{
+			to: "/features",
+			label: "Features",
 		},
 		{
 			to: "/pricing",
@@ -56,10 +62,10 @@ export default function Navbar() {
 						<Button
 							asChild
 							variant="ghost"
-							className="rounded-xl px-2.5 py-2 font-medium"
+							className="rounded-xl px-2.5 py-2 font-medium hover:bg-neutral-200/60"
 						>
 							<Link to="/login" className="text-sm">
-								Sign In
+								{t("auth.signIn")}
 							</Link>
 						</Button>
 						<Button
@@ -68,7 +74,11 @@ export default function Navbar() {
 							// className="rounded-xl bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] text-black text-sm"
 						>
 							<Link to="/signup">
-								Sign Up <span className="text-neutral-500 italic">- free</span>
+								{t("auth.signUp")}{" "}
+								<span className="text-neutral-500 text-sm">-</span>
+								<span className="font-lyon text-lg text-neutral-500 italic">
+									free
+								</span>
 							</Link>
 						</Button>
 					</div>

@@ -1,26 +1,38 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { env } from "@english.now/env/client";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import {
 	ArrowRight,
 	BookOpen,
 	Briefcase,
 	Check,
-	ChevronLeft,
 	Clock,
 	GraduationCap,
 	MessageCircle,
 	Plane,
-	Sparkles,
-	Star,
 	Target,
-	Trophy,
 	Users,
 	Zap,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import Logo from "@/components/logo";
+import NativeLanguageStep from "@/components/onboarding/nativelanguage-step";
+import PaywallStep from "@/components/onboarding/paywall-step";
+import SelectionStep from "@/components/onboarding/selection-step";
+import WelcomeStep from "@/components/onboarding/welcome-step";
 import { Button } from "@/components/ui/button";
+import { getProfile } from "@/functions/get-profile";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/onboarding")({
+	beforeLoad: async () => {
+		const profile = await getProfile();
+		if (profile?.isOnboardingCompleted) {
+			throw redirect({ to: "/home" });
+		}
+		return { profile };
+	},
 	component: OnboardingPage,
 });
 
@@ -33,6 +45,7 @@ type OnboardingData = {
 
 const STEPS = [
 	{ id: "welcome", title: "Welcome" },
+	{ id: "native-language", title: "Native Language" },
 	{ id: "level", title: "Your Level" },
 	{ id: "goal", title: "Your Goal" },
 	{ id: "time", title: "Daily Time" },
@@ -147,49 +160,6 @@ const FOCUS_AREAS = [
 	{ id: "pronunciation", name: "Pronunciation", icon: Zap },
 ];
 
-const PLANS = [
-	{
-		id: "weekly",
-		name: "Weekly",
-		price: 4.99,
-		period: "week",
-		features: [
-			"Unlimited AI conversations",
-			"Personalized learning path",
-			"Progress tracking",
-		],
-		popular: false,
-	},
-	{
-		id: "yearly",
-		name: "Yearly",
-		price: 59.99,
-		originalPrice: 259.48,
-		period: "year",
-		features: [
-			"Everything in Weekly",
-			"Save 77%",
-			"Priority support",
-			"Offline access",
-		],
-		popular: true,
-		badge: "Best Value",
-	},
-	{
-		id: "lifetime",
-		name: "Lifetime",
-		price: 149.99,
-		period: "once",
-		features: [
-			"Everything in Yearly",
-			"Pay once, own forever",
-			"All future updates",
-			"Premium support",
-		],
-		popular: false,
-	},
-];
-
 function OnboardingPage() {
 	const navigate = useNavigate();
 	const [currentStep, setCurrentStep] = useState(0);
@@ -201,6 +171,29 @@ function OnboardingPage() {
 	});
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [selectedPlan, setSelectedPlan] = useState("yearly");
+
+	const saveOnboardingMutation = useMutation({
+		mutationFn: async (input: {
+			nativeLanguage: string;
+			proficiencyLevel: string;
+			dailyGoal: number;
+			focusAreas: string[];
+			goal: string;
+			timezone: string;
+		}) => {
+			const response = await fetch(
+				`${env.VITE_SERVER_URL}/api/profile/onboarding`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					credentials: "include",
+					body: JSON.stringify(input),
+				},
+			);
+			if (!response.ok) throw new Error("Failed to save onboarding");
+			return response.json();
+		},
+	});
 
 	// Load saved progress from localStorage
 	useEffect(() => {
@@ -234,28 +227,45 @@ function OnboardingPage() {
 		}
 	}, [currentStep]);
 
-	const prevStep = useCallback(() => {
-		if (currentStep > 0) {
-			setIsAnimating(true);
-			setTimeout(() => {
-				setCurrentStep((prev) => prev - 1);
-				setIsAnimating(false);
-			}, 150);
+	const handleComplete = useCallback(async () => {
+		try {
+			await saveOnboardingMutation.mutateAsync({
+				nativeLanguage: "en", // Default, could be collected in onboarding
+				proficiencyLevel: data.level,
+				dailyGoal: Number.parseInt(data.time) || 15,
+				focusAreas: data.focus,
+				goal: data.goal,
+				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+			});
+
+			// Clear local progress
+			localStorage.removeItem("onboarding-progress");
+			localStorage.setItem("selected-plan", selectedPlan);
+
+			// Navigate to dashboard
+			navigate({ to: "/home" });
+		} catch (error) {
+			console.error("Failed to save onboarding:", error);
 		}
-	}, [currentStep]);
+	}, [navigate, selectedPlan, data, saveOnboardingMutation]);
 
-	const handleComplete = useCallback(() => {
-		// Save completion status
-		localStorage.setItem("onboarding-completed", "true");
-		localStorage.setItem("selected-plan", selectedPlan);
-		// Navigate to dashboard or signup
-		navigate({ to: "/home" });
-	}, [navigate, selectedPlan]);
+	const handleSkip = useCallback(async () => {
+		try {
+			await saveOnboardingMutation.mutateAsync({
+				nativeLanguage: "en",
+				proficiencyLevel: data.level || "beginner",
+				dailyGoal: Number.parseInt(data.time) || 15,
+				focusAreas: data.focus.length > 0 ? data.focus : ["speaking"],
+				goal: data.goal || "personal",
+				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+			});
 
-	const handleSkip = useCallback(() => {
-		localStorage.setItem("onboarding-completed", "true");
-		navigate({ to: "/home" });
-	}, [navigate]);
+			localStorage.removeItem("onboarding-progress");
+			navigate({ to: "/home" });
+		} catch (error) {
+			console.error("Failed to save onboarding:", error);
+		}
+	}, [navigate, data, saveOnboardingMutation]);
 
 	const toggleFocus = (focusId: string) => {
 		setData((prev) => ({
@@ -297,7 +307,7 @@ function OnboardingPage() {
 			{currentStep > 0 && currentStep < STEPS.length - 1 && (
 				<div className="fixed top-0 right-0 left-0 z-50 h-1 bg-neutral-200">
 					<div
-						className="h-full bg-lime-500 transition-all duration-500 ease-out"
+						className="h-full bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] transition-all duration-500 ease-out"
 						style={{ width: `${progressPercentage}%` }}
 					/>
 				</div>
@@ -305,8 +315,18 @@ function OnboardingPage() {
 
 			{/* Header */}
 			{currentStep > 0 && (
-				<header className="sticky top-0 z-40 bg-neutral-50/80 backdrop-blur-sm">
-					<div className="container mx-auto flex items-center justify-between px-4 py-4">
+				<header>
+					<div className="container relative z-10 mx-auto px-4">
+						<nav className="flex items-center justify-between py-5 md:grid-cols-5">
+							<div className="col-span-3 items-center gap-3 md:flex">
+								<Logo />
+							</div>
+							<div className="relative z-50 flex items-center justify-end gap-2">
+								<LanguageSwitcher className="h-9 rounded-xl" />
+							</div>
+						</nav>
+					</div>
+					{/* <div className="container mx-auto flex items-center justify-between px-4 py-4">
 						<button
 							type="button"
 							onClick={prevStep}
@@ -324,7 +344,7 @@ function OnboardingPage() {
 								Skip
 							</button>
 						)}
-					</div>
+					</div> */}
 				</header>
 			)}
 
@@ -337,9 +357,7 @@ function OnboardingPage() {
 					)}
 				>
 					{/* Welcome Step */}
-					{currentStep === 0 && (
-						<WelcomeStep onNext={nextStep} onSkip={handleSkip} />
-					)}
+					{currentStep === 0 && <WelcomeStep onNext={nextStep} />}
 
 					{/* Level Step */}
 					{currentStep === 1 && (
@@ -425,187 +443,8 @@ function OnboardingPage() {
 	);
 }
 
-// Welcome Step Component
-function WelcomeStep({
-	onNext,
-	onSkip,
-}: {
-	onNext: () => void;
-	onSkip: () => void;
-}) {
-	return (
-		<div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
-			<div className="mx-auto w-full max-w-md text-center">
-				{/* Logo/Icon */}
-				<div className="mx-auto mb-8 flex size-24 items-center justify-center rounded-3xl bg-radial from-[#EFFF9B] to-[#D8FF76] shadow-lg">
-					<span className="text-5xl">🎯</span>
-				</div>
-
-				<h1 className="mb-4 font-bold font-lyon text-4xl tracking-tight">
-					Learn English
-					<br />
-					<span className="bg-linear-to-r from-lime-600 to-emerald-600 bg-clip-text text-transparent">
-						The Smart Way
-					</span>
-				</h1>
-
-				<p className="mb-8 text-lg text-muted-foreground">
-					Practice speaking with AI, build vocabulary, and master grammar — all
-					personalized for you.
-				</p>
-
-				{/* Features */}
-				<div className="mb-8 space-y-3 text-left">
-					{[
-						{ icon: MessageCircle, text: "AI-powered conversations" },
-						{ icon: Target, text: "Personalized learning path" },
-						{ icon: Trophy, text: "Track your progress" },
-					].map((feature) => (
-						<div
-							key={feature.text}
-							className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-sm"
-						>
-							<div className="flex size-10 items-center justify-center rounded-lg bg-lime-100">
-								<feature.icon className="size-5 text-lime-600" />
-							</div>
-							<span className="font-medium">{feature.text}</span>
-						</div>
-					))}
-				</div>
-
-				<Button
-					size="lg"
-					className="en-button-gradient h-14 w-full rounded-2xl text-base"
-					onClick={onNext}
-				>
-					Get Started
-					<ArrowRight className="ml-2 size-5" />
-				</Button>
-
-				<button
-					type="button"
-					onClick={onSkip}
-					className="mt-4 text-muted-foreground text-sm transition-colors hover:text-foreground"
-				>
-					I already have an account
-				</button>
-			</div>
-		</div>
-	);
-}
-
-// Generic Selection Step Component
-function SelectionStep({
-	title,
-	subtitle,
-	options,
-	selected,
-	onSelect,
-	onNext,
-	canProceed,
-}: {
-	title: string;
-	subtitle: string;
-	options: Array<{
-		id: string;
-		name: string;
-		description: string;
-		icon?: string;
-		IconComponent?: React.ComponentType<{ className?: string }>;
-	}>;
-	selected: string;
-	onSelect: (id: string) => void;
-	onNext: () => void;
-	canProceed: boolean;
-}) {
-	return (
-		<div className="flex flex-1 flex-col px-4 py-8">
-			<div className="mx-auto w-full max-w-lg">
-				<div className="mb-8 text-center">
-					<h1 className="mb-2 font-bold font-lyon text-3xl tracking-tight">
-						{title}
-					</h1>
-					<p className="text-muted-foreground">{subtitle}</p>
-				</div>
-
-				<div className="space-y-3">
-					{options.map((option) => {
-						const isSelected = selected === option.id;
-						return (
-							<button
-								key={option.id}
-								type="button"
-								onClick={() => onSelect(option.id)}
-								className={cn(
-									"flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition-all",
-									isSelected
-										? "border-lime-500 bg-lime-50"
-										: "border-transparent bg-white hover:bg-neutral-50",
-								)}
-								style={
-									!isSelected
-										? {
-												boxShadow:
-													"0 0 0 1px rgba(0,0,0,.05),0 2px 4px rgba(0,0,0,.04)",
-											}
-										: undefined
-								}
-							>
-								<div
-									className={cn(
-										"flex size-12 shrink-0 items-center justify-center rounded-xl text-2xl",
-										isSelected
-											? "bg-radial from-[#EFFF9B] to-[#D8FF76]"
-											: "bg-neutral-100",
-									)}
-								>
-									{option.icon ? (
-										option.icon
-									) : option.IconComponent ? (
-										<option.IconComponent
-											className={cn(
-												"size-6",
-												isSelected ? "text-lime-700" : "text-neutral-600",
-											)}
-										/>
-									) : null}
-								</div>
-								<div className="flex-1">
-									<h3 className="font-semibold">{option.name}</h3>
-									<p className="text-muted-foreground text-sm">
-										{option.description}
-									</p>
-								</div>
-								<div
-									className={cn(
-										"flex size-6 items-center justify-center rounded-full border-2 transition-all",
-										isSelected
-											? "border-lime-500 bg-lime-500"
-											: "border-neutral-300",
-									)}
-								>
-									{isSelected && <Check className="size-4 text-white" />}
-								</div>
-							</button>
-						);
-					})}
-				</div>
-
-				<div className="mt-8">
-					<Button
-						size="lg"
-						className="en-button-gradient h-14 w-full rounded-2xl text-base"
-						disabled={!canProceed}
-						onClick={onNext}
-					>
-						Continue
-						<ArrowRight className="ml-2 size-5" />
-					</Button>
-				</div>
-			</div>
-		</div>
-	);
-}
+// Native Language Step Component
+<NativeLanguageStep />;
 
 // Focus Areas Step Component
 function FocusAreasStep({
@@ -623,10 +462,10 @@ function FocusAreasStep({
 		<div className="flex flex-1 flex-col px-4 py-8">
 			<div className="mx-auto w-full max-w-lg">
 				<div className="mb-8 text-center">
-					<h1 className="mb-2 font-bold font-lyon text-3xl tracking-tight">
+					<h1 className="mb-2 font-bold font-lyon text-4xl tracking-tight md:text-5xl">
 						What do you want to focus on?
 					</h1>
-					<p className="text-muted-foreground">
+					<p className="text-muted-foreground md:text-lg">
 						Select all that apply — you can change this later
 					</p>
 				</div>
@@ -680,10 +519,10 @@ function FocusAreasStep({
 					})}
 				</div>
 
-				<div className="mt-8">
+				<div className="mx-auto mt-8 max-w-md">
 					<Button
 						size="lg"
-						className="en-button-gradient h-14 w-full rounded-2xl text-base"
+						className="en-button-gradient h-14 w-full rounded-2xl text-base text-lime-900"
 						disabled={!canProceed}
 						onClick={onNext}
 					>
@@ -715,29 +554,31 @@ function PlanSummaryStep({
 		<div className="flex flex-1 flex-col items-center justify-center px-4 py-8">
 			<div className="mx-auto w-full max-w-md text-center">
 				{/* Success animation */}
-				<div className="relative mx-auto mb-6 size-24">
+				{/* <div className="relative mx-auto mb-6 flex size-16 justify-center">
 					<div className="absolute inset-0 animate-ping rounded-full bg-lime-200 opacity-75" />
 					<div className="relative flex size-24 items-center justify-center rounded-full bg-radial from-[#EFFF9B] to-[#D8FF76]">
 						<Sparkles className="size-10 text-lime-700" />
 					</div>
-				</div>
+				</div> */}
 
-				<h1 className="mb-2 font-bold font-lyon text-3xl tracking-tight">
+				<h1 className="mb-4 font-bold font-lyon text-4xl tracking-tight md:text-5xl">
 					Your Personal Plan is Ready!
 				</h1>
-				<p className="mb-8 text-muted-foreground">
+				<p className="text-muted-foreground md:text-lg">
 					Based on your preferences, we've created a custom learning path
 				</p>
 
 				{/* Summary Card */}
 				<div
-					className="mb-8 rounded-3xl bg-white p-6 text-left"
+					className="mt-8 mb-8 rounded-3xl bg-white p-6 text-left"
 					style={{
 						boxShadow:
 							"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04)",
 					}}
 				>
-					<h3 className="mb-4 font-semibold text-lg">Your Learning Profile</h3>
+					<h3 className="mb-4 font-bold font-lyon text-2xl tracking-tight">
+						Your Learning Profile
+					</h3>
 					<div className="space-y-4">
 						<div className="flex items-center justify-between border-b border-dashed pb-3">
 							<span className="text-muted-foreground">Current Level</span>
@@ -761,7 +602,7 @@ function PlanSummaryStep({
 				</div>
 
 				{/* Projection */}
-				<div className="mb-8 rounded-2xl bg-lime-50 p-4">
+				{/* <div className="mb-8 rounded-2xl bg-lime-50 p-4">
 					<div className="flex items-center justify-center gap-2 text-lime-700">
 						<Clock className="size-5" />
 						<span className="font-medium">
@@ -769,15 +610,15 @@ function PlanSummaryStep({
 							weeks
 						</span>
 					</div>
-				</div>
+				</div> */}
 
 				<Button
 					size="lg"
-					className="en-button-gradient h-14 w-full rounded-2xl text-base"
+					className="en-button-gradient h-14 w-full rounded-2xl text-base text-lime-900"
 					onClick={onNext}
 				>
 					Start Learning
-					<ArrowRight className="ml-2 size-5" />
+					<ArrowRight className="size-5" />
 				</Button>
 			</div>
 		</div>
@@ -785,168 +626,4 @@ function PlanSummaryStep({
 }
 
 // Paywall Step Component
-function PaywallStep({
-	selectedPlan,
-	onSelectPlan,
-	onComplete,
-	onSkip,
-}: {
-	selectedPlan: string;
-	onSelectPlan: (plan: string) => void;
-	onComplete: () => void;
-	onSkip: () => void;
-}) {
-	return (
-		<div className="flex flex-1 flex-col px-4 py-8">
-			<div className="mx-auto w-full max-w-2xl">
-				<div className="mb-8 text-center">
-					<h1 className="mb-2 font-bold font-lyon text-3xl tracking-tight">
-						Unlock Your Full Potential
-					</h1>
-					<p className="text-muted-foreground">
-						Join thousands of learners improving their English every day
-					</p>
-				</div>
-
-				{/* Social proof */}
-				<div className="mb-6 flex items-center justify-center gap-4">
-					<div className="-space-x-2 flex">
-						{[1, 2, 3, 4, 5].map((i) => (
-							<div
-								key={i}
-								className="flex size-8 items-center justify-center rounded-full border-2 border-white bg-linear-to-br from-lime-400 to-lime-600 text-white text-xs"
-							>
-								{String.fromCharCode(64 + i)}
-							</div>
-						))}
-					</div>
-					<div className="text-sm">
-						<span className="font-semibold">10,000+</span>
-						<span className="text-muted-foreground"> learners this month</span>
-					</div>
-				</div>
-
-				{/* Plans */}
-				<div className="mb-6 grid gap-4 md:grid-cols-3">
-					{PLANS.map((plan) => {
-						const isSelected = selectedPlan === plan.id;
-						return (
-							<button
-								key={plan.id}
-								type="button"
-								onClick={() => onSelectPlan(plan.id)}
-								className={cn(
-									"relative flex flex-col rounded-3xl border-2 p-5 text-left transition-all",
-									isSelected
-										? "border-lime-500"
-										: "border-transparent hover:border-neutral-200",
-									plan.popular && "md:-mt-4 md:mb-4",
-								)}
-								style={
-									plan.popular
-										? {
-												background:
-													"linear-gradient(180deg, #EFFF9B 0%, #D8FF76 60%, #C6F64D 100%)",
-											}
-										: {
-												background: "white",
-												boxShadow:
-													"0 0 0 1px rgba(0,0,0,.05),0 4px 8px rgba(0,0,0,.04)",
-											}
-								}
-							>
-								{plan.badge && (
-									<div className="-top-3 -translate-x-1/2 absolute left-1/2 rounded-full bg-black px-3 py-1 font-medium text-white text-xs">
-										{plan.badge}
-									</div>
-								)}
-								{plan.popular && (
-									<div className="mb-2 flex items-center gap-1 font-medium text-lime-800 text-sm">
-										<Star className="size-4" fill="currentColor" />
-										Most Popular
-									</div>
-								)}
-								<div className="mb-2">
-									<h3 className="font-bold text-lg">{plan.name}</h3>
-								</div>
-								<div className="mb-4 flex items-baseline gap-1">
-									<span className="font-bold text-3xl">${plan.price}</span>
-									<span className="text-muted-foreground text-sm">
-										/{plan.period}
-									</span>
-								</div>
-								{plan.originalPrice && (
-									<div className="mb-2 text-muted-foreground text-sm line-through">
-										${plan.originalPrice}/year
-									</div>
-								)}
-								<ul className="mt-auto space-y-2">
-									{plan.features.map((feature) => (
-										<li
-											key={feature}
-											className="flex items-center gap-2 text-sm"
-										>
-											<Check className="size-4 shrink-0 text-lime-600" />
-											{feature}
-										</li>
-									))}
-								</ul>
-								<div
-									className={cn(
-										"mt-4 flex size-6 items-center justify-center self-end rounded-full border-2 transition-all",
-										isSelected
-											? "border-lime-600 bg-lime-600"
-											: "border-neutral-300",
-									)}
-								>
-									{isSelected && <Check className="size-4 text-white" />}
-								</div>
-							</button>
-						);
-					})}
-				</div>
-
-				{/* CTA */}
-				<Button
-					size="lg"
-					className="en-button-gradient h-14 w-full rounded-2xl text-base"
-					onClick={onComplete}
-				>
-					Start 7-Day Free Trial
-					<ArrowRight className="ml-2 size-5" />
-				</Button>
-
-				<p className="mt-3 text-center text-muted-foreground text-xs">
-					Cancel anytime. No credit card required for trial.
-				</p>
-
-				{/* Skip option */}
-				<div className="mt-6 text-center">
-					<button
-						type="button"
-						onClick={onSkip}
-						className="text-muted-foreground text-sm underline transition-colors hover:text-foreground"
-					>
-						Continue with limited features
-					</button>
-				</div>
-
-				{/* Trust badges */}
-				<div className="mt-8 flex items-center justify-center gap-6 text-muted-foreground text-xs">
-					<span className="flex items-center gap-1">
-						<Check className="size-4" />
-						Secure payment
-					</span>
-					<span className="flex items-center gap-1">
-						<Check className="size-4" />
-						30-day money back
-					</span>
-					<span className="flex items-center gap-1">
-						<Check className="size-4" />
-						Cancel anytime
-					</span>
-				</div>
-			</div>
-		</div>
-	);
-}
+<PaywallStep />;

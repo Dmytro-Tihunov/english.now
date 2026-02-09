@@ -1,43 +1,25 @@
 import { Link } from "@tanstack/react-router";
 import { Languages, PlayIcon } from "lucide-react";
-import { motion } from "motion/react";
 import { useState } from "react";
+import DialogDemo from "../dialog-demo";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
+
 export default function Hero() {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<section className="relative pt-16">
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-w-4xl border-0 bg-transparent p-0 shadow-none">
-					<DialogTitle className="sr-only">Demo Video</DialogTitle>
-					<div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black">
-						<iframe
-							className="absolute inset-0 h-full w-full"
-							src={
-								open
-									? "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-									: ""
-							}
-							title="Demo Video"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-							allowFullScreen
-						/>
-					</div>
-				</DialogContent>
-			</Dialog>
-
+			<DialogDemo open={open} setOpen={setOpen} />
 			<div className="relative mx-auto flex flex-col lg:flex-row lg:items-center">
 				<div className="flex flex-1 flex-col items-start gap-6">
-					<h1 className="font-bold font-lyon text-5xl text-neutral-900 tracking-tight sm:text-5xl lg:text-6xl">
+					<h1 className="font-bold font-lyon text-5xl text-neutral-900 tracking-tight sm:text-5xl lg:text-6xl dark:text-white">
 						The last English learning app you <br />
 						will ever need.
 					</h1>
 
 					<p className="max-w-md text-lg text-muted-foreground leading-relaxed">
-						English Now is an AI-powered platform that helps you learn English
-						faster through personalized lessons, real conversations, and instant
+						AI-powered English learning app that helps you learn faster and
+						easier through personalized lessons, real conversations, and instant
 						feedback.
 					</p>
 
@@ -47,7 +29,12 @@ export default function Hero() {
 							asChild
 							className="relative inline-flex h-12 shrink-0 cursor-pointer items-center overflow-hidden whitespace-nowrap rounded-2xl bg-linear-to-t from-[#202020] to-[#2F2F2F] text-base text-white shadow-[inset_0_1px_4px_0_rgba(255,255,255,0.4)] outline-none transition-all hover:opacity-90 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40 has-[>svg]:px-2.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:from-[rgb(192,192,192)] dark:to-[rgb(255,255,255)] dark:shadow-[inset_0_1px_4px_0_rgba(128,128,128,0.2)] dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none"
 						>
-							<Link to="/login">Get started for free</Link>
+							<Link to="/login">
+								Get started
+								<span className="font-lyon text-neutral-500 text-xl italic">
+									for free
+								</span>
+							</Link>
 						</Button>
 						<Button
 							size="lg"
@@ -94,7 +81,7 @@ export default function Hero() {
 					/>
 
 					<div
-						className="relative bottom-0 left-6 z-20 flex h-[56%] w-[240px] flex-col overflow-hidden rounded-t-3xl border border-[#C6F64D] border-b-0 p-4 shadow-xl lg:absolute"
+						className="relative bottom-0 left-6 z-20 flex h-[56%] w-[240px] select-none flex-col overflow-hidden rounded-t-3xl border border-[#C6F64D] border-b-0 p-4 shadow-xl lg:absolute"
 						style={{
 							background:
 								"linear-gradient(45deg, white 70%, rgba(255,255,255,0.8) 100%)",
@@ -294,12 +281,12 @@ export default function Hero() {
 						</p>
 					</div>
 
-					<div className="relative z-10 ml-auto h-full w-[370px] max-w-sm overflow-hidden rounded-3xl border border-[#C6F64D] bg-white shadow-xl lg:absolute lg:top-8 lg:right-6">
-						<div className="border-neutral-100 border-b bg-neutral-50 px-4 py-3">
+					<div className="relative z-10 ml-auto h-full w-[370px] max-w-sm select-none overflow-hidden rounded-3xl border border-[#C6F64D] bg-white shadow-xl lg:absolute lg:top-8 lg:right-6">
+						<div className="border-border/50 border-b bg-neutral-50 px-4 py-3">
 							<div className="flex items-center gap-2">
 								<div className="relative size-8 overflow-hidden rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
 									<img
-										className="absolute bottom-[-3px] h-full w-full object-contain"
+										className="absolute bottom-[-4px] h-full w-full object-contain"
 										src="/logo.svg"
 										alt=""
 										width={32}

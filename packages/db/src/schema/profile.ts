@@ -1,5 +1,6 @@
 import {
-	index,
+	boolean,
+	integer,
 	jsonb,
 	pgTable,
 	text,
@@ -13,7 +14,30 @@ export const userProfile = pgTable("user_profile", {
 	userId: text("user_id")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
-	embedding: vector("embedding", { dimensions: 1536 }),
+	nativeLanguage: text("native_language"),
+	level: text("level"),
+	goal: text("goal"),
+	dailyGoal: integer("daily_goal"),
+	focusAreas: jsonb("focus_areas").$type<string[]>(),
+	interests: jsonb("interests").$type<string[]>(),
+	timezone: text("timezone"),
+	isOnboardingCompleted: boolean("is_onboarding_completed")
+		.notNull()
+		.default(false),
+	// Streak tracking
+	currentStreak: integer("current_streak").notNull().default(0),
+	longestStreak: integer("longest_streak").notNull().default(0),
+	lastActivityAt: timestamp("last_activity_at").notNull().defaultNow(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const userActivity = pgTable("user_activity", {
+	id: text("id").primaryKey(),
+	userId: text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	activityType: text("activity_type").notNull(),
+	completedAt: timestamp("completed_at").notNull().defaultNow(),
+	activityAt: timestamp("activity_at").notNull().defaultNow(),
 });

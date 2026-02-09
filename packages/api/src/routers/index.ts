@@ -1,5 +1,6 @@
 import { protectedProcedure, publicProcedure, router } from "../index";
 import { conversationRouter } from "./conversation";
+import { profileRouter } from "./profile";
 import { pronunciationRouter } from "./pronunciation";
 
 export const appRouter = router({
@@ -14,5 +15,6 @@ export const appRouter = router({
 	}),
 	pronunciation: pronunciationRouter,
 	conversation: conversationRouter,
+	profile: profileRouter,
 });
 export type AppRouter = typeof appRouter;

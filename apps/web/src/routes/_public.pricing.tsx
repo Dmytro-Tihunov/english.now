@@ -29,7 +29,7 @@ const _plans = [
 	{
 		name: "Monthly",
 		description: "For teams and businesses.",
-		price: 10,
+		price: 12,
 		isPopular: true,
 		duration: "month",
 		features: [
@@ -99,16 +99,16 @@ function PricingPage() {
 		<div className="relative">
 			<div className="container relative mx-auto max-w-5xl px-4 py-16">
 				<div className="mb-16 text-center">
-					<h1 className="mb-4 font-bold font-lyon text-5xl text-neutral-900 tracking-tight sm:text-5xl lg:text-6xl">
-						Choose your path to English fluency
+					<h1 className="mb-4 font-bold font-lyon text-5xl text-neutral-950 leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+						Which plan is right for you?
+						<br />
+						<span className="text-neutral-500">Use our 7 day free trial.</span>
 					</h1>
-					<p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-						Start free and upgrade when you're ready. All plans include access
-						to our AI-powered learning tools.
-					</p>
+					{/* All plans include access
+						to our AI-powered learning tools. */}
 				</div>
 
-				<div className="relative flex w-full flex-row items-end justify-between gap-6">
+				<div className="relative flex w-full flex-row items-end justify-between gap-3">
 					{_plans.map((_plan) => {
 						const card = (
 							<div
@@ -128,7 +128,7 @@ function PricingPage() {
 												{_plan.name}
 											</span>
 											{_plan.duration === "year" && (
-												<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-2 py-2.5 font-medium text-black text-sm normal-case tracking-normal md:py-[0.175rem] md:text-xs">
+												<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-2.5 py-3 font-semibold text-black text-sm normal-case tracking-normal md:py-[0.175rem] md:text-xs">
 													Save 20%
 												</span>
 											)}
@@ -197,7 +197,9 @@ function PricingPage() {
 										</div>
 									</div>
 								) : (
-									card
+									<div className="relative">
+										<div className="p-2">{card}</div>
+									</div>
 								)}
 							</div>
 						);
@@ -205,10 +207,10 @@ function PricingPage() {
 				</div>
 
 				{/* FAQs Section */}
-				<div className="mx-auto max-w-3xl pb-32 sm:mt-20">
+				<div className="mx-auto max-w-3xl sm:mt-20">
 					<div className="mb-10 text-center">
 						<h2 className="mb-2 font-bold font-lyon text-5xl tracking-tight md:text-5xl">
-							Frequently Asked Questions
+							FAQs
 						</h2>
 						<p className="text-lg text-muted-foreground">
 							Everything you need to know about our pricing and plans.

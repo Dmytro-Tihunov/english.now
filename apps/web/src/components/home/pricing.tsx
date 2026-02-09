@@ -1,7 +1,21 @@
-import { CheckIcon, StarIcon } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { CheckIcon, Loader2, StarIcon } from "lucide-react";
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { openCheckout } from "@/lib/paddle";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
+
+const PADDLE_PRICE_IDS = {
+	monthly: import.meta.env.VITE_PADDLE_PRICE_MONTHLY ?? "",
+	yearly: import.meta.env.VITE_PADDLE_PRICE_YEARLY ?? "",
+} as const;
+
 export function Pricing() {
+	const [isLoading, setIsLoading] = useState(false);
+	const navigate = useNavigate();
+	const { data: session } = authClient.useSession();
+
 	const _plans = [
 		{
 			name: "Free",
@@ -9,6 +23,7 @@ export function Pricing() {
 			price: 0,
 			isPopular: false,
 			duration: "forever",
+			paddlePriceId: null as string | null,
 			features: [
 				"1 AI conversations per day",
 				"Basic grammar lessons",
@@ -19,9 +34,10 @@ export function Pricing() {
 		{
 			name: "Monthly",
 			description: "For teams and businesses.",
-			price: 10,
+			price: 12,
 			isPopular: true,
 			duration: "month",
+			paddlePriceId: PADDLE_PRICE_IDS.monthly,
 			features: [
 				"Unlimited AI conversations",
 				"Advanced AI feedback",
@@ -36,6 +52,7 @@ export function Pricing() {
 			price: 100,
 			isPopular: false,
 			duration: "year",
+			paddlePriceId: PADDLE_PRICE_IDS.yearly,
 			features: [
 				"Unlimited AI conversations",
 				"Advanced AI feedback",
@@ -45,6 +62,30 @@ export function Pricing() {
 			],
 		},
 	];
+
+	async function handlePlanClick(plan: (typeof _plans)[number]) {
+		setIsLoading(true);
+		// Free plan — just go to signup
+		if (!plan.paddlePriceId) {
+			navigate({ to: "/signup" });
+			return;
+		}
+
+		// If not logged in, redirect to signup first
+		if (!session?.user) {
+			navigate({ to: "/signup" });
+			return;
+		}
+
+		// Open Paddle checkout overlay
+		await openCheckout({
+			priceId: plan.paddlePriceId,
+			userId: session.user.id,
+			email: session.user.email,
+		}).finally(() => {
+			setIsLoading(false);
+		});
+	}
 	return (
 		<div className="group mx-auto sm:mt-24">
 			<div className="mb-14 text-center">
@@ -55,7 +96,7 @@ export function Pricing() {
 					Choose the plan that's right for you.
 				</p>
 			</div>
-			<div className="relative flex w-full flex-row items-end justify-between gap-6">
+			<div className="relative flex w-full flex-row items-end justify-between gap-3">
 				{_plans.map((_plan) => {
 					const card = (
 						<div
@@ -75,7 +116,7 @@ export function Pricing() {
 											{_plan.name}
 										</span>
 										{_plan.duration === "year" && (
-											<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-2 py-2.5 font-medium text-black text-sm normal-case tracking-normal md:py-[0.175rem] md:text-xs">
+											<span className="inline-block rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-2.5 py-3 font-semibold text-black text-sm normal-case tracking-normal md:py-[0.175rem] md:text-xs">
 												Save 20%
 											</span>
 										)}
@@ -95,14 +136,23 @@ export function Pricing() {
 							</div>
 							<div className="relative z-10 my-6 flex items-center gap-4">
 								<Button
+									disabled={isLoading}
 									variant={_plan.isPopular ? "default" : "outline"}
+									onClick={() => handlePlanClick(_plan)}
 									className={cn(
-										"inline-flex w-full cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+										"inline-flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-4 py-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
 										_plan.isPopular
-											? "bg-linear-to-t from-[#202020] to-[#2F2F2F] text-white shadow-[inset_0_1px_4px_0_rgba(255,255,255,0.4)] outline-none transition-all hover:opacity-90 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40 has-[>svg]:px-2.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:from-[rgb(192,192,192)] dark:to-[rgb(255,255,255)] dark:shadow-[inset_0_1px_4px_0_rgba(128,128,128,0.2)] dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none"
-											: "border border-border/50 bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+											? "h-9 bg-linear-to-t from-[#202020] to-[#2F2F2F] text-white shadow-[inset_0_1px_4px_0_rgba(255,255,255,0.4)] outline-none transition-all hover:opacity-90 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:shadow-[inset_0_1px_4px_0_rgba(128,128,128,0.2)] [&_svg]:pointer-events-none"
+											: "h-9 border border-border/50 bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
 									)}
 								>
+									{isLoading ? (
+										<Loader2 className="size-4 animate-spin" />
+									) : _plan.price > 0 ? (
+										"Start 7-day trial"
+									) : (
+										"Get started"
+									)}
 									{_plan.price > 0 ? "Start 7-day trial" : "Get started"}
 								</Button>
 							</div>
@@ -144,7 +194,9 @@ export function Pricing() {
 									</div>
 								</div>
 							) : (
-								card
+								<div className="relative">
+									<div className="p-2">{card}</div>
+								</div>
 							)}
 						</div>
 					);

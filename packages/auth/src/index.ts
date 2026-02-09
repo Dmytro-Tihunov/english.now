@@ -1,7 +1,8 @@
 import { expo } from "@better-auth/expo";
-import { db } from "@english.now/db";
+import { db, userProfile } from "@english.now/db";
 import * as schema from "@english.now/db/schema/auth";
 import { sendEmail } from "@english.now/email";
+import { env } from "@english.now/env/server";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
@@ -10,13 +11,34 @@ export const auth = betterAuth<BetterAuthOptions>({
 		provider: "pg",
 		schema: schema,
 	}),
-	trustedOrigins: [process.env.CORS_ORIGIN || "", "mybettertapp://", "exp://"],
+	databaseHooks: {
+		user: {
+			create: {
+				after: async (user) => {
+					await db
+						.insert(userProfile)
+						.values({
+							id: crypto.randomUUID(),
+							userId: user.id as string,
+						})
+						.onConflictDoNothing();
+				},
+			},
+		},
+	},
+	trustedOrigins: [
+		env.CORS_ORIGIN,
+		"mybettertapp://",
+		"exp://",
+		"https://appleid.apple.com",
+	],
 	emailAndPassword: {
 		enabled: true,
+		requireEmailVerification: true,
 		sendResetPassword: async ({ user, url }) => {
 			void sendEmail({
 				to: user.email,
-				templateId: process.env.AUTOSEND_RESET_PASSWORD_TEMPLATE_ID || "",
+				templateId: env.AUTOSEND_RESET_PASSWORD_TEMPLATE_ID,
 				dynamicData: {
 					url,
 					name: user.name,
@@ -25,22 +47,26 @@ export const auth = betterAuth<BetterAuthOptions>({
 		},
 	},
 	emailVerification: {
-		// autoSignInAfterVerification: true,
-		// sendVerificationEmail: async ({ user, url }) => {
-		// 	void sendEmail({
-		// 		to: user.email,
-		// 		templateId: process.env.AUTOSEND_VERIFY_EMAIL_TEMPLATE_ID || "",
-		// 		variables: {
-		// 			url,
-		// 			name: user.name,
-		// 		},
-		// 	});
-		// },
+		autoSignInAfterVerification: true,
+		sendVerificationEmail: async ({ user, url }) => {
+			void sendEmail({
+				to: user.email,
+				templateId: env.AUTOSEND_VERIFY_EMAIL_TEMPLATE_ID,
+				dynamicData: {
+					url,
+					name: user.name,
+				},
+			});
+		},
 	},
 	socialProviders: {
 		google: {
-			clientId: process.env.GOOGLE_CLIENT_ID || "",
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+			clientId: env.GOOGLE_CLIENT_ID,
+			clientSecret: env.GOOGLE_CLIENT_SECRET,
+		},
+		apple: {
+			clientId: env.APPLE_CLIENT_ID ?? "",
+			clientSecret: env.APPLE_CLIENT_SECRET ?? "",
 		},
 	},
 	advanced: {

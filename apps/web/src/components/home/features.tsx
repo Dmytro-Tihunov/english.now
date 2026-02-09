@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import { GrammarIcon } from "../icons/grammar";
 import { SpeakingIcon } from "../icons/speaking";
 import { VocabularyIcon } from "../icons/vocabulary";
@@ -53,22 +54,10 @@ function PracticeDemo() {
 	}, []);
 
 	return (
-		<div className="absolute right-0 bottom-0 left-0 h-[250px]">
-			<motion.div
-				initial={{ y: 20, opacity: 0 }}
-				animate={{ y: 0, opacity: 1 }}
-				transition={{ duration: 0.5 }}
-				className="relative z-10 flex h-full flex-col rounded-xl bg-white p-4"
-				style={{
-					boxShadow:
-						"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
-				}}
-			>
+		<div className="">
+			<div className="relative z-10 flex flex-col rounded-3xl bg-white p-6">
 				{/* Question */}
 				<div className="mb-3">
-					<span className="mb-1 block font-medium text-neutral-400 text-xs uppercase tracking-wider">
-						Fill in the blank
-					</span>
 					<p className="font-medium text-neutral-800">
 						She{" "}
 						<span className="inline-flex min-w-[60px] items-center justify-center rounded-lg border-2 border-[#C6F64D] border-dashed bg-[#F5FFE0] px-2 py-0.5">
@@ -151,7 +140,7 @@ function PracticeDemo() {
 						</motion.div>
 					)}
 				</AnimatePresence>
-			</motion.div>
+			</div>
 		</div>
 	);
 }
@@ -194,31 +183,13 @@ function ReviewMistakesDemo() {
 	}, []);
 
 	return (
-		<div className="absolute right-0 bottom-0 left-0 h-[250px]">
+		<div className="">
 			<motion.div
 				initial={{ y: 20, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
 				transition={{ duration: 0.5 }}
-				className="relative z-10 flex h-full flex-col rounded-xl bg-white p-4"
-				style={{
-					boxShadow:
-						"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
-				}}
+				className="relative z-10 flex h-full flex-col"
 			>
-				{/* Header */}
-				<div className="mb-3 flex items-center justify-between">
-					<span className="font-medium text-neutral-400 text-xs uppercase tracking-wider">
-						Your mistakes
-					</span>
-					<motion.div
-						initial={{ scale: 0 }}
-						animate={{ scale: step >= 1 ? 1 : 0 }}
-						className="flex items-center gap-1.5 rounded-full bg-amber-100 px-2 py-0.5"
-					>
-						<span className="text-amber-700 text-xs">2 to review</span>
-					</motion.div>
-				</div>
-
 				{/* Mistake cards */}
 				<div className="flex flex-1 flex-col gap-2">
 					{mistakes.map((mistake, i) => (
@@ -230,7 +201,10 @@ function ReviewMistakesDemo() {
 								opacity: step >= i + 1 ? 1 : 0,
 							}}
 							transition={{ duration: 0.4, type: "spring" }}
-							className="relative rounded-lg border border-neutral-100 bg-neutral-50 p-3"
+							className="relative rounded-lg border border-neutral-100 bg-white p-3"
+							style={{
+								boxShadow: "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+							}}
 						>
 							{/* Error type badge */}
 							<motion.span
@@ -299,23 +273,6 @@ function ReviewMistakesDemo() {
 						</motion.div>
 					))}
 				</div>
-
-				{/* Progress indicator */}
-				<motion.div
-					initial={{ opacity: 0 }}
-					animate={{ opacity: step >= 4 ? 1 : 0 }}
-					className="mt-2 flex items-center justify-center gap-2"
-				>
-					<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
-						<motion.div
-							className="h-full rounded-full bg-[#C6F64D]"
-							initial={{ width: "0%" }}
-							animate={{ width: step >= 4 ? "100%" : "0%" }}
-							transition={{ duration: 0.8 }}
-						/>
-					</div>
-					<span className="text-neutral-400 text-xs">Reviewed!</span>
-				</motion.div>
 			</motion.div>
 		</div>
 	);
@@ -341,43 +298,13 @@ function GetFeedbackDemo() {
 	}, []);
 
 	return (
-		<div className="absolute right-0 bottom-0 left-0 h-[250px]">
+		<div>
 			<motion.div
 				initial={{ y: 20, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
 				transition={{ duration: 0.5 }}
-				className="relative z-10 flex h-full flex-col rounded-xl bg-white p-4"
-				style={{
-					boxShadow:
-						"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
-				}}
+				className="relative z-10 flex h-full flex-col"
 			>
-				{/* Header */}
-				<div className="mb-3 flex items-center gap-2">
-					<motion.div
-						animate={{
-							scale: step >= 2 ? [1, 1.2, 1] : 1,
-						}}
-						transition={{ duration: 0.3 }}
-						className="flex h-6 w-6 items-center justify-center rounded-full bg-[#C6F64D]"
-					>
-						<svg
-							width="14"
-							height="14"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="#2d4a00"
-							strokeWidth="2.5"
-							aria-hidden="true"
-						>
-							<path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-						</svg>
-					</motion.div>
-					<span className="font-medium text-neutral-400 text-xs uppercase tracking-wider">
-						AI Feedback
-					</span>
-				</div>
-
 				{/* User text with highlighted error */}
 				<motion.div
 					initial={{ opacity: 0 }}
@@ -490,7 +417,10 @@ function GetFeedbackDemo() {
 							animate={{ y: 0, opacity: 1, scale: 1 }}
 							exit={{ y: -10, opacity: 0 }}
 							transition={{ type: "spring", stiffness: 300, damping: 25 }}
-							className="flex items-start gap-3 rounded-lg border border-[#C6F64D]/30 bg-[#F5FFE0] p-3"
+							className="flex items-start gap-3 rounded-lg border bg-white p-3"
+							style={{
+								boxShadow: "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+							}}
 						>
 							<motion.div
 								initial={{ rotate: -180, opacity: 0 }}
@@ -563,8 +493,8 @@ export function Features() {
 	const _features = [
 		{
 			id: "grammar",
-			icon: GrammarIcon,
-			title: "Practice",
+			icon: SpeakingIcon,
+			title: "Practice speaking",
 			description:
 				"Master rules with interactive exercises and instant feedback",
 			demo: PracticeDemo,
@@ -578,7 +508,7 @@ export function Features() {
 		},
 		{
 			id: "mistakes",
-			icon: SpeakingIcon,
+			icon: GrammarIcon,
 			title: "Review mistakes",
 			description: "Track and learn from your errors to improve faster",
 			demo: ReviewMistakesDemo,
@@ -587,28 +517,51 @@ export function Features() {
 
 	return (
 		<div className="relative mx-auto md:mt-24">
-			<div
-				className="rounded-3xl border border-border/50 bg-neutral-50 px-6 pt-8 pb-6"
-				style={{
-					boxShadow:
-						"rgba(162, 166, 171, 0.2) 0px 0px 0px 0px inset, rgba(162, 166, 171, 0.2) 0px 0px 8px 2px inset",
-				}}
-			>
+			<div>
 				<h1 className="mb-10 text-left font-bold font-lyon text-4xl tracking-tight md:text-5xl">
 					English learning is broken.
 					<br />
 					We are here to fix it for you
 				</h1>
-				<div className="relative grid min-h-[300px] grid-cols-1 gap-4 md:grid-cols-3">
+
+				<div className="relative grid grid-cols-1 gap-6 md:grid-cols-3">
 					{_features.map((feature, _i) => (
-						<div key={feature.id} className="relative">
-							<div className="z-10 flex items-center gap-2">
+						<div
+							className={cn(
+								"rounded-3xl border border-border/50 bg-neutral-50 px-6 py-5",
+								feature.id === "grammar" ? "col-span-2" : "",
+							)}
+							style={{
+								boxShadow:
+									"rgba(162, 166, 171, 0.2) 0px 0px 0px 0px inset, rgba(162, 166, 171, 0.2) 0px 0px 8px 2px inset",
+							}}
+							key={feature.id}
+						>
+							<div className={cn("z-10 mb-4 flex items-center gap-2")}>
 								<feature.icon />
-								<h2 className="mt-2 font-bold font-lyon text-2xl">
+								<h2 className="font-bold font-lyon text-2xl">
 									{feature.title}
 								</h2>
+
+								{/* <p className="text-muted-foreground text-sm">
+									{feature.description}
+								</p> */}
 							</div>
-							<feature.demo />
+							<div
+								key={feature.id}
+								className="relative flex min-h-[240px] items-end"
+								// style={{
+								// 	boxShadow:
+								// 		"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+								// }}
+							>
+								<feature.demo />
+								{/* <img
+									src="/profile-bg-gradient2.svg"
+									alt="Feature 1"
+									className="absolute right-0 bottom-0 h-full w-full object-cover"
+								/> */}
+							</div>
 						</div>
 					))}
 				</div>

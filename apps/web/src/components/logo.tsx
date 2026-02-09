@@ -2,8 +2,8 @@ import { Link } from "@tanstack/react-router";
 
 export default function Logo() {
 	return (
-		<Link to="/" className="flex items-center gap-3">
-			<div className="relative size-9.5 overflow-hidden rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
+		<Link to="/" className="inline-block">
+			<div className="relative size-9 overflow-hidden rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
 				<svg
 					className="absolute bottom-[-5px] h-full w-full object-contain"
 					width="147"

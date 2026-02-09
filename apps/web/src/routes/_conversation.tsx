@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { Check, Loader2, SettingsIcon, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
 	Popover,
@@ -72,21 +73,11 @@ function ConversationLayout() {
 	return (
 		<div className="flex h-dvh w-full bg-neutral-50 dark:bg-neutral-900">
 			<main className="relative flex h-full w-full flex-1 flex-col overflow-auto">
-				<div className="border-black/5 border-b dark:bg-neutral-900">
+				<div className="sticky border-black/5 border-b dark:bg-neutral-900">
 					<div className="container relative z-10 mx-auto max-w-3xl px-4">
 						<nav className="flex grid-cols-2 items-center justify-between py-5 md:grid-cols-5">
 							<div className="items-center gap-2 md:flex">
-								<Link to="/home" className="flex items-center gap-3">
-									<div className="relative size-9.5 overflow-hidden rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
-										<img
-											className="absolute bottom-[-5px] h-full w-full object-contain"
-											src="/logo.svg"
-											alt="English Now Logo"
-											width={62}
-											height={62}
-										/>
-									</div>
-								</Link>
+								<Logo />
 
 								{/* <div className="flex flex-col">
 									<div className="font-medium text-sm">Practice Session</div>
@@ -180,13 +171,6 @@ function ConversationLayout() {
 										</div>
 									</PopoverContent>
 								</Popover>
-								<Button
-									variant="outline"
-									size="icon"
-									className="size-10 rounded-xl border-0 bg-[#EF4444] text-white text-xs"
-								>
-									<X className="size-4" />
-								</Button>
 							</div>
 						</nav>
 					</div>

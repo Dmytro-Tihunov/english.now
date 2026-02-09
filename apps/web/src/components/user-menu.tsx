@@ -86,15 +86,6 @@ export default function UserMenu() {
 						Settings
 					</Button>
 				</DropdownMenuItem>
-				{/* <DropdownMenuItem asChild>
-          <Link to="/profile">Profile</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/billing">Billing</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/logout">Logout</Link>
-        </DropdownMenuItem> */}
 				<DropdownMenuItem asChild>
 					<Button
 						variant="destructive"

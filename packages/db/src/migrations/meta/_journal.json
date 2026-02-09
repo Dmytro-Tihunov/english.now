@@ -15,6 +15,34 @@
       "when": 1767907262573,
       "tag": "0001_complete_stick",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769374812252,
+      "tag": "0002_amusing_jigsaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1769377306954,
+      "tag": "0003_ancient_lucky_pierre",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1769553156534,
+      "tag": "0004_lethal_rhino",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1770655296268,
+      "tag": "0005_modern_vermin",
+      "breakpoints": true
     }
   ]
 }
