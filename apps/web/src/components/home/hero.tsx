@@ -81,7 +81,7 @@ export default function Hero() {
 					/>
 
 					<div
-						className="relative bottom-0 left-6 z-20 flex h-[56%] w-[240px] select-none flex-col overflow-hidden rounded-t-3xl border border-[#C6F64D] border-b-0 p-4 shadow-xl lg:absolute"
+						className="relative bottom-0 left-6 z-20 flex h-[55%] w-[240px] select-none flex-col overflow-hidden rounded-t-3xl border border-[#C6F64D] border-b-0 p-4 shadow-xl lg:absolute"
 						style={{
 							background:
 								"linear-gradient(45deg, white 70%, rgba(255,255,255,0.8) 100%)",
@@ -250,15 +250,15 @@ export default function Hero() {
                 </filter>
               </defs>
             </svg> */}
-						<div className="relative mb-1 flex items-center gap-1.5">
+						<div className="relative mb-0.5 flex items-center gap-1.5">
 							<span className="font-semibold text-sm">Feedback</span>{" "}
-							<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-1.5 py-1.5 font-medium text-black text-sm normal-case tracking-normal md:py-[0.175rem] md:text-xs">
+							<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-1.5 py-0.5 font-medium text-black text-sm normal-case tracking-normal md:py-[0.165rem] md:text-xs">
 								AI
 							</span>
 						</div>
 
 						<p className="text-neutral-900 text-sm">
-							Here's your feedback:
+							<span className="font-medium text-xs">Here's your feedback:</span>
 							<div className="mt-3 flex flex-col divide-neutral-200">
 								<div className="relative h-[48px]">
 									<span className="absolute top-0 rounded-t-md bg-[#D8FF76] px-1.5 py-0.5 font-semibold text-lime-700 text-xs">
@@ -282,7 +282,7 @@ export default function Hero() {
 					</div>
 
 					<div className="relative z-10 ml-auto h-full w-[370px] max-w-sm select-none overflow-hidden rounded-3xl border border-[#C6F64D] bg-white shadow-xl lg:absolute lg:top-8 lg:right-6">
-						<div className="border-border/50 border-b bg-neutral-50 px-4 py-3">
+						<div className="border-border/50 border-b px-4 py-3">
 							<div className="flex items-center gap-2">
 								<div className="relative size-8 overflow-hidden rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
 									<img
@@ -303,7 +303,7 @@ export default function Hero() {
 									<Sparkles className="size-3.5 text-lime-600" />
 								</div> */}
 								<div
-									className="max-w-[90%] rounded-2xl rounded-tl-md bg-neutral-100 px-3.5 py-2.5 text-sm"
+									className="max-w-[90%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
 									style={{
 										boxShadow:
 											"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
@@ -313,21 +313,32 @@ export default function Hero() {
 										Let's practice ordering at a restaurant. What would you say
 										to the waiter?
 									</p>
-									<div className="mt-2 flex items-center gap-2">
-										<button
-											type="button"
-											className="flex items-center gap-1 rounded-md bg-neutral-200 px-2 py-1 text-[11px]"
+									<div className="mt-1.5 flex items-center gap-1.5">
+										<Button
+											variant="outline"
+											size="sm"
+											className="size-7 rounded-lg text-xs"
 										>
 											<PlayIcon fill="currentColor" className="size-2.5" />
-											Play
-										</button>
-										<button
-											type="button"
-											className="flex items-center gap-1 rounded-md bg-neutral-200 px-2 py-1 text-[11px]"
+										</Button>
+										<Button
+											variant="outline"
+											size="sm"
+											className="size-7 rounded-lg text-xs"
 										>
-											<Languages className="size-2.5" />
-											Translate
-										</button>
+											<svg
+												className="size-3"
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 20 20"
+												width="1em"
+												aria-hidden="true"
+											>
+												<path
+													d="m6.25 6.013.675 1.8h-1.35zm1.86 1.443c.777-1.022 1.896-1.762 3.28-2.147C10.576 3.534 8.76 2.5 6.25 2.5 2.778 2.5.625 4.475.625 7.656c0 1.622.563 2.928 1.572 3.819L.625 13.047l.469.703a5.6 5.6 0 0 0 3.378-1.134 7.8 7.8 0 0 0 1.778.197c.256 0 .503-.016.747-.035a7.7 7.7 0 0 1-.122-1.372c0-.853.134-1.634.381-2.344h-2.15l-.35.938H3.437l1.876-5h1.875zm5.64 4.206c.31-.28.575-.621.75-1.037h-1.497c.175.416.44.756.75 1.037zm4.053 3.563 1.572 1.572-.469.703a5.6 5.6 0 0 1-3.378-1.134 7.8 7.8 0 0 1-1.778.197c-3.472 0-5.625-1.975-5.625-5.157S10.278 6.25 13.75 6.25s5.625 1.975 5.625 5.156c0 1.622-.562 2.928-1.572 3.819m-1.24-5.85h-2.188v-.937h-1.25v.937h-2.187v1.25h.778a4.4 4.4 0 0 0 1.006 1.725c-.863.425-1.681.544-1.681.544l.437 1.172a6.3 6.3 0 0 0 2.269-.87 6.3 6.3 0 0 0 2.269.87l.437-1.172s-.819-.119-1.681-.544a4.3 4.3 0 0 0 1.006-1.725h.778v-1.25z"
+													fill="currentColor"
+												/>
+											</svg>
+										</Button>
 									</div>
 								</div>
 							</div>
@@ -351,7 +362,7 @@ export default function Hero() {
 									<Sparkles className="size-3.5 text-lime-600" />
 								</div> */}
 								<div
-									className="max-w-[90%] rounded-2xl rounded-tl-md bg-neutral-100 px-3.5 py-2.5 text-sm"
+									className="max-w-[90%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
 									style={{
 										boxShadow:
 											"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
@@ -361,21 +372,32 @@ export default function Hero() {
 										Perfect! <span className="font-medium">98% accuracy</span>.
 										Your pronunciation is improving! Keep going!
 									</p>
-									<div className="mt-2 flex items-center gap-2">
-										<button
-											type="button"
-											className="flex items-center gap-1 rounded-md bg-neutral-200 px-2 py-1 text-[11px]"
+									<div className="mt-1.5 flex items-center gap-1.5">
+										<Button
+											variant="outline"
+											size="sm"
+											className="size-7 rounded-lg text-xs"
 										>
 											<PlayIcon fill="currentColor" className="size-2.5" />
-											Play
-										</button>
-										<button
-											type="button"
-											className="flex items-center gap-1 rounded-md bg-neutral-200 px-2 py-1 text-[11px]"
+										</Button>
+										<Button
+											variant="outline"
+											size="sm"
+											className="size-7 rounded-lg text-xs"
 										>
-											<Languages className="size-2.5" />
-											Translate
-										</button>
+											<svg
+												className="size-3"
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 20 20"
+												width="1em"
+												aria-hidden="true"
+											>
+												<path
+													d="m6.25 6.013.675 1.8h-1.35zm1.86 1.443c.777-1.022 1.896-1.762 3.28-2.147C10.576 3.534 8.76 2.5 6.25 2.5 2.778 2.5.625 4.475.625 7.656c0 1.622.563 2.928 1.572 3.819L.625 13.047l.469.703a5.6 5.6 0 0 0 3.378-1.134 7.8 7.8 0 0 0 1.778.197c.256 0 .503-.016.747-.035a7.7 7.7 0 0 1-.122-1.372c0-.853.134-1.634.381-2.344h-2.15l-.35.938H3.437l1.876-5h1.875zm5.64 4.206c.31-.28.575-.621.75-1.037h-1.497c.175.416.44.756.75 1.037zm4.053 3.563 1.572 1.572-.469.703a5.6 5.6 0 0 1-3.378-1.134 7.8 7.8 0 0 1-1.778.197c-3.472 0-5.625-1.975-5.625-5.157S10.278 6.25 13.75 6.25s5.625 1.975 5.625 5.156c0 1.622-.562 2.928-1.572 3.819m-1.24-5.85h-2.188v-.937h-1.25v.937h-2.187v1.25h.778a4.4 4.4 0 0 0 1.006 1.725c-.863.425-1.681.544-1.681.544l.437 1.172a6.3 6.3 0 0 0 2.269-.87 6.3 6.3 0 0 0 2.269.87l.437-1.172s-.819-.119-1.681-.544a4.3 4.3 0 0 0 1.006-1.725h.778v-1.25z"
+													fill="currentColor"
+												/>
+											</svg>
+										</Button>
 									</div>
 								</div>
 							</div>

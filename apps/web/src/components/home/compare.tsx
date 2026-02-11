@@ -1,11 +1,10 @@
-import { ArrowRight, Check, X } from "lucide-react";
-import { Button } from "../ui/button";
+import { Check, X } from "lucide-react";
 
 const comparisons = [
 	{
 		feature: "Cost per month (USD)",
-		us: "$12",
-		them: "$400+",
+		us: "~$12",
+		them: "~$400+",
 	},
 	{
 		feature: "24/7 availability — learn any time, anywhere",
@@ -79,7 +78,7 @@ export function Compare() {
 							<span className="font-medium">{row.feature}</span>
 							<div className="flex justify-center">
 								{typeof row.us === "string" ? (
-									<span className="font-semibold">{row.us}</span>
+									<span className="text-lime-600">{row.us}</span>
 								) : row.us ? (
 									<div className="flex items-center justify-center rounded-full border border-lime-300 bg-lime-200 p-1 text-lime-600">
 										<Check className="size-3.5" strokeWidth={2} />
@@ -92,7 +91,7 @@ export function Compare() {
 							</div>
 							<div className="flex justify-center">
 								{typeof row.them === "string" ? (
-									<span className="font-semibold">{row.them}</span>
+									<span className="text-muted-foreground">{row.them}</span>
 								) : row.them ? (
 									<div className="flex items-center justify-center rounded-full border border-lime-300 bg-lime-200 p-1 text-lime-600">
 										<Check className="size-3.5" strokeWidth={2} />

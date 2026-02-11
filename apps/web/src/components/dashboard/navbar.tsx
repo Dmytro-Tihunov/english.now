@@ -282,10 +282,6 @@ export default function Navbar() {
 			className={`sticky border-border/50 border-b ${
 				isScrolled ? "border-b" : ""
 			}`}
-			// style={{
-			//   boxShadow:
-			//     "rgba(0, 0, 0, 0.04) 0px 8px 12px -4px, rgba(0, 0, 0, 0.055) 0px 0px 2px 0px, rgba(0, 0, 0, 0.055) 0px 1px 2px 0px",
-			// }}
 		>
 			<div className="container relative z-10 mx-auto max-w-5xl px-4">
 				<nav className="flex grid-cols-2 items-center justify-between py-5 md:grid-cols-5">

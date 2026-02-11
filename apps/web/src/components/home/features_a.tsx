@@ -537,19 +537,9 @@ export function Features() {
 				<div className="relative grid grid-cols-1 gap-6 md:grid-cols-3">
 					{_features.map((feature, _i) => (
 						<div key={feature.id}>
-							<div className={cn("z-10 mb-4 flex items-center gap-2")}>
-								<feature.icon />
-								<h2 className="font-bold font-lyon text-2xl">
-									{feature.title}
-								</h2>
-							</div>
 							<div
 								key={feature.id}
 								className="relative flex min-h-[240px] items-end"
-								// style={{
-								// 	boxShadow:
-								// 		"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
-								// }}
 							>
 								<div
 									className="pointer-events-none absolute top-0 right-0 left-0 z-20 bg-linear-to-b from-10% from-neutral-50/85 to-90% to-neutral-50/5"

@@ -1,8 +1,10 @@
-export function VocabularyIcon() {
+import { cn } from "@/lib/utils";
+
+export function VocabularyIcon({ className }: { className?: string }) {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="size-6.5"
+			className={cn(className)}
 			fill="none"
 			viewBox="0 0 56 52"
 			aria-hidden="true"

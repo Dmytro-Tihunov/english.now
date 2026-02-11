@@ -3,7 +3,7 @@ export const Letter = () => {
 	return (
 		<div className="container mx-auto max-w-5xl pt-24">
 			<div className="mx-auto mb-14 max-w-xl text-center">
-				<h2 className="mb-2 font-bold font-lyon text-4xl tracking-tight md:text-5xl">
+				<h2 className="mb-4 font-bold font-lyon text-4xl tracking-tight md:text-5xl">
 					The story behind English Now
 				</h2>
 				<p className="text-balance text-center text-muted-foreground text-sm md:mx-auto md:max-w-boundary-sm md:text-lg">
@@ -76,9 +76,9 @@ export const Letter = () => {
 							<br />
 							I'm grateful for your support, and I'm excited to see where this
 							journey takes us. */}
-							{/* <br />
 							<br />
-							Thank you for using English Now. */}
+							<br />
+							Thank you for using English Now.
 						</p>
 						<div className="flex items-center gap-6">
 							<p className="flex flex-col gap-1 font-medium text-sm md:text-base">

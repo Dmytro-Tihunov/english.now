@@ -19,7 +19,7 @@ export function Pricing() {
 	const _plans = [
 		{
 			name: "Free",
-			description: "For individuals and small teams.",
+			description: "Great for beginners.",
 			price: 0,
 			isPopular: false,
 			duration: "forever",
@@ -33,7 +33,7 @@ export function Pricing() {
 		},
 		{
 			name: "Monthly",
-			description: "For teams and businesses.",
+			description: "Great for intermediate learners.",
 			price: 12,
 			isPopular: true,
 			duration: "month",
@@ -48,7 +48,7 @@ export function Pricing() {
 		},
 		{
 			name: "Yearly",
-			description: "For teams and businesses.",
+			description: "Great for advanced learners.",
 			price: 100,
 			isPopular: false,
 			duration: "year",
@@ -65,19 +65,16 @@ export function Pricing() {
 
 	async function handlePlanClick(plan: (typeof _plans)[number]) {
 		setIsLoading(true);
-		// Free plan — just go to signup
 		if (!plan.paddlePriceId) {
 			navigate({ to: "/signup" });
 			return;
 		}
 
-		// If not logged in, redirect to signup first
 		if (!session?.user) {
 			navigate({ to: "/signup" });
 			return;
 		}
 
-		// Open Paddle checkout overlay
 		await openCheckout({
 			priceId: plan.paddlePriceId,
 			userId: session.user.id,
@@ -89,7 +86,7 @@ export function Pricing() {
 	return (
 		<div className="group mx-auto sm:mt-24">
 			<div className="mb-14 text-center">
-				<h2 className="mb-2 font-bold font-lyon text-5xl tracking-tight md:text-5xl">
+				<h2 className="mb-4 font-bold font-lyon text-5xl tracking-tight md:text-5xl">
 					Pricing
 				</h2>
 				<p className="text-balance text-center text-muted-foreground text-sm md:mx-auto md:max-w-boundary-sm md:text-lg">
@@ -116,7 +113,7 @@ export function Pricing() {
 											{_plan.name}
 										</span>
 										{_plan.duration === "year" && (
-											<span className="inline-block rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-2.5 py-3 font-semibold text-black text-sm normal-case tracking-normal md:py-[0.175rem] md:text-xs">
+											<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-2 py-3 font-semibold text-lime-900 text-sm normal-case tracking-normal md:py-[0.250rem] md:text-xs">
 												Save 20%
 											</span>
 										)}
@@ -153,7 +150,6 @@ export function Pricing() {
 									) : (
 										"Get started"
 									)}
-									{_plan.price > 0 ? "Start 7-day trial" : "Get started"}
 								</Button>
 							</div>
 							<div className="relative z-10 mb-4 font-medium text-black/50 text-sm">
@@ -186,7 +182,7 @@ export function Pricing() {
 												"inset 0 0 0 1px #C6F64D, inset 0 0 8px 2px #C6F64D",
 										}}
 									>
-										<div className="mt-1.5 mb-2.5 flex items-center justify-center gap-1.5 text-center font-medium text-black text-sm">
+										<div className="mt-1.5 mb-2.5 flex items-center justify-center gap-1.5 text-center font-medium text-lime-900 text-sm">
 											<StarIcon fill="currentColor" className="size-4" />
 											Most Popular
 										</div>

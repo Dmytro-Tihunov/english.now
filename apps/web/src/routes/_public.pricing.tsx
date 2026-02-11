@@ -99,13 +99,12 @@ function PricingPage() {
 		<div className="relative">
 			<div className="container relative mx-auto max-w-5xl px-4 py-16">
 				<div className="mb-16 text-center">
-					<h1 className="mb-4 font-bold font-lyon text-5xl text-neutral-950 leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+					<h1 className="mb-4 font-bold font-bold font-lyon font-lyon text-5xl text-neutral-900 text-neutral-950 leading-tight tracking-tight tracking-tight sm:text-5xl lg:text-6xl dark:text-white">
 						Which plan is right for you?
 						<br />
 						<span className="text-neutral-500">Use our 7 day free trial.</span>
 					</h1>
-					{/* All plans include access
-						to our AI-powered learning tools. */}
+					All plans include access to our AI-powered learning tools.
 				</div>
 
 				<div className="relative flex w-full flex-row items-end justify-between gap-3">
@@ -128,7 +127,7 @@ function PricingPage() {
 												{_plan.name}
 											</span>
 											{_plan.duration === "year" && (
-												<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-2.5 py-3 font-semibold text-black text-sm normal-case tracking-normal md:py-[0.175rem] md:text-xs">
+												<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-2 py-3 font-semibold text-lime-900 text-sm normal-case tracking-normal md:py-[0.250rem] md:text-xs">
 													Save 20%
 												</span>
 											)}
@@ -189,7 +188,7 @@ function PricingPage() {
 													"inset 0 0 0 1px #C6F64D, inset 0 0 8px 2px #C6F64D",
 											}}
 										>
-											<div className="mt-1.5 mb-2.5 flex items-center justify-center gap-1.5 text-center font-medium text-black text-sm">
+											<div className="mt-1.5 mb-2.5 flex items-center justify-center gap-1.5 text-center font-medium text-lime-900 text-sm">
 												<StarIcon fill="currentColor" className="size-4" />
 												Most Popular
 											</div>

@@ -1,490 +1,517 @@
-import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import {
+	ArrowRightIcon,
+	ArrowUpRightIcon,
+	CheckIcon,
+	ClockIcon,
+	KeyboardIcon,
+	Lightbulb,
+	Lock,
+	Mic,
+	PanelRight,
+	PlayIcon,
+	Settings,
+	X,
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { GrammarIcon } from "../icons/grammar";
+import { ReviewIcon } from "../icons/review";
 import { SpeakingIcon } from "../icons/speaking";
 import { VocabularyIcon } from "../icons/vocabulary";
+import { Button } from "../ui/button";
 
-// Practice Demo - Interactive exercise with typing animation
-function PracticeDemo() {
-	const [step, setStep] = useState(0);
-	const [typedAnswer, setTypedAnswer] = useState("");
-	const [showResult, setShowResult] = useState(false);
-
-	const exercise = {
-		sentence: "She ___ to the store yesterday.",
-		options: ["go", "went", "goes", "going"],
-		correctAnswer: "went",
-		explanation: "Use past tense for completed actions",
-	};
-
-	useEffect(() => {
-		const cycle = () => {
-			setStep(0);
-			setTypedAnswer("");
-			setShowResult(false);
-
-			// Show options appearing
-			setTimeout(() => setStep(1), 500);
-
-			// Start typing animation
-			setTimeout(() => {
-				const answer = exercise.correctAnswer;
-				let i = 0;
-				const typeInterval = setInterval(() => {
-					if (i <= answer.length) {
-						setTypedAnswer(answer.slice(0, i));
-						i++;
-					} else {
-						clearInterval(typeInterval);
-					}
-				}, 120);
-			}, 1500);
-
-			// Show result
-			setTimeout(() => {
-				setShowResult(true);
-				setStep(2);
-			}, 2500);
-		};
-
-		cycle();
-		const interval = setInterval(cycle, 6000);
-		return () => clearInterval(interval);
-	}, []);
-
+function PracticeSpeakingDemo() {
+	const [showFeedback, setShowFeedback] = useState(true);
 	return (
-		<div className="">
-			<div className="relative z-10 flex flex-col rounded-3xl bg-white p-6">
-				{/* Question */}
-				<div className="mb-3">
-					<p className="font-medium text-neutral-800">
-						She{" "}
-						<span className="inline-flex min-w-[60px] items-center justify-center rounded-lg border-2 border-[#C6F64D] border-dashed bg-[#F5FFE0] px-2 py-0.5">
-							<motion.span
-								className="font-semibold text-[#5a8a00]"
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-							>
-								{typedAnswer || "_____"}
-							</motion.span>
-							{typedAnswer && typedAnswer !== exercise.correctAnswer && (
-								<motion.span
-									className="ml-0.5 inline-block h-4 w-0.5 bg-[#5a8a00]"
-									animate={{ opacity: [1, 0] }}
-									transition={{
-										duration: 0.5,
-										repeat: Number.POSITIVE_INFINITY,
-									}}
-								/>
-							)}
-						</span>{" "}
-						to the store yesterday.
+		<div
+			className="relative flex w-full flex-col overflow-hidden rounded-2xl bg-white"
+			style={{
+				boxShadow:
+					"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+			}}
+		>
+			{/* {showFeedback && (
+				<motion.div
+					initial={{ right: "0px" }}
+					animate={{ right: "0px" }}
+					exit={{ right: "-180px" }}
+					className="absolute top-0 z-20 h-full w-[180px] rounded-r-2xl border-border/50 border-l bg-white p-4 pt-3"
+				>
+					<div className="relative mb-0.5 flex items-center gap-1.5">
+						<span className="font-semibold text-xs">Feedback</span>{" "}
+						<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-1.5 py-[1.5px] font-medium text-[11px] text-black normal-case tracking-normal">
+							AI
+						</span>
+					</div>
+					<button
+						className="absolute top-3 right-3"
+						type="button"
+						onClick={() => setShowFeedback(!showFeedback)}
+					>
+						<X className="size-3.5 cursor-pointer text-muted-foreground hover:text-muted-foreground/80" />
+					</button>
+
+					<p className="text-neutral-900 text-sm">
+						<span className="font-medium text-xs">Here's your feedback:</span>
+						<div className="mt-4 flex flex-col divide-neutral-200">
+							<div className="relative flex flex-col">
+								<span className="w-[40%] rounded-t-md bg-[#D8FF76] px-1.5 py-0.5 font-semibold text-lime-700 text-xs">
+									Fluency
+								</span>
+								<span className="rounded-b-md border-2 border-[#D8FF76] bg-[#D8FF76]/50 px-1.5 py-0.5 text-neutral-900 text-xs">
+									Good use of phrases.
+								</span>
+							</div>
+						</div>
 					</p>
-				</div>
+				</motion.div>
+			)} */}
 
-				{/* Options */}
-				<div className="mb-3 grid grid-cols-2 gap-2">
-					{exercise.options.map((option, i) => (
-						<motion.button
-							key={option}
-							type="button"
-							initial={{ scale: 0.8, opacity: 0 }}
-							animate={{
-								scale: step >= 1 ? 1 : 0.8,
-								opacity: step >= 1 ? 1 : 0,
-							}}
-							transition={{ delay: i * 0.1, duration: 0.3, type: "spring" }}
-							className={`rounded-lg px-3 py-2 font-medium text-sm transition-all ${
-								showResult && option === exercise.correctAnswer
-									? "bg-[#C6F64D] text-[#2d4a00] ring-2 ring-[#C6F64D]/50"
-									: "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-							}`}
+			<div className="flex items-center gap-2 border-border/50 border-b px-3 py-2.5">
+				<div className="flex w-full items-center justify-between gap-2">
+					<div className="flex items-center gap-2">
+						<div className="relative size-7 overflow-hidden rounded-lg border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
+							<img
+								className="absolute right-0 bottom-[-4px] left-0 mx-auto h-full w-full object-contain"
+								src="/logo.svg"
+								alt=""
+								width={32}
+								height={32}
+							/>
+						</div>
+						<span className="font-semibold text-sm">Conversation</span>
+					</div>
+					<div>
+						<Button
+							variant="outline"
+							size="icon"
+							className="size-7 rounded-lg"
+							onClick={() => setShowFeedback(!showFeedback)}
 						>
-							{option}
-						</motion.button>
-					))}
+							<PanelRight className="size-3.5" />
+						</Button>
+					</div>
 				</div>
+			</div>
 
-				{/* Result */}
-				<AnimatePresence>
-					{showResult && (
-						<motion.div
-							initial={{ y: 10, opacity: 0, height: 0 }}
-							animate={{ y: 0, opacity: 1, height: "auto" }}
-							exit={{ y: -10, opacity: 0, height: 0 }}
-							transition={{ duration: 0.4, type: "spring" }}
-							className="flex items-center gap-2 rounded-lg bg-[#F5FFE0] px-3 py-2"
-						>
-							<motion.div
-								initial={{ scale: 0 }}
-								animate={{ scale: 1 }}
-								transition={{ delay: 0.2, type: "spring", stiffness: 400 }}
-								className="flex h-5 w-5 items-center justify-center rounded-full bg-[#C6F64D]"
+			<div className="space-y-4 p-4 px-14 pb-0">
+				{/* AI Message */}
+				<div className="max-w-[60%] select-none">
+					<div
+						className="max-w-[90%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
+						style={{
+							boxShadow:
+								"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
+						}}
+					>
+						<p className="text-neutral-900 text-xs leading-relaxed">
+							Let's practice ordering at a restaurant. <br />
+							What would you say to the waiter?
+						</p>
+						<div className="mt-1 flex items-center gap-1.5">
+							<Button
+								variant="outline"
+								size="sm"
+								className="size-6 rounded-lg text-xs"
+							>
+								<PlayIcon fill="currentColor" className="size-2" />
+							</Button>
+							<Button
+								variant="outline"
+								size="sm"
+								className="size-6 rounded-lg text-xs"
 							>
 								<svg
-									width="12"
-									height="12"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="#2d4a00"
-									strokeWidth="3"
+									className="size-2.5"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									width="1em"
 									aria-hidden="true"
 								>
-									<polyline points="20 6 9 17 4 12" />
+									<path
+										d="m6.25 6.013.675 1.8h-1.35zm1.86 1.443c.777-1.022 1.896-1.762 3.28-2.147C10.576 3.534 8.76 2.5 6.25 2.5 2.778 2.5.625 4.475.625 7.656c0 1.622.563 2.928 1.572 3.819L.625 13.047l.469.703a5.6 5.6 0 0 0 3.378-1.134 7.8 7.8 0 0 0 1.778.197c.256 0 .503-.016.747-.035a7.7 7.7 0 0 1-.122-1.372c0-.853.134-1.634.381-2.344h-2.15l-.35.938H3.437l1.876-5h1.875zm5.64 4.206c.31-.28.575-.621.75-1.037h-1.497c.175.416.44.756.75 1.037zm4.053 3.563 1.572 1.572-.469.703a5.6 5.6 0 0 1-3.378-1.134 7.8 7.8 0 0 1-1.778.197c-3.472 0-5.625-1.975-5.625-5.157S10.278 6.25 13.75 6.25s5.625 1.975 5.625 5.156c0 1.622-.562 2.928-1.572 3.819m-1.24-5.85h-2.188v-.937h-1.25v.937h-2.187v1.25h.778a4.4 4.4 0 0 0 1.006 1.725c-.863.425-1.681.544-1.681.544l.437 1.172a6.3 6.3 0 0 0 2.269-.87 6.3 6.3 0 0 0 2.269.87l.437-1.172s-.819-.119-1.681-.544a4.3 4.3 0 0 0 1.006-1.725h.778v-1.25z"
+										fill="currentColor"
+									/>
 								</svg>
-							</motion.div>
-							<span className="text-[#2d4a00] text-sm">
-								{exercise.explanation}
-							</span>
-						</motion.div>
-					)}
-				</AnimatePresence>
+							</Button>
+						</div>
+					</div>
+				</div>
+
+				{/* User Message */}
+				<div className="ml-auto max-w-[50%] select-none">
+					<div
+						className="rounded-2xl rounded-tr-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-3.5 py-2.5 text-xs"
+						style={{
+							boxShadow:
+								"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
+						}}
+					>
+						I would like to order the pasta, please.
+					</div>
+				</div>
+
+				{/* AI Accuracy Response */}
+				<div className="max-w-[9%]">
+					<div
+						className="rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
+						style={{
+							boxShadow:
+								"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
+						}}
+					>
+						<div className="flex gap-1 py-1">
+							<span className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60" />
+							<span
+								className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60"
+								style={{ animationDelay: "0.1s" }}
+							/>
+							<span
+								className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60"
+								style={{ animationDelay: "0.2s" }}
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div
+					className="sticky inset-x-0 mx-auto flex w-[35%] justify-center overflow-hidden rounded-t-2xl border bg-white p-2 transition-all duration-75 ease-in dark:from-surface dark:to-transparent"
+					style={{
+						boxShadow:
+							"rgba(162, 166, 171, 0.2) 0px 0px 0px 0px inset, rgba(162, 166, 171, 0.2) 0px 0px 8px 2px inset",
+					}}
+				>
+					<div className="flex items-center gap-0.5">
+						<Button
+							type="button"
+							size="sm"
+							className={cn(
+								"flex size-7 items-center justify-center rounded-lg border border-[#C6F64D] bg-radial from-[#EFFF9B] to-[#D8FF76]",
+							)}
+						>
+							<Mic className="size-3.5 text-lime-900" />
+						</Button>
+
+						<Button
+							type="button"
+							variant="ghost"
+							className="size-7 rounded-lg"
+							size="sm"
+						>
+							<Lightbulb className="size-3.5" />
+						</Button>
+
+						<Button
+							type="button"
+							variant="ghost"
+							size="sm"
+							className="size-7 rounded-lg"
+						>
+							<KeyboardIcon className="size-3.5" />
+						</Button>
+						<Button
+							type="button"
+							variant="ghost"
+							className="size-7 rounded-lg"
+							size="sm"
+						>
+							<Settings className="size-3.5" />
+						</Button>
+
+						<Button
+							type="button"
+							variant="ghost"
+							size="sm"
+							className="flex size-7 items-center justify-center rounded-lg border border-red-600 bg-radial from-[#e28b8b] to-[#EF4444] text-red-800 hover:text-red-700/80"
+						>
+							<X className="size-3.5" />
+						</Button>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
 }
 
-// Review Mistakes Demo - Shows mistakes being highlighted and corrected
 function ReviewMistakesDemo() {
-	const [step, setStep] = useState(0);
-
 	const mistakes = [
 		{
 			id: "mistake1",
 			original: "I goed to school",
 			corrected: "I went to school",
-			errorWord: "goed",
-			correctWord: "went",
 			type: "Past tense",
 		},
 		{
 			id: "mistake2",
 			original: "She don't like it",
 			corrected: "She doesn't like it",
-			errorWord: "don't",
-			correctWord: "doesn't",
+			type: "Subject-verb",
+		},
+		{
+			id: "mistake3",
+			original: "She don't like it",
+			corrected: "She doesn't like it",
 			type: "Subject-verb",
 		},
 	];
 
-	useEffect(() => {
-		const cycle = () => {
-			setStep(0);
-			setTimeout(() => setStep(1), 600);
-			setTimeout(() => setStep(2), 1500);
-			setTimeout(() => setStep(3), 2500);
-			setTimeout(() => setStep(4), 3500);
-		};
-
-		cycle();
-		const interval = setInterval(cycle, 6000);
-		return () => clearInterval(interval);
-	}, []);
-
 	return (
-		<div className="">
-			<motion.div
-				initial={{ y: 20, opacity: 0 }}
-				animate={{ y: 0, opacity: 1 }}
-				transition={{ duration: 0.5 }}
-				className="relative z-10 flex h-full flex-col"
-			>
-				{/* Mistake cards */}
-				<div className="flex flex-1 flex-col gap-2">
-					{mistakes.map((mistake, i) => (
-						<motion.div
-							key={mistake.id}
-							initial={{ x: -20, opacity: 0 }}
-							animate={{
-								x: step >= i + 1 ? 0 : -20,
-								opacity: step >= i + 1 ? 1 : 0,
-							}}
-							transition={{ duration: 0.4, type: "spring" }}
-							className="relative rounded-lg border border-neutral-100 bg-white p-3"
-							style={{
-								boxShadow: "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
-							}}
-						>
-							{/* Error type badge */}
-							<motion.span
-								initial={{ opacity: 0, y: -5 }}
-								animate={{
-									opacity: step >= i + 2 ? 1 : 0,
-									y: step >= i + 2 ? 0 : -5,
-								}}
-								className="mb-1 inline-block rounded bg-red-100 px-1.5 py-0.5 font-medium text-[10px] text-red-600"
-							>
-								{mistake.type}
-							</motion.span>
+		<div
+			className="flex h-full w-full flex-col gap-2.5 rounded-t-2xl bg-white p-4"
+			style={{
+				boxShadow:
+					"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+			}}
+		>
+			<div className="mb-1 flex items-center justify-between">
+				<h2 className="font-semibold text-sm">Review Mistakes</h2>
+				<span className="text-muted-foreground text-xs">3/5 corrected</span>
+			</div>
 
-							{/* Original with strikethrough */}
-							<div className="flex items-center gap-2 text-sm">
-								<motion.span
-									className="text-neutral-400 line-through"
-									animate={{
-										opacity: step >= i + 3 ? 0.5 : 1,
-									}}
-								>
-									{mistake.original}
-								</motion.span>
-
-								{/* Arrow */}
-								<AnimatePresence>
-									{step >= i + 3 && (
-										<motion.svg
-											initial={{ width: 0, opacity: 0 }}
-											animate={{ width: 20, opacity: 1 }}
-											transition={{ duration: 0.3 }}
-											height="12"
-											viewBox="0 0 20 12"
-											fill="none"
-											className="text-[#C6F64D]"
-											aria-hidden="true"
-										>
-											<motion.path
-												d="M0 6h16M12 1l5 5-5 5"
-												stroke="currentColor"
-												strokeWidth="2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												initial={{ pathLength: 0 }}
-												animate={{ pathLength: 1 }}
-												transition={{ duration: 0.4 }}
-											/>
-										</motion.svg>
-									)}
-								</AnimatePresence>
-
-								{/* Corrected */}
-								<AnimatePresence>
-									{step >= i + 3 && (
-										<motion.span
-											initial={{ opacity: 0, x: -10 }}
-											animate={{ opacity: 1, x: 0 }}
-											transition={{ duration: 0.3, delay: 0.2 }}
-											className="font-medium text-[#5a8a00]"
-										>
-											{mistake.corrected}
-										</motion.span>
-									)}
-								</AnimatePresence>
-							</div>
-						</motion.div>
-					))}
+			{/* Mistake cards */}
+			{mistakes.map((mistake) => (
+				<div
+					key={mistake.id}
+					className="rounded-xl border border-neutral-100 bg-white p-3"
+				>
+					<span className="mb-1.5 inline-block rounded-md bg-red-50 px-1.5 py-0.5 font-medium text-[10px] text-red-500">
+						{mistake.type}
+					</span>
+					<div className="flex items-center gap-2 text-xs">
+						<span className="text-neutral-400 line-through">
+							{mistake.original}
+						</span>
+						<ArrowRightIcon className="size-3.5 text-lime-600" />
+						<span className="font-medium text-lime-600">
+							{mistake.corrected}
+						</span>
+					</div>
 				</div>
-			</motion.div>
+			))}
 		</div>
 	);
 }
 
-// Get Feedback Demo - Shows AI feedback with arrows pointing to issues
-function GetFeedbackDemo() {
-	const [step, setStep] = useState(0);
-
-	useEffect(() => {
-		const cycle = () => {
-			setStep(0);
-			setTimeout(() => setStep(1), 500); // Show text
-			setTimeout(() => setStep(2), 1200); // Highlight error
-			setTimeout(() => setStep(3), 1800); // Show arrow
-			setTimeout(() => setStep(4), 2400); // Show suggestion card
-			setTimeout(() => setStep(5), 3500); // Apply fix
-		};
-
-		cycle();
-		const interval = setInterval(cycle, 6500);
-		return () => clearInterval(interval);
-	}, []);
+function VocabularyDemo() {
+	const words = [
+		{
+			word: "Eloquent",
+			phonetic: "/ˈeləkwənt/",
+			definition: "Fluent or persuasive in speaking",
+			example: '"She gave an eloquent speech."',
+			mastery: 85,
+		},
+		{
+			word: "Resilient",
+			phonetic: "/rɪˈzɪliənt/",
+			definition: "Able to recover quickly from difficulties",
+			example: '"He remained resilient through hardships."',
+			mastery: 60,
+		},
+		{
+			word: "Ubiquitous",
+			phonetic: "/juːˈbɪkwɪtəs/",
+			definition: "Present, appearing, or found everywhere",
+			example: '"Smartphones are now ubiquitous."',
+			mastery: 30,
+		},
+		{
+			word: "Ubiquitous",
+			phonetic: "/juːˈbɪkwɪtəs/",
+			definition: "Present, appearing, or found everywhere",
+			example: '"Smartphones are now ubiquitous."',
+			mastery: 30,
+		},
+	];
 
 	return (
-		<div>
-			<motion.div
-				initial={{ y: 20, opacity: 0 }}
-				animate={{ y: 0, opacity: 1 }}
-				transition={{ duration: 0.5 }}
-				className="relative z-10 flex h-full flex-col"
-			>
-				{/* User text with highlighted error */}
-				<motion.div
-					initial={{ opacity: 0 }}
-					animate={{ opacity: step >= 1 ? 1 : 0 }}
-					className="relative mb-4 rounded-lg bg-neutral-50 p-3"
+		<div
+			className="flex w-full flex-col gap-2.5 rounded-t-2xl bg-white p-4"
+			style={{
+				boxShadow:
+					"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+			}}
+		>
+			<div className="mb-1 flex items-center justify-between">
+				<h2 className="font-semibold text-sm">Today's Words</h2>
+				<span className="text-muted-foreground text-xs">3/5 learned</span>
+			</div>
+			{words.map((item) => (
+				<div
+					key={item.word}
+					className="rounded-xl border border-neutral-100 bg-white p-3.5"
 				>
-					<p className="text-neutral-700 text-sm leading-relaxed">
-						I am very{" "}
-						<motion.span
-							className="relative inline-block"
-							animate={{
-								backgroundColor:
-									step >= 2 && step < 5
-										? "rgba(239, 68, 68, 0.15)"
-										: step >= 5
-											? "rgba(198, 246, 77, 0.3)"
-											: "transparent",
-							}}
-							style={{ padding: "0 2px", borderRadius: "4px" }}
-						>
-							<AnimatePresence mode="wait">
-								{step < 5 ? (
-									<motion.span
-										key="wrong"
-										initial={{ opacity: 0 }}
-										animate={{ opacity: 1 }}
-										exit={{ opacity: 0, y: -10 }}
-										className={step >= 2 && step < 5 ? "text-red-500" : ""}
-									>
-										exciting
-									</motion.span>
-								) : (
-									<motion.span
-										key="correct"
-										initial={{ opacity: 0, y: 10 }}
-										animate={{ opacity: 1, y: 0 }}
-										className="font-medium text-[#5a8a00]"
-									>
-										excited
-									</motion.span>
-								)}
-							</AnimatePresence>
+					<div className="mb-1 flex items-center justify-between">
+						<div className="flex items-baseline gap-2">
+							<span className="font-bold text-neutral-800 text-xs">
+								{item.word}
+							</span>
+							<span className="text-[11px] text-neutral-400">
+								{item.phonetic}
+							</span>
+						</div>
+					</div>
+					<p className="mb-1 text-neutral-600 text-xs">{item.definition}</p>
+					<div className="flex items-center gap-1.5">
+						<div className="h-1 w-12 overflow-hidden rounded-full bg-neutral-100">
+							<div
+								className="h-full rounded-full bg-lime-500"
+								style={{ width: `${item.mastery}%` }}
+							/>
+						</div>
+						<span className="text-[10px] text-neutral-400">
+							{item.mastery}%
+						</span>
+					</div>
+					{/* <p className="text-[11px] text-neutral-400 italic">{item.example}</p> */}
+				</div>
+			))}
+		</div>
+	);
+}
 
-							{/* Underline animation */}
-							{step >= 2 && step < 5 && (
-								<motion.div
-									initial={{ scaleX: 0 }}
-									animate={{ scaleX: 1 }}
-									className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-red-400"
-									style={{ borderRadius: "2px" }}
+function PersonalizedLessonsDemo() {
+	const lessons = [
+		{
+			id: 1,
+			title: "Greetings & Introductions",
+			level: "Beginner",
+			progress: 100,
+			status: "completed" as const,
+		},
+		{
+			id: 3,
+			title: "Job Interview Basics",
+			level: "Intermediate",
+			progress: 45,
+			status: "current" as const,
+		},
+		{
+			id: 4,
+			title: "Business Email Writing",
+			level: "Intermediate",
+			progress: 0,
+			status: "locked" as const,
+		},
+		{
+			id: 5,
+			title: "Negotiation Skills",
+			level: "Advanced",
+			progress: 0,
+			status: "locked" as const,
+		},
+	];
+
+	return (
+		<div
+			className="flex w-full flex-col gap-2 rounded-2xl bg-white p-4"
+			style={{
+				boxShadow:
+					"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+			}}
+		>
+			<div className="mb-2">
+				<h2 className="font-semibold text-sm">Unit Overview</h2>
+				<div className="mt-1 flex items-center justify-between">
+					<span className="text-muted-foreground text-xs">
+						Lessons 1 of 4 • Grammar Foundations
+					</span>
+					<span className="text-muted-foreground text-xs">18% Complete</span>
+				</div>
+			</div>
+
+			<div className="mb-4 flex gap-1.5">
+				<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
+					<div className="h-full w-full rounded-full bg-lime-400" />
+				</div>
+				<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
+					<div className="h-full w-[80%] rounded-full bg-amber-400" />
+				</div>
+				<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
+					<div className="h-full w-0 rounded-full bg-neutral-300" />
+				</div>
+				<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
+					<div className="h-full w-0 rounded-full bg-slate-300" />
+				</div>
+			</div>
+
+			<div className="flex flex-col">
+				{lessons.map((lesson, i) => (
+					<div key={lesson.id} className="flex items-stretch gap-3">
+						<div className="flex w-6 flex-col items-center">
+							<div
+								className={cn(
+									"relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-bold text-[10px]",
+									lesson.status === "completed" &&
+										"border border-lime-400 bg-lime-200 text-lime-600",
+									lesson.status === "current" &&
+										"border border-amber-400 bg-amber-200 text-amber-600",
+									lesson.status === "locked" &&
+										"bg-neutral-100 text-neutral-400",
+								)}
+							>
+								{lesson.status === "completed" ? (
+									<CheckIcon className="size-3" strokeWidth={2.5} />
+								) : lesson.status === "current" ? (
+									<ClockIcon className="size-3" strokeWidth={2.5} />
+								) : lesson.status === "locked" ? (
+									<Lock className="size-3" strokeWidth={2.5} />
+								) : null}
+							</div>
+							{i < lessons.length - 1 && (
+								<div
+									className={cn(
+										"min-h-3 w-0.5 flex-1",
+										lesson.status === "completed"
+											? "bg-lime-200"
+											: "bg-neutral-200",
+									)}
 								/>
 							)}
-						</motion.span>{" "}
-						about this.
-					</p>
+						</div>
 
-					{/* Animated arrow pointing to error */}
-					<AnimatePresence>
-						{step >= 3 && step < 5 && (
-							<motion.div
-								initial={{ opacity: 0, scale: 0.5 }}
-								animate={{ opacity: 1, scale: 1 }}
-								exit={{ opacity: 0, scale: 0.5 }}
-								transition={{ type: "spring", stiffness: 300 }}
-								className="absolute"
-								style={{ top: "50%", right: "-8px" }}
-							>
-								<svg
-									width="60"
-									height="40"
-									viewBox="0 0 60 40"
-									fill="none"
-									className="overflow-visible"
-									aria-hidden="true"
-								>
-									{/* Curved arrow path */}
-									<motion.path
-										d="M 55 20 Q 30 5 10 15"
-										stroke="#C6F64D"
-										strokeWidth="2"
-										strokeLinecap="round"
-										fill="none"
-										initial={{ pathLength: 0 }}
-										animate={{ pathLength: 1 }}
-										transition={{ duration: 0.5 }}
-									/>
-									{/* Arrow head */}
-									<motion.path
-										d="M 15 10 L 10 15 L 17 18"
-										stroke="#C6F64D"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										fill="none"
-										initial={{ opacity: 0 }}
-										animate={{ opacity: 1 }}
-										transition={{ delay: 0.4 }}
-									/>
-								</svg>
-							</motion.div>
-						)}
-					</AnimatePresence>
-				</motion.div>
-
-				{/* Suggestion card */}
-				<AnimatePresence>
-					{step >= 4 && (
-						<motion.div
-							initial={{ y: 20, opacity: 0, scale: 0.95 }}
-							animate={{ y: 0, opacity: 1, scale: 1 }}
-							exit={{ y: -10, opacity: 0 }}
-							transition={{ type: "spring", stiffness: 300, damping: 25 }}
-							className="flex items-start gap-3 rounded-lg border bg-white p-3"
-							style={{
-								boxShadow: "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
-							}}
+						{/* Lesson card */}
+						<div
+							className={cn(
+								"mb-2 flex-1 rounded-xl border p-3",
+								lesson.status === "current"
+									? "border-neutral-100 bg-white"
+									: lesson.status === "completed"
+										? "border-neutral-100 bg-white/70"
+										: "border-neutral-100 bg-neutral-50/50 opacity-60",
+							)}
 						>
-							<motion.div
-								initial={{ rotate: -180, opacity: 0 }}
-								animate={{ rotate: 0, opacity: 1 }}
-								transition={{ delay: 0.2, type: "spring" }}
-								className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#C6F64D]"
-							>
-								<svg
-									width="10"
-									height="10"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="#2d4a00"
-									strokeWidth="3"
-									aria-hidden="true"
+							<div className="flex items-center justify-between">
+								<span
+									className={cn(
+										"font-medium text-xs",
+										lesson.status === "locked"
+											? "text-neutral-400"
+											: "text-neutral-800",
+									)}
 								>
-									<path d="M12 5v14M5 12h14" />
-								</svg>
-							</motion.div>
-							<div className="flex-1">
-								<div className="flex items-center gap-2">
-									<span className="text-red-400 text-sm line-through">
-										exciting
-									</span>
-									<motion.svg
-										width="16"
-										height="16"
-										viewBox="0 0 24 24"
-										fill="none"
-										initial={{ x: -5, opacity: 0 }}
-										animate={{ x: 0, opacity: 1 }}
-										transition={{ delay: 0.3 }}
-										aria-hidden="true"
-									>
-										<path
-											d="M5 12h14M12 5l7 7-7 7"
-											stroke="#5a8a00"
-											strokeWidth="2"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										/>
-									</motion.svg>
-									<motion.span
-										initial={{ x: -5, opacity: 0 }}
-										animate={{ x: 0, opacity: 1 }}
-										transition={{ delay: 0.4 }}
-										className="font-semibold text-[#5a8a00] text-sm"
-									>
-										excited
-									</motion.span>
-								</div>
-								<motion.p
-									initial={{ opacity: 0 }}
-									animate={{ opacity: 1 }}
-									transition={{ delay: 0.5 }}
-									className="mt-1 text-[#5a8a00]/70 text-xs"
-								>
-									Use 'excited' to describe how you feel
-								</motion.p>
+									{lesson.title}
+								</span>
 							</div>
-						</motion.div>
-					)}
-				</AnimatePresence>
-			</motion.div>
+							{lesson.status === "current" && (
+								<div className="mt-2 flex items-center gap-2">
+									<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
+										<div
+											className="h-full rounded-full bg-amber-400"
+											style={{ width: `${lesson.progress}%` }}
+										/>
+									</div>
+									<span className="text-[10px] text-neutral-400">
+										{lesson.progress}%
+									</span>
+								</div>
+							)}
+						</div>
+					</div>
+				))}
+			</div>
 		</div>
 	);
 }
@@ -494,73 +521,117 @@ export function Features() {
 		{
 			id: "grammar",
 			icon: SpeakingIcon,
-			title: "Practice speaking",
-			description:
-				"Master rules with interactive exercises and instant feedback",
-			demo: PracticeDemo,
+			title: "Practice speaking & Get feedback",
+			demo: PracticeSpeakingDemo,
+		},
+		{
+			id: "mistakes",
+			icon: ReviewIcon,
+			title: "Review mistakes",
+			demo: ReviewMistakesDemo,
 		},
 		{
 			id: "feedback",
 			icon: VocabularyIcon,
-			title: "Get feedback",
-			description: "Get AI-powered corrections with detailed explanations",
-			demo: GetFeedbackDemo,
+			title: "Vocabulary",
+			demo: VocabularyDemo,
 		},
 		{
-			id: "mistakes",
+			id: "lessons",
 			icon: GrammarIcon,
-			title: "Review mistakes",
-			description: "Track and learn from your errors to improve faster",
-			demo: ReviewMistakesDemo,
+			title: "Personalized lessons",
+			demo: PersonalizedLessonsDemo,
 		},
 	];
 
 	return (
 		<div className="relative mx-auto md:mt-24">
 			<div>
-				<h1 className="mb-10 text-left font-bold font-lyon text-4xl tracking-tight md:text-5xl">
-					English learning is broken.
-					<br />
-					We are here to fix it for you
-				</h1>
-
+				<div className="mb-14 text-center">
+					<h1 className="mb-4 font-bold font-lyon text-5xl tracking-tight md:text-5xl">
+						English learning is broken.
+						<br />
+						We are here to fix it for you
+					</h1>
+					<p className="flex items-center justify-center gap-2 text-balance text-muted-foreground text-sm md:max-w-boundary-sm md:text-lg">
+						Want to more about our features?{" "}
+						<Link
+							to="/features"
+							className="flex items-center gap-1 text-lime-700 underline transition-all duration-300 hover:text-lime-700/80"
+						>
+							Learn more <ArrowUpRightIcon className="size-5" />
+						</Link>
+					</p>
+				</div>
 				<div className="relative grid grid-cols-1 gap-6 md:grid-cols-3">
 					{_features.map((feature, _i) => (
 						<div
 							className={cn(
-								"rounded-3xl border border-border/50 bg-neutral-50 px-6 py-5",
-								feature.id === "grammar" ? "col-span-2" : "",
+								"relative h-full min-h-[400px] w-full overflow-hidden rounded-3xl border border-border/50",
+								feature.id === "grammar" || feature.id === "lessons"
+									? "col-span-2"
+									: "",
 							)}
-							style={{
-								boxShadow:
-									"rgba(162, 166, 171, 0.2) 0px 0px 0px 0px inset, rgba(162, 166, 171, 0.2) 0px 0px 8px 2px inset",
-							}}
 							key={feature.id}
 						>
-							<div className={cn("z-10 mb-4 flex items-center gap-2")}>
-								<feature.icon />
-								<h2 className="font-bold font-lyon text-2xl">
-									{feature.title}
-								</h2>
-
-								{/* <p className="text-muted-foreground text-sm">
-									{feature.description}
-								</p> */}
-							</div>
 							<div
-								key={feature.id}
-								className="relative flex min-h-[240px] items-end"
-								// style={{
-								// 	boxShadow:
-								// 		"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
-								// }}
+								className="absolute inset-1 h-full w-full rounded-tl-[1.25rem] px-6 py-6 pt-4 pl-4"
+								style={{
+									background:
+										"radial-gradient(92.09% 124.47% at 50% 99.24%, rgba(245, 245, 245, 0.80) 58.91%, rgba(245, 245, 245, 0.40) 100%)",
+									boxShadow:
+										"1.899px 1.77px 8.174px 0 rgba(255, 255, 255, 0.13) inset, 1.007px 0.939px 4.087px 0 rgba(255, 255, 255, 0.13) inset",
+									mixBlendMode: "plus-lighter",
+								}}
 							>
-								<feature.demo />
-								{/* <img
-									src="/profile-bg-gradient2.svg"
-									alt="Feature 1"
-									className="absolute right-0 bottom-0 h-full w-full object-cover"
-								/> */}
+								<div className={cn("z-10 mb-3.5 flex items-center gap-2")}>
+									<feature.icon className="size-6.5" />
+									<h2 className="font-bold font-lyon text-[1.30rem]">
+										{feature.title}
+									</h2>
+								</div>
+
+								<div key={feature.id} className="relative z-10 flex items-end">
+									<feature.demo />
+								</div>
+								{/* <div className="absolute bottom-0 left-0 w-full">
+								<svg
+									className="absolute bottom-0 left-0 w-full text-[#DCFF6F] blur-[70px]"
+									viewBox="0 0 1920 600"
+									xmlns="http://www.w3.org/2000/svg"
+									preserveAspectRatio="none"
+									aria-hidden="true"
+								>
+									<path
+										d="M0,600 C200,100 800,0 1000,400 C1200,100 1600,200 1920,600 L1920,600 L0,600 Z"
+										fill="currentColor"
+									/>
+								</svg>
+								<svg
+									className="md:-bottom-[10rem] absolute bottom-0 left-0 w-full text-lime-400 blur-[60px] md:left-[-4rem]"
+									viewBox="0 0 1920 600"
+									xmlns="http://www.w3.org/2000/svg"
+									preserveAspectRatio="none"
+									aria-hidden="true"
+								>
+									<path
+										d="M0,600 C200,100 800,0 1000,400 C1200,100 1600,200 1920,600 L1920,600 L0,600 Z"
+										fill="currentColor"
+									/>
+								</svg>
+								<svg
+									className="-bottom-[2rem] md:-bottom-[12rem] absolute left-0 w-full text-[#D8FF76] blur-[60px]"
+									viewBox="0 0 1920 600"
+									xmlns="http://www.w3.org/2000/svg"
+									preserveAspectRatio="none"
+									aria-hidden="true"
+								>
+									<path
+										d="M0,500 C200,200 600,100 960,300 C1300,100 1600,0 1920,400 L1920,600 L0,600 Z"
+										fill="currentColor"
+									/>
+								</svg>
+							</div> */}
 							</div>
 						</div>
 					))}

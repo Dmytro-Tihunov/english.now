@@ -57,7 +57,7 @@ export default function FAQ() {
 						</p>
 						<a
 							href="mailto:support@english.now"
-							className="text-lime-700 underline transition-all duration-300 hover:text-lime-700/80"
+							className="text-lime-700 text-sm underline transition-all duration-300 hover:text-lime-700/80 md:text-base"
 						>
 							support@english.now
 						</a>

@@ -30,12 +30,19 @@ const navigation = [
 	{
 		label: "Legal",
 		items: [
-			{ label: "Privacy Policy", to: "/privacy-policy" },
-			{ label: "Terms of Service", to: "/terms-of-service" },
+			{ label: "Privacy", to: "/privacy-policy" },
+			{ label: "Terms", to: "/terms-of-service" },
 			{
-				label: "Cancellation Policy",
+				label: "Cancellation",
 				to: "/refund",
 			},
+		],
+	},
+	{
+		label: "Social",
+		items: [
+			{ label: "GitHub", to: "https://github.com/Dmytro-Tihunov/english.now" },
+			{ label: "X", to: "https://x.com/tihunov" },
 		],
 	},
 ];
@@ -46,7 +53,7 @@ export default function Footer() {
 			<div className="container relative z-10 mx-auto max-w-5xl px-4">
 				<div className="mx-auto grid grid-cols-3 border-border/50 border-t pt-12">
 					<div className="col-span-1">
-						<div className="mb-4 flex items-center gap-2">
+						<div className="mb-5 flex items-center gap-2">
 							<Link to="/" className="flex items-center gap-3">
 								<div className="relative size-9 overflow-hidden rounded-xl border border-border/50 bg-neutral-100">
 									<svg
@@ -73,22 +80,19 @@ export default function Footer() {
 									</svg>
 								</div>
 							</Link>
-							{/* <div className="font-bold font-lyon text-xl italic">English</div> */}
 						</div>
 						<div className="mb-5 text-muted-foreground text-sm leading-relaxed tracking-tight">
-							<span className="font-semibold">English.now</span> - English
-							learning platform. <br />
-							It's not ready yet, but I'm working hard to make it better for
-							you.
-						</div>
-
-						<div className="flex items-center gap-2">
-							<LanguageSwitcher />
-							<ThemeSwitcher />
+							<span className="h-auto w-fit font-medium text-[13px] text-muted-foreground leading-[20px] tracking-[0.1px]">
+								English.now - English learning platform.
+							</span>
+							<p className="mt-1 h-auto w-fit text-[12px] text-muted-foreground leading-[20px] tracking-[0.1px]">
+								It's not ready yet, but I'm working hard to make it better for
+								you. Thank you for your support!
+							</p>
 						</div>
 					</div>
-					<div className="col-span-2 pl-28">
-						<div className="grid grid-cols-3 gap-2">
+					<div className="col-span-2 pl-18">
+						<div className="grid grid-cols-4 gap-4">
 							{navigation.map(({ label, items }) => (
 								<div key={label} className="flex flex-col">
 									<h5 className="mb-3 text-muted-foreground text-sm uppercase leading-relaxed tracking-tight">
@@ -112,7 +116,7 @@ export default function Footer() {
 					</div>
 				</div>
 
-				<div className="mt-8 mb-3 flex flex-row items-start justify-between py-3.5 text-muted-foreground">
+				<div className="mt-8 mb-3 flex flex-row items-center justify-between py-3.5 text-muted-foreground">
 					<div className="flex items-center gap-1.5 text-center text-xs">
 						<div>
 							© {new Date().getFullYear()} English Now. All rights reserved.{" "}
@@ -138,37 +142,10 @@ export default function Footer() {
 							</div>
 						</div> */}
 					</div>
-					<div className="flex items-center gap-3">
-						<a
-							href="https://github.com/Dmytro-Tihunov/english.now"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="size-4"
-								viewBox="0 0 24 24"
-								aria-hidden="true"
-							>
-								<path
-									fill="currentColor"
-									d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"
-								/>
-							</svg>
-						</a>
-						<a href="https://x.com/tihunov" target="_blank" rel="noopener">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="size-4"
-								viewBox="0 0 24 24"
-								aria-hidden="true"
-							>
-								<path
-									fill="currentColor"
-									d="m17.687 3.063l-4.996 5.711l-4.32-5.711H2.112l7.477 9.776l-7.086 8.099h3.034l5.469-6.25l4.78 6.25h6.102l-7.794-10.304l6.625-7.571zm-1.064 16.06L5.654 4.782h1.803l10.846 14.34z"
-								/>
-							</svg>
-						</a>
+
+					<div className="flex items-center gap-2">
+						<LanguageSwitcher />
+						<ThemeSwitcher />
 					</div>
 				</div>
 			</div>

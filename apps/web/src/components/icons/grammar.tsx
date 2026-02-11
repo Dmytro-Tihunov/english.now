@@ -1,7 +1,8 @@
-export const GrammarIcon = () => {
+import { cn } from "@/lib/utils";
+export const GrammarIcon = ({ className }: { className?: string }) => {
 	return (
 		<svg
-			className="size-6.5"
+			className={cn("size-7", className)}
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 54 50"

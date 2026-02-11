@@ -1,7 +1,8 @@
-export function SpeakingIcon() {
+import { cn } from "@/lib/utils";
+export function SpeakingIcon({ className }: { className?: string }) {
 	return (
 		<svg
-			className="w-6.5"
+			className={cn(className)}
 			viewBox="0 0 12 12"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"

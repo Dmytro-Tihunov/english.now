@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_public/about")({
 	component: About,
@@ -66,6 +66,20 @@ export default function About() {
 							</span>{" "}
 							It never judges your mistakes, it's available 24/7, and it adapts
 							to exactly where you are in your learning journey.
+							<br />
+							<br />
+							It is completely{" "}
+							<Link className="text-lime-700 underline" to="/login">
+								free to start
+							</Link>
+							, and I'm committed to keeping it that way.
+							{/* <br />
+							<br />
+							I'm grateful for your support, and I'm excited to see where this
+							journey takes us. */}
+							<br />
+							<br />
+							Thank you for using English Now.
 						</p>
 						{/* <div className="my-12 rounded-2xl border-[#C6F64D] border-l-4 bg-[#C6F64D]/5 p-6 pl-8">
 							<p className="mb-0 font-medium text-foreground italic">
