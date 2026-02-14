@@ -19,7 +19,21 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LOCALES_DIR = path.join(__dirname, "../src/locales");
 
 // Target languages to translate to (excluding source language 'en')
-const TARGET_LANGUAGES = ["uk", "fr"];
+const TARGET_LANGUAGES = [
+	"uk",
+	"fr",
+	"es",
+	"de",
+	"pt",
+	"it",
+	"pl",
+	"ja",
+	"ko",
+	"zh",
+	"ar",
+	"hi",
+	"tr",
+];
 
 // Source language
 const SOURCE_LANGUAGE = "en";
@@ -106,12 +120,15 @@ async function translateWithOpenAI(
 		es: "Spanish",
 		fr: "French",
 		de: "German",
+		pt: "Portuguese",
 		it: "Italian",
 		pl: "Polish",
-		pt: "Portuguese",
-		ru: "Russian",
-		zh: "Chinese",
 		ja: "Japanese",
+		ko: "Korean",
+		zh: "Chinese",
+		ar: "Arabic",
+		hi: "Hindi",
+		tr: "Turkish",
 	};
 
 	const response = await fetch("https://api.openai.com/v1/chat/completions", {

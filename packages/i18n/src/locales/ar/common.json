@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "English.now"
+  },
+  "actions": {
+    "continue": "استمر",
+    "back": "رجوع",
+    "skip": "تخطي",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "close": "إغلاق",
+    "getStarted": "ابدأ الآن"
+  },
+  "errors": {
+    "required": "هذا الحقل مطلوب",
+    "generic": "حدث خطأ ما",
+    "networkError": "خطأ في الشبكة. يرجى المحاولة مرة أخرى."
+  },
+  "auth": {
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "signOut": "تسجيل الخروج",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "alreadyHaveAccount": "لدي حساب بالفعل"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "practice": "تمرين",
+    "vocabulary": "المفردات",
+    "lessons": "الدروس",
+    "settings": "الإعدادات",
+    "pricing": "التسعير",
+    "about": "حول",
+    "features": "الميزات",
+    "blog": "مدونة"
+  }
+}

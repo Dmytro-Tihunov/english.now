@@ -1,5 +1,5 @@
+import { useTranslation } from "@english.now/i18n";
 import { ArrowRight, MessageCircle, Target, Trophy } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 
 export default function WelcomeStep({ onNext }: { onNext: () => void }) {

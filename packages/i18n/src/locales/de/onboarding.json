@@ -1,0 +1,179 @@
+{
+  "steps": {
+    "welcome": "Willkommen",
+    "nativeLanguage": "Muttersprache",
+    "level": "Dein Niveau",
+    "goal": "Dein Ziel",
+    "time": "Tägliche Zeit",
+    "focus": "Fokusbereiche",
+    "plan": "Dein Plan",
+    "paywall": "Loslegen"
+  },
+  "welcome": {
+    "title": "Lerne Englisch, Der Smarte Weg",
+    "titleHighlight": "Der Smarte Weg",
+    "subtitle": "Übe Englisch mit KI, baue deinen Wortschatz auf und beherrsche die Grammatik - alles auf dich zugeschnitten.",
+    "features": {
+      "conversations": "KI-gestützte Gespräche",
+      "personalizedPath": "Personalisierter Lernpfad",
+      "trackProgress": "Verfolge deinen Fortschritt"
+    }
+  },
+  "nativeLanguage": {
+    "title": "Was ist deine Muttersprache?",
+    "subtitle": "Wir verwenden dies, um Übersetzungen und Erklärungen zu personalisieren",
+    "searchPlaceholder": "Sprache suchen...",
+    "noLanguagesFound": "Keine Sprachen gefunden"
+  },
+  "level": {
+    "title": "Wie ist dein Englisch-Niveau?",
+    "subtitle": "Das hilft uns, deine Lernerfahrung zu personalisieren",
+    "options": {
+      "beginner": {
+        "name": "Anfänger",
+        "description": "Ich kenne einige grundlegende Wörter und Sätze"
+      },
+      "elementary": {
+        "name": "Grundstufe",
+        "description": "Ich kann einfache Gespräche führen"
+      },
+      "intermediate": {
+        "name": "Mittelstufe",
+        "description": "Ich kann über verschiedene Themen diskutieren"
+      },
+      "upperIntermediate": {
+        "name": "Fortgeschrittene Mittelstufe",
+        "description": "Ich fühle mich in den meisten Situationen wohl"
+      },
+      "advanced": {
+        "name": "Fortgeschritten",
+        "description": "Ich möchte mein Englisch perfektionieren"
+      },
+      "upper-intermediate": {
+        "name": "Fortgeschrittene Mittelstufe",
+        "description": "Ich fühle mich in den meisten Situationen wohl"
+      }
+    }
+  },
+  "goal": {
+    "title": "Was ist dein Hauptziel?",
+    "subtitle": "Wir erstellen einen Lernpfad, der auf deine Bedürfnisse zugeschnitten ist",
+    "options": {
+      "career": {
+        "name": "Karrierewachstum",
+        "description": "Bessere Jobmöglichkeiten erhalten"
+      },
+      "travel": {
+        "name": "Reisen",
+        "description": "Kommunizieren beim Reisen"
+      },
+      "education": {
+        "name": "Bildung",
+        "description": "Im Ausland studieren oder Prüfungen bestehen"
+      },
+      "social": {
+        "name": "Soziales",
+        "description": "Freunde finden und Kontakte knüpfen"
+      },
+      "personal": {
+        "name": "Persönliches Wachstum",
+        "description": "Mich selbst herausfordern zu lernen"
+      },
+      "content": {
+        "name": "Unterhaltung",
+        "description": "Filme, Bücher & Musik genießen"
+      }
+    }
+  },
+  "time": {
+    "title": "Wie viel Zeit kannst du täglich üben?",
+    "subtitle": "Konsistenz ist der Schlüssel zum Sprachenlernen",
+    "options": {
+      "5": {
+        "name": "5 Minuten",
+        "description": "Schnelles tägliches Üben"
+      },
+      "10": {
+        "name": "10 Minuten",
+        "description": "Stetiger Fortschritt"
+      },
+      "15": {
+        "name": "15 Minuten",
+        "description": "Stetiger Fortschritt"
+      },
+      "20": {
+        "name": "20+ Minuten",
+        "description": "Intensives Studium"
+      },
+      "30": {
+        "name": "30 Minuten",
+        "description": "Ernsthaftes Lernen"
+      },
+      "60": {
+        "name": "60+ Minuten",
+        "description": "Intensives Studium"
+      }
+    }
+  },
+  "focus": {
+    "title": "Worauf möchtest du dich konzentrieren?",
+    "subtitle": "Wähle alles aus, was zutrifft — du kannst dies später ändern",
+    "options": {
+      "speaking": "Sprechen",
+      "vocabulary": "Wortschatz",
+      "grammar": "Grammatik",
+      "pronunciation": "Aussprache"
+    }
+  },
+  "planSummary": {
+    "title": "Dein persönlicher Plan ist bereit!",
+    "subtitle": "Basierend auf deinen Vorlieben haben wir einen individuellen Lernpfad erstellt",
+    "profileTitle": "Dein Lernprofil",
+    "currentLevel": "Aktuelles Niveau",
+    "mainGoal": "Hauptziel",
+    "dailyPractice": "Tägliche Übung",
+    "focusAreas": "Fokusbereiche",
+    "all": "Alle",
+    "minutes": "Minuten",
+    "projection": "Mit {{time}} Min/Tag könntest du das nächste Niveau in ~8 Wochen erreichen",
+    "startLearning": "Lernen beginnen"
+  },
+  "paywall": {
+    "title": "Entfessle dein volles Potenzial",
+    "subtitle": "Schließe dich Tausenden von Lernenden an, die täglich ihr Englisch verbessern",
+    "learnersThisMonth": "Lernende diesen Monat",
+    "mostPopular": "Am beliebtesten",
+    "bestValue": "Bester Wert",
+    "startTrial": "7-tägige kostenlose Testversion starten",
+    "trialNote": "Jederzeit kündbar. Keine Kreditkarte für die Testversion erforderlich.",
+    "skipToLimited": "Mit eingeschränkten Funktionen fortfahren",
+    "securePayment": "Sichere Zahlung",
+    "moneyBack": "30 Tage Geld-zurück-Garantie",
+    "cancelAnytime": "Jederzeit kündbar",
+    "plans": {
+      "weekly": {
+        "name": "Wöchentlich",
+        "period": "Woche"
+      },
+      "yearly": {
+        "name": "Jährlich",
+        "period": "Jahr"
+      },
+      "lifetime": {
+        "name": "Lebenslang",
+        "period": "einmalig"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "Unbegrenzte KI-Gespräche",
+      "personalizedPath": "Personalisierter Lernpfad",
+      "progressTracking": "Fortschrittsverfolgung",
+      "save77": "Spare 77%",
+      "prioritySupport": "Priorisierter Support",
+      "offlineAccess": "Offline-Zugriff",
+      "payOnce": "Einmal zahlen, für immer besitzen",
+      "futureUpdates": "Alle zukünftigen Updates",
+      "premiumSupport": "Premium-Support"
+    }
+  }
+}

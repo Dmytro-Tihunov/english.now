@@ -10,7 +10,10 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@ai-sdk/deepgram": "^2.0.20",
+    "@ai-sdk/openai": "^3.0.28",
     "@aws-sdk/client-s3": "^3.705.0",
+    "@deepgram/sdk": "^4.11.3",
     "@english.now/api": "workspace:*",
     "@english.now/auth": "workspace:*",
     "@english.now/db": "workspace:*",
@@ -19,6 +22,7 @@
     "@hono/trpc-server": "^0.4.0",
     "@paddle/paddle-node-sdk": "^3.6.0",
     "@trpc/server": "catalog:",
+    "ai": "^6.0.85",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.44.2",

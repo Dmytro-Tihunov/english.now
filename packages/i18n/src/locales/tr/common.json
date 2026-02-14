@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "English.now"
+  },
+  "actions": {
+    "continue": "Devam Et",
+    "back": "Geri",
+    "skip": "Atla",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "close": "Kapat",
+    "getStarted": "Başlayın"
+  },
+  "errors": {
+    "required": "Bu alan gereklidir",
+    "generic": "Bir şeyler ters gitti",
+    "networkError": "Ağ hatası. Lütfen tekrar deneyin."
+  },
+  "auth": {
+    "signIn": "Giriş yap",
+    "signUp": "Kayıt ol",
+    "signOut": "Çıkış yap",
+    "forgotPassword": "Şifrenizi mi unuttunuz?",
+    "resetPassword": "Şifreyi sıfırla",
+    "alreadyHaveAccount": "Zaten bir hesabım var"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "practice": "Alıştırma",
+    "vocabulary": "Kelime Bilgisi",
+    "lessons": "Dersler",
+    "settings": "Ayarlar",
+    "pricing": "Fiyatlandırma",
+    "about": "Hakkında",
+    "features": "Özellikler",
+    "blog": "Blog"
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "steps": {
+    "welcome": "ようこそ",
+    "nativeLanguage": "母国語",
+    "level": "あなたのレベル",
+    "goal": "あなたの目標",
+    "time": "毎日の時間",
+    "focus": "重点分野",
+    "plan": "あなたのプラン",
+    "paywall": "始める"
+  },
+  "welcome": {
+    "title": "スマートな方法で英語を学ぶ",
+    "titleHighlight": "スマートな方法",
+    "subtitle": "AIで英語を練習し、語彙を増やし、文法をマスターしましょう - すべてあなたに合わせてパーソナライズされています。",
+    "features": {
+      "conversations": "AIによる会話",
+      "personalizedPath": "パーソナライズされた学習経路",
+      "trackProgress": "進捗を追跡"
+    }
+  },
+  "nativeLanguage": {
+    "title": "あなたの母国語は何ですか？",
+    "subtitle": "翻訳や説明をパーソナライズするために使用します",
+    "searchPlaceholder": "言語を検索...",
+    "noLanguagesFound": "言語が見つかりません"
+  },
+  "level": {
+    "title": "あなたの英語レベルは何ですか？",
+    "subtitle": "これにより、学習体験をパーソナライズできます",
+    "options": {
+      "beginner": {
+        "name": "初心者",
+        "description": "基本的な単語やフレーズを知っています"
+      },
+      "elementary": {
+        "name": "初級",
+        "description": "簡単な会話ができます"
+      },
+      "intermediate": {
+        "name": "中級",
+        "description": "さまざまなトピックについて話せます"
+      },
+      "upperIntermediate": {
+        "name": "中上級",
+        "description": "ほとんどの状況で快適に話せます"
+      },
+      "advanced": {
+        "name": "上級",
+        "description": "英語を完璧にしたい"
+      },
+      "upper-intermediate": {
+        "name": "中上級",
+        "description": "ほとんどの状況で快適です"
+      }
+    }
+  },
+  "goal": {
+    "title": "あなたの主な目標は何ですか？",
+    "subtitle": "あなたのニーズに合わせた学習経路を作成します",
+    "options": {
+      "career": {
+        "name": "キャリア成長",
+        "description": "より良い仕事の機会を得る"
+      },
+      "travel": {
+        "name": "旅行",
+        "description": "旅行中にコミュニケーションを取る"
+      },
+      "education": {
+        "name": "教育",
+        "description": "留学や試験に合格する"
+      },
+      "social": {
+        "name": "社交",
+        "description": "友達を作り、つながる"
+      },
+      "personal": {
+        "name": "自己成長",
+        "description": "自分を挑戦して学ぶ"
+      },
+      "content": {
+        "name": "エンターテインメント",
+        "description": "映画、本、音楽を楽しむ"
+      }
+    }
+  },
+  "time": {
+    "title": "毎日どのくらいの時間を練習できますか？",
+    "subtitle": "言語学習には継続性が重要です",
+    "options": {
+      "5": {
+        "name": "5分",
+        "description": "毎日の短時間練習"
+      },
+      "10": {
+        "name": "10分",
+        "description": "着実な進歩"
+      },
+      "15": {
+        "name": "15分",
+        "description": "着実な進歩"
+      },
+      "20": {
+        "name": "20分以上",
+        "description": "集中的な学習"
+      },
+      "30": {
+        "name": "30分",
+        "description": "本格的な学習"
+      },
+      "60": {
+        "name": "60分以上",
+        "description": "集中的な学習"
+      }
+    }
+  },
+  "focus": {
+    "title": "何に重点を置きたいですか？",
+    "subtitle": "該当するものをすべて選択してください — 後で変更できます",
+    "options": {
+      "speaking": "スピーキング",
+      "vocabulary": "語彙",
+      "grammar": "文法",
+      "pronunciation": "発音"
+    }
+  },
+  "planSummary": {
+    "title": "あなたのパーソナルプランが準備できました！",
+    "subtitle": "あなたの好みに基づいて、カスタム学習経路を作成しました",
+    "profileTitle": "あなたの学習プロフィール",
+    "currentLevel": "現在のレベル",
+    "mainGoal": "主な目標",
+    "dailyPractice": "毎日の練習",
+    "focusAreas": "重点分野",
+    "all": "すべて",
+    "minutes": "分",
+    "projection": "{{time}}分/日で、約8週間で次のレベルに到達できます",
+    "startLearning": "学習を始める"
+  },
+  "paywall": {
+    "title": "あなたの潜在能力を最大限に引き出す",
+    "subtitle": "毎日英語を上達させている何千人もの学習者に参加しましょう",
+    "learnersThisMonth": "今月の学習者",
+    "mostPopular": "最も人気",
+    "bestValue": "最高の価値",
+    "startTrial": "7日間の無料トライアルを開始",
+    "trialNote": "いつでもキャンセル可能。トライアルにはクレジットカードは不要です。",
+    "skipToLimited": "限定機能で続行",
+    "securePayment": "安全な支払い",
+    "moneyBack": "30日間の返金保証",
+    "cancelAnytime": "いつでもキャンセル可能",
+    "plans": {
+      "weekly": {
+        "name": "週ごと",
+        "period": "週"
+      },
+      "yearly": {
+        "name": "年ごと",
+        "period": "年"
+      },
+      "lifetime": {
+        "name": "生涯",
+        "period": "一度"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "無制限のAI会話",
+      "personalizedPath": "パーソナライズされた学習経路",
+      "progressTracking": "進捗追跡",
+      "save77": "77%節約",
+      "prioritySupport": "優先サポート",
+      "offlineAccess": "オフラインアクセス",
+      "payOnce": "一度支払えば永遠に所有",
+      "futureUpdates": "すべての将来の更新",
+      "premiumSupport": "プレミアムサポート"
+    }
+  }
+}

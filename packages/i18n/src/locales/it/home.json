@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "L'ultima app per imparare l'inglese di cui avrai mai bisogno.",
+    "subtitle": "App per l'apprendimento dell'inglese potenziata dall'IA che ti aiuta a imparare più velocemente e facilmente attraverso lezioni personalizzate, conversazioni reali e feedback istantaneo.",
+    "getStarted": "Inizia",
+    "watchDemo": "Guarda la demo",
+    "learners": "Oltre 10k studenti",
+    "noCard": "Nessuna carta richiesta"
+  },
+  "features": {
+    "title": "L'apprendimento dell'inglese è difettoso.",
+    "titleLine2": "Siamo qui per risolverlo per te",
+    "learnMore": "Vuoi saperne di più sulle nostre caratteristiche?",
+    "learnMoreLink": "Scopri di più",
+    "items": {
+      "speaking": "Pratica di conversazione e ricevi feedback",
+      "mistakes": "Rivedi gli errori",
+      "vocabulary": "Vocabolario",
+      "lessons": "Lezioni personalizzate"
+    }
+  },
+  "footer": {
+    "description": "English.now - Piattaforma per l'apprendimento dell'inglese.",
+    "descriptionNote": "Non è ancora pronta, ma sto lavorando duramente per migliorarla per te. Grazie per il tuo supporto!",
+    "product": "Prodotto",
+    "company": "Azienda",
+    "legal": "Legale",
+    "social": "Social",
+    "contact": "Contatto",
+    "copyright": "Tutti i diritti riservati.",
+    "privacy": "Informativa sulla privacy",
+    "terms": "Termini di servizio",
+    "cancellation": "Politica di cancellazione"
+  }
+}

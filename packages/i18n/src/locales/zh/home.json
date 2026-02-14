@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "您将需要的最后一个英语学习应用程序。",
+    "subtitle": "由AI驱动的英语学习应用程序，通过个性化课程、真实对话和即时反馈帮助您更快、更轻松地学习。",
+    "getStarted": "开始",
+    "watchDemo": "观看演示",
+    "learners": "超过1万名学习者",
+    "noCard": "无需信用卡"
+  },
+  "features": {
+    "title": "英语学习存在问题。",
+    "titleLine2": "我们在这里为您解决",
+    "learnMore": "想了解更多关于我们的功能吗？",
+    "learnMoreLink": "了解更多",
+    "items": {
+      "speaking": "练习口语并获得反馈",
+      "mistakes": "复习错误",
+      "vocabulary": "词汇",
+      "lessons": "个性化课程"
+    }
+  },
+  "footer": {
+    "description": "English.now - 英语学习平台。",
+    "descriptionNote": "它还没有准备好，但我正在努力为您改进。感谢您的支持！",
+    "product": "产品",
+    "company": "公司",
+    "legal": "法律",
+    "social": "社交",
+    "contact": "联系",
+    "copyright": "版权所有。",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "cancellation": "取消政策"
+  }
+}

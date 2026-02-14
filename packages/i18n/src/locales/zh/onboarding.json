@@ -1,0 +1,179 @@
+{
+  "steps": {
+    "welcome": "欢迎",
+    "nativeLanguage": "母语",
+    "level": "你的水平",
+    "goal": "你的目标",
+    "time": "每日时间",
+    "focus": "关注领域",
+    "plan": "你的计划",
+    "paywall": "开始"
+  },
+  "welcome": {
+    "title": "智能学习英语",
+    "titleHighlight": "智能学习",
+    "subtitle": "用AI练习英语，建立词汇量，掌握语法——一切为你量身定制。",
+    "features": {
+      "conversations": "AI驱动的对话",
+      "personalizedPath": "个性化学习路径",
+      "trackProgress": "跟踪你的进度"
+    }
+  },
+  "nativeLanguage": {
+    "title": "你的母语是什么？",
+    "subtitle": "我们将使用此信息来个性化翻译和解释",
+    "searchPlaceholder": "搜索语言...",
+    "noLanguagesFound": "未找到语言"
+  },
+  "level": {
+    "title": "你的英语水平是什么？",
+    "subtitle": "这有助于我们个性化你的学习体验",
+    "options": {
+      "beginner": {
+        "name": "初学者",
+        "description": "我知道一些基本的单词和短语"
+      },
+      "elementary": {
+        "name": "初级",
+        "description": "我可以进行简单的对话"
+      },
+      "intermediate": {
+        "name": "中级",
+        "description": "我可以讨论各种话题"
+      },
+      "upperIntermediate": {
+        "name": "中高级",
+        "description": "我在大多数情况下都很自如"
+      },
+      "advanced": {
+        "name": "高级",
+        "description": "我想完善我的英语"
+      },
+      "upper-intermediate": {
+        "name": "中高级",
+        "description": "我在大多数情况下都感到舒适"
+      }
+    }
+  },
+  "goal": {
+    "title": "你的主要目标是什么？",
+    "subtitle": "我们将根据你的需求创建一个学习路径",
+    "options": {
+      "career": {
+        "name": "职业发展",
+        "description": "获得更好的工作机会"
+      },
+      "travel": {
+        "name": "旅行",
+        "description": "旅行时沟通"
+      },
+      "education": {
+        "name": "教育",
+        "description": "出国留学或通过考试"
+      },
+      "social": {
+        "name": "社交",
+        "description": "交朋友和建立联系"
+      },
+      "personal": {
+        "name": "个人成长",
+        "description": "挑战自己学习"
+      },
+      "content": {
+        "name": "娱乐",
+        "description": "享受电影、书籍和音乐"
+      }
+    }
+  },
+  "time": {
+    "title": "你每天能练习多长时间？",
+    "subtitle": "一致性是语言学习的关键",
+    "options": {
+      "5": {
+        "name": "5分钟",
+        "description": "快速的日常练习"
+      },
+      "10": {
+        "name": "10分钟",
+        "description": "稳步进展"
+      },
+      "15": {
+        "name": "15分钟",
+        "description": "稳步进步"
+      },
+      "20": {
+        "name": "20+分钟",
+        "description": "深入学习"
+      },
+      "30": {
+        "name": "30分钟",
+        "description": "认真学习"
+      },
+      "60": {
+        "name": "60+分钟",
+        "description": "深入学习"
+      }
+    }
+  },
+  "focus": {
+    "title": "你想专注于什么？",
+    "subtitle": "选择所有适用的选项——你可以稍后更改",
+    "options": {
+      "speaking": "口语",
+      "vocabulary": "词汇",
+      "grammar": "语法",
+      "pronunciation": "发音"
+    }
+  },
+  "planSummary": {
+    "title": "你的个人计划已准备好！",
+    "subtitle": "根据你的偏好，我们创建了一个定制的学习路径",
+    "profileTitle": "你的学习档案",
+    "currentLevel": "当前水平",
+    "mainGoal": "主要目标",
+    "dailyPractice": "每日练习",
+    "focusAreas": "关注领域",
+    "all": "所有",
+    "minutes": "分钟",
+    "projection": "每天{{time}}分钟，你可以在约8周内达到下一个水平",
+    "startLearning": "开始学习"
+  },
+  "paywall": {
+    "title": "释放你的全部潜力",
+    "subtitle": "加入每天提高英语的数千名学习者",
+    "learnersThisMonth": "本月学习者",
+    "mostPopular": "最受欢迎",
+    "bestValue": "最佳价值",
+    "startTrial": "开始7天免费试用",
+    "trialNote": "随时取消。试用无需信用卡。",
+    "skipToLimited": "继续使用有限功能",
+    "securePayment": "安全支付",
+    "moneyBack": "30天退款保证",
+    "cancelAnytime": "随时取消",
+    "plans": {
+      "weekly": {
+        "name": "每周",
+        "period": "周"
+      },
+      "yearly": {
+        "name": "每年",
+        "period": "年"
+      },
+      "lifetime": {
+        "name": "终身",
+        "period": "一次性"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "无限AI对话",
+      "personalizedPath": "个性化学习路径",
+      "progressTracking": "进度跟踪",
+      "save77": "节省77%",
+      "prioritySupport": "优先支持",
+      "offlineAccess": "离线访问",
+      "payOnce": "一次支付，永久拥有",
+      "futureUpdates": "所有未来更新",
+      "premiumSupport": "高级支持"
+    }
+  }
+}

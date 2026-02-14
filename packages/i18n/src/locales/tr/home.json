@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "İhtiyacınız olan son İngilizce öğrenme uygulaması.",
+    "subtitle": "Kişiselleştirilmiş dersler, gerçek konuşmalar ve anında geri bildirim ile daha hızlı ve kolay öğrenmenize yardımcı olan yapay zeka destekli İngilizce öğrenme uygulaması.",
+    "getStarted": "Başlayın",
+    "watchDemo": "Demoyu İzle",
+    "learners": "10k+ öğrenci",
+    "noCard": "Kart gerekmez"
+  },
+  "features": {
+    "title": "İngilizce öğrenimi bozulmuş durumda.",
+    "titleLine2": "Bunu sizin için düzeltmeye geldik",
+    "learnMore": "Özelliklerimiz hakkında daha fazla bilgi mi istiyorsunuz?",
+    "learnMoreLink": "Daha fazla bilgi edinin",
+    "items": {
+      "speaking": "Konuşma pratiği yapın ve geri bildirim alın",
+      "mistakes": "Hataları gözden geçirin",
+      "vocabulary": "Kelime bilgisi",
+      "lessons": "Kişiselleştirilmiş dersler"
+    }
+  },
+  "footer": {
+    "description": "English.now - İngilizce öğrenme platformu.",
+    "descriptionNote": "Henüz hazır değil, ancak sizin için daha iyi hale getirmek için çok çalışıyorum. Desteğiniz için teşekkür ederim!",
+    "product": "Ürün",
+    "company": "Şirket",
+    "legal": "Yasal",
+    "social": "Sosyal",
+    "contact": "İletişim",
+    "copyright": "Tüm hakları saklıdır.",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Hizmet Şartları",
+    "cancellation": "İptal Politikası"
+  }
+}

@@ -1,5 +1,6 @@
-import { FlameIcon } from "lucide-react";
+import { FlameIcon, InfoIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface StreakProps {
 	currentStreak: number;
@@ -49,24 +50,32 @@ export default function Streak({
 					"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
 			}}
 		>
-			<div className="flex gap-2 font-medium">
+			<div className="mb-2.5 flex gap-2 pl-1.5 font-medium">
 				<div>
-					<h3 className="font-semibold text-orange-500">{streak} day streak</h3>
+					<h3 className="flex items-center gap-2 font-lyon font-semibold text-xl">
+						{streak} day streak
+						<Tooltip>
+							<TooltipTrigger>
+								<InfoIcon className="size-4 text-neutral-400" strokeWidth={2} />
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>
+									Your current streak is {streak} days.
+									<br />
+									Your longest streak is {longestStreak} days.
+								</p>
+							</TooltipContent>
+						</Tooltip>
+					</h3>
 					<p className="text-muted-foreground text-sm">
 						Time to start your first lesson!
 					</p>
 				</div>
 			</div>
 
-			<div className="rounded-[1.2rem] border border-border/50 p-4">
-				<div className="mb-4 flex items-center gap-2">
-					{/* <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-orange-500 bg-radial from-orange-300 to-orange-400">
-						<FlameIcon className="size-5 text-orange-700" />
-					</div> */}
-				</div>
-
+			<div className="rounded-[1.2rem] border border-border/50 p-3">
 				{/* Week Progress */}
-				<div className="mb-6 flex items-center justify-between">
+				<div className="flex items-center justify-between">
 					{WEEK_DAYS.map((day, index) => {
 						const isToday = index === todayIndex;
 						const isCompleted = completedDays.includes(day.key);
@@ -78,7 +87,7 @@ export default function Streak({
 								</span>
 								<div
 									className={cn(
-										"flex size-9 items-center justify-center rounded-full transition-all",
+										"flex size-8.5 items-center justify-center rounded-full transition-all",
 										isCompleted
 											? "bg-[#EA580C]"
 											: isToday
@@ -94,7 +103,7 @@ export default function Streak({
 						);
 					})}
 				</div>
-				<div className="grid grid-cols-2 gap-4 pb-0">
+				{/* <div className="grid grid-cols-2 gap-4 pb-0">
 					<div className="flex flex-col">
 						<div className="mb-1 flex items-center font-medium text-muted-foreground text-xs">
 							Current Streak
@@ -108,7 +117,7 @@ export default function Streak({
 						</div>
 						<span className="font-semibold">{longestStreak} days</span>
 					</div>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

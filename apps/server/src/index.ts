@@ -7,6 +7,7 @@ import { trpcServer } from "@hono/trpc-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import contentRoutes from "./routes/content";
 import conversationRoutes from "./routes/conversation";
 import paddleRoutes from "./routes/paddle";
 import profileRoutes from "./routes/profile";
@@ -29,6 +30,9 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
 // REST API routes for profile
 app.route("/api/profile", profileRoutes);
+
+// REST API routes for content generation (SSE streaming)
+app.route("/api/content", contentRoutes);
 
 // REST API routes for conversation (streaming support)
 app.route("/api/conversation", conversationRoutes);

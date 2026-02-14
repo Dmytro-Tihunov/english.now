@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "O último aplicativo de aprendizado de inglês que você precisará.",
+    "subtitle": "Aplicativo de aprendizado de inglês com inteligência artificial que ajuda você a aprender mais rápido e mais facilmente através de lições personalizadas, conversas reais e feedback instantâneo.",
+    "getStarted": "Começar",
+    "watchDemo": "Assistir Demo",
+    "learners": "Mais de 10 mil alunos",
+    "noCard": "Cartão não necessário"
+  },
+  "features": {
+    "title": "O aprendizado de inglês está quebrado.",
+    "titleLine2": "Estamos aqui para consertá-lo para você",
+    "learnMore": "Quer saber mais sobre nossos recursos?",
+    "learnMoreLink": "Saiba mais",
+    "items": {
+      "speaking": "Pratique a fala e receba feedback",
+      "mistakes": "Reveja erros",
+      "vocabulary": "Vocabulário",
+      "lessons": "Aulas personalizadas"
+    }
+  },
+  "footer": {
+    "description": "English.now - Plataforma de aprendizado de inglês.",
+    "descriptionNote": "Ainda não está pronto, mas estou trabalhando duro para melhorá-lo para você. Obrigado pelo seu apoio!",
+    "product": "Produto",
+    "company": "Empresa",
+    "legal": "Legal",
+    "social": "Social",
+    "contact": "Contato",
+    "copyright": "Todos os direitos reservados.",
+    "privacy": "Política de Privacidade",
+    "terms": "Termos de Serviço",
+    "cancellation": "Política de Cancelamento"
+  }
+}

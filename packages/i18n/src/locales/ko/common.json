@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "English.now"
+  },
+  "actions": {
+    "continue": "계속",
+    "back": "뒤로",
+    "skip": "건너뛰기",
+    "save": "저장",
+    "cancel": "취소",
+    "confirm": "확인",
+    "delete": "삭제",
+    "edit": "편집",
+    "close": "닫기",
+    "getStarted": "시작하기"
+  },
+  "errors": {
+    "required": "이 필드는 필수입니다",
+    "generic": "문제가 발생했습니다",
+    "networkError": "네트워크 오류입니다. 다시 시도해 주세요."
+  },
+  "auth": {
+    "signIn": "로그인",
+    "signUp": "가입하기",
+    "signOut": "로그아웃",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "resetPassword": "비밀번호 재설정",
+    "alreadyHaveAccount": "이미 계정이 있습니다"
+  },
+  "nav": {
+    "home": "홈",
+    "practice": "연습",
+    "vocabulary": "어휘",
+    "lessons": "레슨",
+    "settings": "설정",
+    "pricing": "가격",
+    "about": "소개",
+    "features": "기능",
+    "blog": "블로그"
+  }
+}

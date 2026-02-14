@@ -1,9 +1,12 @@
+import { useTranslation } from "@english.now/i18n";
 import { Link } from "@tanstack/react-router";
 import {
-	ArrowRightIcon,
+	ArrowRight,
 	ArrowUpRightIcon,
+	Bookmark,
 	CheckIcon,
 	ClockIcon,
+	Flag,
 	KeyboardIcon,
 	Lightbulb,
 	Lock,
@@ -11,9 +14,9 @@ import {
 	PanelRight,
 	PlayIcon,
 	Settings,
+	Volume2,
 	X,
 } from "lucide-react";
-import { motion } from "motion/react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { GrammarIcon } from "../icons/grammar";
@@ -25,209 +28,216 @@ import { Button } from "../ui/button";
 function PracticeSpeakingDemo() {
 	const [showFeedback, setShowFeedback] = useState(true);
 	return (
-		<div
-			className="relative flex w-full flex-col overflow-hidden rounded-2xl bg-white"
-			style={{
-				boxShadow:
-					"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
-			}}
-		>
-			{/* {showFeedback && (
-				<motion.div
-					initial={{ right: "0px" }}
-					animate={{ right: "0px" }}
-					exit={{ right: "-180px" }}
-					className="absolute top-0 z-20 h-full w-[180px] rounded-r-2xl border-border/50 border-l bg-white p-4 pt-3"
-				>
-					<div className="relative mb-0.5 flex items-center gap-1.5">
-						<span className="font-semibold text-xs">Feedback</span>{" "}
-						<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-1.5 py-[1.5px] font-medium text-[11px] text-black normal-case tracking-normal">
-							AI
-						</span>
+		<div className="relative flex h-full w-full gap-4">
+			<div
+				className="relative flex flex-1 flex-col overflow-hidden rounded-2xl bg-white"
+				style={{
+					boxShadow:
+						"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+				}}
+			>
+				<div className="flex items-center gap-2 border-border/50 border-b px-3 py-2.5">
+					<div className="flex w-full items-center justify-between gap-2">
+						<div className="flex items-center gap-2">
+							<div className="relative size-7 overflow-hidden rounded-lg border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
+								<img
+									className="absolute right-0 bottom-[-4px] left-0 mx-auto h-full w-full object-contain"
+									src="/logo.svg"
+									alt=""
+									width={32}
+									height={32}
+								/>
+							</div>
+							<span className="font-semibold text-sm">Conversation</span>
+						</div>
+						<div>
+							<Button
+								variant="outline"
+								size="icon"
+								className="size-7 rounded-lg"
+								onClick={() => setShowFeedback(!showFeedback)}
+							>
+								<PanelRight className="size-3.5" />
+							</Button>
+						</div>
 					</div>
-					<button
-						className="absolute top-3 right-3"
-						type="button"
-						onClick={() => setShowFeedback(!showFeedback)}
-					>
-						<X className="size-3.5 cursor-pointer text-muted-foreground hover:text-muted-foreground/80" />
-					</button>
+				</div>
 
-					<p className="text-neutral-900 text-sm">
-						<span className="font-medium text-xs">Here's your feedback:</span>
-						<div className="mt-4 flex flex-col divide-neutral-200">
-							<div className="relative flex flex-col">
-								<span className="w-[40%] rounded-t-md bg-[#D8FF76] px-1.5 py-0.5 font-semibold text-lime-700 text-xs">
-									Fluency
-								</span>
-								<span className="rounded-b-md border-2 border-[#D8FF76] bg-[#D8FF76]/50 px-1.5 py-0.5 text-neutral-900 text-xs">
-									Good use of phrases.
-								</span>
+				<div className="space-y-4 p-4 px-4 pb-0">
+					{/* AI Message */}
+					<div className="max-w-[80%] select-none">
+						<div
+							className="max-w-[90%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
+							style={{
+								boxShadow:
+									"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
+							}}
+						>
+							<p className="text-neutral-900 text-xs leading-relaxed">
+								Let's practice ordering at a restaurant. <br />
+								What would you say to the waiter?
+							</p>
+							<div className="mt-1 flex items-center gap-1.5">
+								<Button
+									variant="outline"
+									size="sm"
+									className="size-6 rounded-lg text-xs"
+								>
+									<PlayIcon fill="currentColor" className="size-2" />
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									className="size-6 rounded-lg text-xs"
+								>
+									<svg
+										className="size-2.5"
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 20 20"
+										width="1em"
+										aria-hidden="true"
+									>
+										<path
+											d="m6.25 6.013.675 1.8h-1.35zm1.86 1.443c.777-1.022 1.896-1.762 3.28-2.147C10.576 3.534 8.76 2.5 6.25 2.5 2.778 2.5.625 4.475.625 7.656c0 1.622.563 2.928 1.572 3.819L.625 13.047l.469.703a5.6 5.6 0 0 0 3.378-1.134 7.8 7.8 0 0 0 1.778.197c.256 0 .503-.016.747-.035a7.7 7.7 0 0 1-.122-1.372c0-.853.134-1.634.381-2.344h-2.15l-.35.938H3.437l1.876-5h1.875zm5.64 4.206c.31-.28.575-.621.75-1.037h-1.497c.175.416.44.756.75 1.037zm4.053 3.563 1.572 1.572-.469.703a5.6 5.6 0 0 1-3.378-1.134 7.8 7.8 0 0 1-1.778.197c-3.472 0-5.625-1.975-5.625-5.157S10.278 6.25 13.75 6.25s5.625 1.975 5.625 5.156c0 1.622-.562 2.928-1.572 3.819m-1.24-5.85h-2.188v-.937h-1.25v.937h-2.187v1.25h.778a4.4 4.4 0 0 0 1.006 1.725c-.863.425-1.681.544-1.681.544l.437 1.172a6.3 6.3 0 0 0 2.269-.87 6.3 6.3 0 0 0 2.269.87l.437-1.172s-.819-.119-1.681-.544a4.3 4.3 0 0 0 1.006-1.725h.778v-1.25z"
+											fill="currentColor"
+										/>
+									</svg>
+								</Button>
 							</div>
 						</div>
-					</p>
-				</motion.div>
-			)} */}
-
-			<div className="flex items-center gap-2 border-border/50 border-b px-3 py-2.5">
-				<div className="flex w-full items-center justify-between gap-2">
-					<div className="flex items-center gap-2">
-						<div className="relative size-7 overflow-hidden rounded-lg border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)]">
-							<img
-								className="absolute right-0 bottom-[-4px] left-0 mx-auto h-full w-full object-contain"
-								src="/logo.svg"
-								alt=""
-								width={32}
-								height={32}
-							/>
-						</div>
-						<span className="font-semibold text-sm">Conversation</span>
 					</div>
-					<div>
-						<Button
-							variant="outline"
-							size="icon"
-							className="size-7 rounded-lg"
-							onClick={() => setShowFeedback(!showFeedback)}
+
+					{/* User Message */}
+					<div className="ml-auto max-w-[70%] select-none">
+						<div
+							className="rounded-2xl rounded-tr-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-3.5 py-2.5 text-xs"
+							style={{
+								boxShadow:
+									"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
+							}}
 						>
-							<PanelRight className="size-3.5" />
-						</Button>
+							I would like to order the pasta, please.
+						</div>
+					</div>
+
+					{/* AI Accuracy Response */}
+					<div className="max-w-[13%]">
+						<div
+							className="rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
+							style={{
+								boxShadow:
+									"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
+							}}
+						>
+							<div className="flex gap-1 py-1">
+								<span className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60" />
+								<span
+									className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60"
+									style={{ animationDelay: "0.1s" }}
+								/>
+								<span
+									className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60"
+									style={{ animationDelay: "0.2s" }}
+								/>
+							</div>
+						</div>
+					</div>
+
+					<div
+						className="sticky inset-x-0 mx-auto flex w-fit justify-center overflow-hidden rounded-t-2xl border bg-white p-2 transition-all duration-75 ease-in dark:from-surface dark:to-transparent"
+						style={{
+							boxShadow:
+								"rgba(162, 166, 171, 0.2) 0px 0px 0px 0px inset, rgba(162, 166, 171, 0.2) 0px 0px 8px 2px inset",
+						}}
+					>
+						<div className="flex items-center gap-0.5">
+							<Button
+								type="button"
+								size="sm"
+								className={cn(
+									"flex size-7 items-center justify-center rounded-lg border border-[#C6F64D] bg-radial from-[#EFFF9B] to-[#D8FF76]",
+								)}
+							>
+								<Mic className="size-3.5 text-lime-900" />
+							</Button>
+
+							<Button
+								type="button"
+								variant="ghost"
+								className="size-7 rounded-lg"
+								size="sm"
+							>
+								<Lightbulb className="size-3.5" />
+							</Button>
+
+							<Button
+								type="button"
+								variant="ghost"
+								size="sm"
+								className="size-7 rounded-lg"
+							>
+								<KeyboardIcon className="size-3.5" />
+							</Button>
+							<Button
+								type="button"
+								variant="ghost"
+								className="size-7 rounded-lg"
+								size="sm"
+							>
+								<Settings className="size-3.5" />
+							</Button>
+
+							<Button
+								type="button"
+								variant="ghost"
+								size="sm"
+								className="flex size-7 items-center justify-center rounded-lg border border-red-600 bg-radial from-[#e28b8b] to-[#EF4444] text-red-800 hover:text-red-700/80"
+							>
+								<X className="size-3.5" />
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<div className="space-y-4 p-4 px-14 pb-0">
-				{/* AI Message */}
-				<div className="max-w-[60%] select-none">
-					<div
-						className="max-w-[90%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
-						style={{
-							boxShadow:
-								"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
-						}}
-					>
-						<p className="text-neutral-900 text-xs leading-relaxed">
-							Let's practice ordering at a restaurant. <br />
-							What would you say to the waiter?
-						</p>
-						<div className="mt-1 flex items-center gap-1.5">
-							<Button
-								variant="outline"
-								size="sm"
-								className="size-6 rounded-lg text-xs"
-							>
-								<PlayIcon fill="currentColor" className="size-2" />
-							</Button>
-							<Button
-								variant="outline"
-								size="sm"
-								className="size-6 rounded-lg text-xs"
-							>
-								<svg
-									className="size-2.5"
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 20 20"
-									width="1em"
-									aria-hidden="true"
-								>
-									<path
-										d="m6.25 6.013.675 1.8h-1.35zm1.86 1.443c.777-1.022 1.896-1.762 3.28-2.147C10.576 3.534 8.76 2.5 6.25 2.5 2.778 2.5.625 4.475.625 7.656c0 1.622.563 2.928 1.572 3.819L.625 13.047l.469.703a5.6 5.6 0 0 0 3.378-1.134 7.8 7.8 0 0 0 1.778.197c.256 0 .503-.016.747-.035a7.7 7.7 0 0 1-.122-1.372c0-.853.134-1.634.381-2.344h-2.15l-.35.938H3.437l1.876-5h1.875zm5.64 4.206c.31-.28.575-.621.75-1.037h-1.497c.175.416.44.756.75 1.037zm4.053 3.563 1.572 1.572-.469.703a5.6 5.6 0 0 1-3.378-1.134 7.8 7.8 0 0 1-1.778.197c-3.472 0-5.625-1.975-5.625-5.157S10.278 6.25 13.75 6.25s5.625 1.975 5.625 5.156c0 1.622-.562 2.928-1.572 3.819m-1.24-5.85h-2.188v-.937h-1.25v.937h-2.187v1.25h.778a4.4 4.4 0 0 0 1.006 1.725c-.863.425-1.681.544-1.681.544l.437 1.172a6.3 6.3 0 0 0 2.269-.87 6.3 6.3 0 0 0 2.269.87l.437-1.172s-.819-.119-1.681-.544a4.3 4.3 0 0 0 1.006-1.725h.778v-1.25z"
-										fill="currentColor"
-									/>
-								</svg>
-							</Button>
-						</div>
-					</div>
+			<div
+				className="relative w-[180px] self-stretch rounded-2xl bg-white p-4 pt-3"
+				style={{
+					boxShadow:
+						"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+				}}
+			>
+				<div className="relative mb-0.5 flex items-center gap-1.5">
+					<span className="font-semibold text-xs">Feedback</span>{" "}
+					<span className="rounded-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-1.5 py-[1.5px] font-medium text-[11px] text-black normal-case tracking-normal">
+						AI
+					</span>
 				</div>
-
-				{/* User Message */}
-				<div className="ml-auto max-w-[50%] select-none">
-					<div
-						className="rounded-2xl rounded-tr-md bg-radial from-[#EFFF9B] to-[#D8FF76] px-3.5 py-2.5 text-xs"
-						style={{
-							boxShadow:
-								"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
-						}}
-					>
-						I would like to order the pasta, please.
-					</div>
-				</div>
-
-				{/* AI Accuracy Response */}
-				<div className="max-w-[9%]">
-					<div
-						className="rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
-						style={{
-							boxShadow:
-								"0 0 0 1px #0000000f,0 1px 1px #00000010,inset 0 1px #fff,inset 0 -1px 1px #fff3,inset 0 1px 4px 1px #fff3,inset 0 -2px 1px 1px #0000000f,inset 0 20px 20px #00000002",
-						}}
-					>
-						<div className="flex gap-1 py-1">
-							<span className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60" />
-							<span
-								className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60"
-								style={{ animationDelay: "0.1s" }}
-							/>
-							<span
-								className="size-1 animate-bounce rounded-full bg-neutral-600 opacity-60"
-								style={{ animationDelay: "0.2s" }}
-							/>
-						</div>
-					</div>
-				</div>
-
-				<div
-					className="sticky inset-x-0 mx-auto flex w-[35%] justify-center overflow-hidden rounded-t-2xl border bg-white p-2 transition-all duration-75 ease-in dark:from-surface dark:to-transparent"
-					style={{
-						boxShadow:
-							"rgba(162, 166, 171, 0.2) 0px 0px 0px 0px inset, rgba(162, 166, 171, 0.2) 0px 0px 8px 2px inset",
-					}}
+				<button
+					className="absolute top-3 right-3"
+					type="button"
+					onClick={() => setShowFeedback(!showFeedback)}
 				>
-					<div className="flex items-center gap-0.5">
-						<Button
-							type="button"
-							size="sm"
-							className={cn(
-								"flex size-7 items-center justify-center rounded-lg border border-[#C6F64D] bg-radial from-[#EFFF9B] to-[#D8FF76]",
-							)}
-						>
-							<Mic className="size-3.5 text-lime-900" />
-						</Button>
+					<X className="size-3.5 cursor-pointer text-muted-foreground hover:text-muted-foreground/80" />
+				</button>
 
-						<Button
-							type="button"
-							variant="ghost"
-							className="size-7 rounded-lg"
-							size="sm"
-						>
-							<Lightbulb className="size-3.5" />
-						</Button>
-
-						<Button
-							type="button"
-							variant="ghost"
-							size="sm"
-							className="size-7 rounded-lg"
-						>
-							<KeyboardIcon className="size-3.5" />
-						</Button>
-						<Button
-							type="button"
-							variant="ghost"
-							className="size-7 rounded-lg"
-							size="sm"
-						>
-							<Settings className="size-3.5" />
-						</Button>
-
-						<Button
-							type="button"
-							variant="ghost"
-							size="sm"
-							className="flex size-7 items-center justify-center rounded-lg border border-red-600 bg-radial from-[#e28b8b] to-[#EF4444] text-red-800 hover:text-red-700/80"
-						>
-							<X className="size-3.5" />
-						</Button>
+				<div className="mt-3 flex flex-col gap-2.5">
+					<div className="relative flex flex-col">
+						<span className="w-fit rounded-t-md bg-[#D8FF76] px-1.5 py-0.5 font-semibold text-lime-700 text-xs">
+							Fluency
+						</span>
+						<span className="rounded-b-md border-2 border-[#D8FF76] bg-[#D8FF76]/50 px-1.5 py-0.5 text-neutral-900 text-xs">
+							Good use of phrases.
+						</span>
+					</div>
+					<hr className="my-1.5 border-neutral-200 border-dashed" />
+					<div className="relative flex flex-col">
+						<span className="w-fit rounded-t-md bg-amber-200 px-1.5 py-0.5 font-semibold text-amber-700 text-xs">
+							Grammar
+						</span>
+						<span className="rounded-b-md border-2 border-amber-200 bg-amber-100/50 px-1.5 py-0.5 text-neutral-900 text-xs">
+							Minor article error.
+						</span>
 					</div>
 				</div>
 			</div>
@@ -257,6 +267,23 @@ function ReviewMistakesDemo() {
 		},
 	];
 
+	const renderCorrectedSentence = (mistake: (typeof mistakes)[number]) => {
+		// In a real app, this would dynamically render based on original/corrected
+		return (
+			<p className="text-xs leading-relaxed">
+				I am so grateful to you{" "}
+				<span className="font-medium text-lime-600">
+					{mistake.corrected || "for knocking"}
+				</span>{" "}
+				<span className="text-rose-400 line-through">
+					{mistake.original || "that you knocked"}
+				</span>{" "}
+				me down with <span className="text-rose-400 line-through">our</span>{" "}
+				<span className="font-medium text-lime-600">your</span> car.
+			</p>
+		);
+	};
+
 	return (
 		<div
 			className="flex h-full w-full flex-col gap-2.5 rounded-t-2xl bg-white p-4"
@@ -270,23 +297,54 @@ function ReviewMistakesDemo() {
 				<span className="text-muted-foreground text-xs">3/5 corrected</span>
 			</div>
 
-			{/* Mistake cards */}
 			{mistakes.map((mistake) => (
 				<div
 					key={mistake.id}
 					className="rounded-xl border border-neutral-100 bg-white p-3"
 				>
-					<span className="mb-1.5 inline-block rounded-md bg-red-50 px-1.5 py-0.5 font-medium text-[10px] text-red-500">
-						{mistake.type}
-					</span>
-					<div className="flex items-center gap-2 text-xs">
-						<span className="text-neutral-400 line-through">
-							{mistake.original}
-						</span>
-						<ArrowRightIcon className="size-3.5 text-lime-600" />
-						<span className="font-medium text-lime-600">
-							{mistake.corrected}
-						</span>
+					{/* Header */}
+					<div className="mb-3 flex items-center gap-2 text-[11px] text-muted-foreground">
+						<span>Correct the Sentence</span>
+						<span>|</span>
+						<span>Correctness</span>
+					</div>
+
+					{/* Correction display */}
+					<div className="mb-4 flex items-start justify-between gap-4">
+						{renderCorrectedSentence(mistakes[0])}
+						<div className="flex shrink-0 gap-1">
+							{/* <Button variant="ghost" size="icon" className="size-6">
+								<Volume2 className="size-3" />
+							</Button> */}
+							<Button variant="ghost" size="icon" className="size-6">
+								<Bookmark className="size-3" />
+							</Button>
+						</div>
+					</div>
+
+					{/* Actions */}
+					<div className="flex items-center gap-2">
+						<Button
+							size="sm"
+							className="group flex h-7 cursor-pointer items-center gap-1 whitespace-nowrap rounded-lg border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] px-2 py-1 font-medium text-lime-900 text-xs italic shadow-none transition duration-150 ease-in-out will-change-transform hover:bg-lime-700/10 hover:brightness-95 focus:shadow-none focus:outline-none focus-visible:shadow-none"
+						>
+							<Mic className="size-3" />
+							Practice
+						</Button>
+						<Button
+							size="sm"
+							variant="outline"
+							className="h-7 rounded-lg text-xs"
+						>
+							Skip
+						</Button>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="ml-auto size-6 text-xs"
+						>
+							<Flag className="size-3" />
+						</Button>
 					</div>
 				</div>
 			))}
@@ -405,141 +463,198 @@ function PersonalizedLessonsDemo() {
 	];
 
 	return (
-		<div
-			className="flex w-full flex-col gap-2 rounded-2xl bg-white p-4"
-			style={{
-				boxShadow:
-					"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
-			}}
-		>
-			<div className="mb-2">
-				<h2 className="font-semibold text-sm">Unit Overview</h2>
-				<div className="mt-1 flex items-center justify-between">
-					<span className="text-muted-foreground text-xs">
-						Lessons 1 of 4 • Grammar Foundations
-					</span>
-					<span className="text-muted-foreground text-xs">18% Complete</span>
+		<div className="relative flex h-full w-full gap-4">
+			<div className="flex flex-col gap-2.5">
+				<div
+					className="relative w-[200px] rounded-2xl bg-white p-4 pt-3"
+					style={{
+						boxShadow:
+							"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+					}}
+				>
+					<h3 className="mb-3 font-semibold text-sm">Module 1</h3>
+					<p className="mb-3 text-muted-foreground text-xs">
+						You talked 0 minutes. Speak 30 more minutes to complete module.
+					</p>
+
+					<div className="mb-1 flex items-baseline gap-1">
+						<span className="font-bold text-3xl">0</span>
+						<span className="text-muted-foreground text-sm">/ 30 min</span>
+					</div>
+					<div className="mb-4 h-2 w-full overflow-hidden rounded-full bg-neutral-100">
+						<div className="h-full w-[2%] rounded-full bg-neutral-800" />
+					</div>
 				</div>
 			</div>
-
-			<div className="mb-4 flex gap-1.5">
-				<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
-					<div className="h-full w-full rounded-full bg-lime-400" />
-				</div>
-				<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
-					<div className="h-full w-[80%] rounded-full bg-amber-400" />
-				</div>
-				<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
-					<div className="h-full w-0 rounded-full bg-neutral-300" />
-				</div>
-				<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
-					<div className="h-full w-0 rounded-full bg-slate-300" />
-				</div>
-			</div>
-
-			<div className="flex flex-col">
-				{lessons.map((lesson, i) => (
-					<div key={lesson.id} className="flex items-stretch gap-3">
-						<div className="flex w-6 flex-col items-center">
-							<div
-								className={cn(
-									"relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-bold text-[10px]",
-									lesson.status === "completed" &&
-										"border border-lime-400 bg-lime-200 text-lime-600",
-									lesson.status === "current" &&
-										"border border-amber-400 bg-amber-200 text-amber-600",
-									lesson.status === "locked" &&
-										"bg-neutral-100 text-neutral-400",
-								)}
-							>
-								{lesson.status === "completed" ? (
-									<CheckIcon className="size-3" strokeWidth={2.5} />
-								) : lesson.status === "current" ? (
-									<ClockIcon className="size-3" strokeWidth={2.5} />
-								) : lesson.status === "locked" ? (
-									<Lock className="size-3" strokeWidth={2.5} />
-								) : null}
-							</div>
-							{i < lessons.length - 1 && (
-								<div
-									className={cn(
-										"min-h-3 w-0.5 flex-1",
-										lesson.status === "completed"
-											? "bg-lime-200"
-											: "bg-neutral-200",
-									)}
-								/>
-							)}
-						</div>
-
-						{/* Lesson card */}
-						<div
-							className={cn(
-								"mb-2 flex-1 rounded-xl border p-3",
-								lesson.status === "current"
-									? "border-neutral-100 bg-white"
-									: lesson.status === "completed"
-										? "border-neutral-100 bg-white/70"
-										: "border-neutral-100 bg-neutral-50/50 opacity-60",
-							)}
-						>
-							<div className="flex items-center justify-between">
-								<span
-									className={cn(
-										"font-medium text-xs",
-										lesson.status === "locked"
-											? "text-neutral-400"
-											: "text-neutral-800",
-									)}
-								>
-									{lesson.title}
-								</span>
-							</div>
-							{lesson.status === "current" && (
-								<div className="mt-2 flex items-center gap-2">
-									<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
-										<div
-											className="h-full rounded-full bg-amber-400"
-											style={{ width: `${lesson.progress}%` }}
+			<div className="flex flex-1 flex-col gap-3">
+				<div
+					className="overflow-hidden rounded-2xl bg-white"
+					style={{
+						boxShadow:
+							"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
+					}}
+				>
+					<div className="p-2">
+						<div className="flex items-center justify-between">
+							<div className="flex items-center gap-4">
+								{/* Circular progress */}
+								<div className="relative flex size-10 items-center justify-center">
+									<svg
+										className="size-10"
+										viewBox="0 0 56 56"
+										aria-hidden="true"
+									>
+										<title>Level progress</title>
+										<circle
+											cx="28"
+											cy="28"
+											r="24"
+											fill="none"
+											stroke="currentColor"
+											strokeWidth="4"
+											className="text-neutral-100"
 										/>
-									</div>
-									<span className="text-[10px] text-neutral-400">
-										{lesson.progress}%
-									</span>
+										<circle
+											cx="28"
+											cy="28"
+											r="24"
+											fill="none"
+											stroke="currentColor"
+											strokeWidth="4"
+											strokeLinecap="round"
+											strokeDasharray={`${(50 / 100) * 150.8} 150.8`}
+											transform="rotate(-90 28 28)"
+											className="text-lime-500"
+										/>
+									</svg>
+									<span className="absolute font-bold text-[10px]">50%</span>
 								</div>
-							)}
+								<div>
+									<h2 className="font-semibold text-sm">Beginner</h2>
+									<p className="text-muted-foreground text-xs">
+										Reach 50% to get{" "}
+										<span className="font-semibold text-foreground">A2</span>
+									</p>
+								</div>
+							</div>
+							<Button
+								variant="outline"
+								size="icon"
+								className="size-6 rounded-full"
+							>
+								<ArrowRight className="size-4" />
+							</Button>
 						</div>
 					</div>
-				))}
+				</div>
+
+				<div className="flex w-full flex-col gap-2 px-4">
+					<div className="flex flex-col">
+						{lessons.map((lesson, i) => (
+							<div key={lesson.id} className="flex items-stretch gap-3">
+								<div className="flex w-6 flex-col items-center">
+									<div
+										className={cn(
+											"relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-bold text-[10px]",
+											lesson.status === "completed" &&
+												"border border-lime-400 bg-lime-200 text-lime-600",
+											lesson.status === "current" &&
+												"border border-amber-400 bg-amber-200 text-amber-600",
+											lesson.status === "locked" &&
+												"bg-neutral-100 text-neutral-400",
+										)}
+									>
+										{lesson.status === "completed" ? (
+											<CheckIcon className="size-3" strokeWidth={2.5} />
+										) : lesson.status === "current" ? (
+											<ClockIcon className="size-3" strokeWidth={2.5} />
+										) : lesson.status === "locked" ? (
+											<Lock className="size-3" strokeWidth={2.5} />
+										) : null}
+									</div>
+									{i < lessons.length - 1 && (
+										<div
+											className={cn(
+												"min-h-3 w-0.5 flex-1",
+												lesson.status === "completed"
+													? "bg-lime-200"
+													: "bg-neutral-200",
+											)}
+										/>
+									)}
+								</div>
+
+								{/* Lesson card */}
+								<div
+									className={cn(
+										"mb-2 flex-1 rounded-xl border p-3",
+										lesson.status === "current"
+											? "border-neutral-100 bg-white"
+											: lesson.status === "completed"
+												? "border-neutral-100 bg-white/70"
+												: "border-neutral-100 bg-neutral-50/50 opacity-60",
+									)}
+								>
+									<div className="flex items-center justify-between">
+										<span
+											className={cn(
+												"font-medium text-xs",
+												lesson.status === "locked"
+													? "text-neutral-400"
+													: "text-neutral-800",
+											)}
+										>
+											{lesson.title}
+										</span>
+									</div>
+									{lesson.status === "current" && (
+										<div className="mt-2 flex items-center gap-2">
+											<div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-100">
+												<div
+													className="h-full rounded-full bg-amber-400"
+													style={{ width: `${lesson.progress}%` }}
+												/>
+											</div>
+											<span className="text-[10px] text-neutral-400">
+												{lesson.progress}%
+											</span>
+										</div>
+									)}
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
 			</div>
 		</div>
 	);
 }
 
 export function Features() {
+	const { t } = useTranslation("home");
 	const _features = [
 		{
 			id: "grammar",
 			icon: SpeakingIcon,
-			title: "Practice speaking & Get feedback",
+			title: t("features.items.speaking"),
 			demo: PracticeSpeakingDemo,
 		},
 		{
 			id: "mistakes",
 			icon: ReviewIcon,
-			title: "Review mistakes",
+			title: t("features.items.mistakes"),
 			demo: ReviewMistakesDemo,
 		},
 		{
 			id: "feedback",
 			icon: VocabularyIcon,
-			title: "Vocabulary",
+			title: t("features.items.vocabulary"),
 			demo: VocabularyDemo,
 		},
 		{
 			id: "lessons",
 			icon: GrammarIcon,
-			title: "Personalized lessons",
+			title: t("features.items.lessons"),
 			demo: PersonalizedLessonsDemo,
 		},
 	];
@@ -547,19 +662,20 @@ export function Features() {
 	return (
 		<div className="relative mx-auto md:mt-24">
 			<div>
-				<div className="mb-14 text-center">
-					<h1 className="mb-4 font-bold font-lyon text-5xl tracking-tight md:text-5xl">
-						English learning is broken.
+				<div className="mb-14">
+					<h1 className="mb-4 text-center font-bold font-lyon text-5xl tracking-tight md:text-5xl">
+						{t("features.title")}
 						<br />
-						We are here to fix it for you
+						{t("features.titleLine2")}
 					</h1>
 					<p className="flex items-center justify-center gap-2 text-balance text-muted-foreground text-sm md:max-w-boundary-sm md:text-lg">
-						Want to more about our features?{" "}
+						{t("features.learnMore")}{" "}
 						<Link
 							to="/features"
 							className="flex items-center gap-1 text-lime-700 underline transition-all duration-300 hover:text-lime-700/80"
 						>
-							Learn more <ArrowUpRightIcon className="size-5" />
+							{t("features.learnMoreLink")}{" "}
+							<ArrowUpRightIcon className="size-5" />
 						</Link>
 					</p>
 				</div>

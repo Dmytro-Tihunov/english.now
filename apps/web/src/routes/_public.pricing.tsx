@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { CheckIcon, StarIcon } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { CheckIcon, Loader2, StarIcon } from "lucide-react";
+import { useState } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -7,54 +8,14 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { openCheckout } from "@/lib/paddle";
+import _plans from "@/lib/plans";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_public/pricing")({
 	component: PricingPage,
 });
-const _plans = [
-	{
-		name: "Free",
-		description: "For individuals and small teams.",
-		price: 0,
-		isPopular: false,
-		duration: "forever",
-		features: [
-			"1 AI conversations per day",
-			"Basic grammar lessons",
-			"Limited vocabulary exercises",
-			"Progress tracking",
-		],
-	},
-	{
-		name: "Monthly",
-		description: "For teams and businesses.",
-		price: 12,
-		isPopular: true,
-		duration: "month",
-		features: [
-			"Unlimited AI conversations",
-			"Advanced AI feedback",
-			"Full vocabulary library",
-			"Personalized learning path",
-			"Progress tracking and analytics",
-		],
-	},
-	{
-		name: "Yearly",
-		description: "For teams and businesses.",
-		price: 100,
-		isPopular: false,
-		duration: "year",
-		features: [
-			"Unlimited AI conversations",
-			"Advanced AI feedback",
-			"Full vocabulary library",
-			"Personalized learning path",
-			"Progress tracking and analytics",
-		],
-	},
-];
 
 const faqs = [
 	{
@@ -73,19 +34,16 @@ const faqs = [
 			"We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and Apple Pay. For Team plans, we also offer invoice-based billing.",
 	},
 	{
+		question: "Do you offer student discounts?",
+		answer:
+			"No, currently we don't offer student discounts. But we're working on it. Stay tuned!",
+		// answer:
+		// 	"Yes! Students with a valid .edu email address get 50% off all paid plans. Contact our support team with proof of enrollment to claim your discount.",
+	},
+	{
 		question: "Can I cancel my subscription anytime?",
 		answer:
 			"Yes, you can cancel your subscription at any time. Your access will continue until the end of your current billing period. No questions asked, no hidden fees.",
-	},
-	{
-		question: "Do you offer student discounts?",
-		answer:
-			"Yes! Students with a valid .edu email address get 50% off all paid plans. Contact our support team with proof of enrollment to claim your discount.",
-	},
-	{
-		question: "How does the AI conversation feature work?",
-		answer:
-			"Our AI tutor uses advanced language models to simulate natural English conversations. It adapts to your level, corrects your mistakes in real-time, and provides personalized feedback to help you improve faster.",
 	},
 	{
 		question: "Is my learning progress saved if I cancel?",
@@ -95,16 +53,45 @@ const faqs = [
 ];
 
 function PricingPage() {
+	const { data: session } = authClient.useSession();
+	const [isLoading, setIsLoading] = useState(false);
+	const navigate = useNavigate();
+
+	async function handlePlanClick(plan: (typeof _plans)[number]) {
+		setIsLoading(true);
+		if (!plan.paddlePriceId) {
+			navigate({ to: "/signup" });
+			return;
+		}
+
+		if (!session?.user) {
+			navigate({ to: "/signup" });
+			return;
+		}
+
+		await openCheckout({
+			priceId: plan.paddlePriceId,
+			userId: session.user.id,
+			email: session.user.email,
+		}).finally(() => {
+			setIsLoading(false);
+		});
+	}
+
 	return (
 		<div className="relative">
 			<div className="container relative mx-auto max-w-5xl px-4 py-16">
 				<div className="mb-16 text-center">
-					<h1 className="mb-4 font-bold font-bold font-lyon font-lyon text-5xl text-neutral-900 text-neutral-950 leading-tight tracking-tight tracking-tight sm:text-5xl lg:text-6xl dark:text-white">
+					<h1 className="mb-4 font-bold font-lyon text-5xl text-neutral-950 leading-tight tracking-tight sm:text-5xl lg:text-6xl dark:text-white">
 						Which plan is right for you?
 						<br />
-						<span className="text-neutral-500">Use our 7 day free trial.</span>
+						<span className="text-muted-foreground">
+							Use our 7 day free trial.
+						</span>
 					</h1>
-					All plans include access to our AI-powered learning tools.
+					<p className="text-balance text-center text-muted-foreground text-sm md:mx-auto md:max-w-boundary-sm md:text-lg">
+						All plans include access to our AI-powered learning tools.
+					</p>
 				</div>
 
 				<div className="relative flex w-full flex-row items-end justify-between gap-3">
@@ -118,7 +105,7 @@ function PricingPage() {
 								}}
 							>
 								<div className="relative z-10 mb-4">
-									<div className="flex flex-col gap-2">
+									<div className="flex flex-col gap-1.5">
 										<div
 											data-slot="card-title"
 											className="flex items-center gap-2 font-semibold text-lg"
@@ -147,7 +134,9 @@ function PricingPage() {
 								</div>
 								<div className="relative z-10 my-6 flex items-center gap-4">
 									<Button
+										disabled={isLoading}
 										variant={_plan.isPopular ? "default" : "outline"}
+										onClick={() => handlePlanClick(_plan)}
 										className={cn(
 											"inline-flex w-full cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
 											_plan.isPopular
@@ -155,7 +144,13 @@ function PricingPage() {
 												: "border border-border/50 bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
 										)}
 									>
-										{_plan.price > 0 ? "Start 7-day trial" : "Get started"}
+										{isLoading ? (
+											<Loader2 className="size-4 animate-spin" />
+										) : _plan.price > 0 ? (
+											"Start 7-day trial"
+										) : (
+											"Get started"
+										)}
 									</Button>
 								</div>
 								<div className="relative z-10 mb-4 font-medium text-black/50 text-sm">
@@ -205,7 +200,6 @@ function PricingPage() {
 					})}
 				</div>
 
-				{/* FAQs Section */}
 				<div className="mx-auto max-w-3xl sm:mt-20">
 					<div className="mb-10 text-center">
 						<h2 className="mb-2 font-bold font-lyon text-5xl tracking-tight md:text-5xl">

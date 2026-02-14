@@ -19,6 +19,12 @@
       "trackProgress": "Track your progress"
     }
   },
+  "nativeLanguage": {
+    "title": "What's your native language?",
+    "subtitle": "We'll use this to personalize translations and explanations",
+    "searchPlaceholder": "Search language...",
+    "noLanguagesFound": "No languages found"
+  },
   "level": {
     "title": "What's your English level?",
     "subtitle": "This helps us personalize your learning experience",
@@ -35,7 +41,7 @@
         "name": "Intermediate",
         "description": "I can discuss various topics"
       },
-      "upperIntermediate": {
+      "upper-intermediate": {
         "name": "Upper Intermediate",
         "description": "I'm comfortable in most situations"
       },
@@ -83,16 +89,16 @@
         "name": "5 minutes",
         "description": "Quick daily practice"
       },
-      "15": {
-        "name": "15 minutes",
+      "10": {
+        "name": "10 minutes",
         "description": "Steady progress"
       },
-      "30": {
-        "name": "30 minutes",
+      "15": {
+        "name": "15 minutes",
         "description": "Serious learning"
       },
-      "60": {
-        "name": "60+ minutes",
+      "20": {
+        "name": "20+ minutes",
         "description": "Intensive study"
       }
     }

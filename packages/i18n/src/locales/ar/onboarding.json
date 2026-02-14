@@ -1,0 +1,179 @@
+{
+  "steps": {
+    "welcome": "أهلاً وسهلاً",
+    "nativeLanguage": "اللغة الأم",
+    "level": "مستواك",
+    "goal": "هدفك",
+    "time": "الوقت اليومي",
+    "focus": "مجالات التركيز",
+    "plan": "خطتك",
+    "paywall": "ابدأ الآن"
+  },
+  "welcome": {
+    "title": "تعلم الإنجليزية بطريقة ذكية",
+    "titleHighlight": "بطريقة ذكية",
+    "subtitle": "مارس الإنجليزية مع الذكاء الاصطناعي، وابنِ مفرداتك، وأتقن القواعد - كل ذلك مخصص لك.",
+    "features": {
+      "conversations": "محادثات مدعومة بالذكاء الاصطناعي",
+      "personalizedPath": "مسار تعلم مخصص",
+      "trackProgress": "تتبع تقدمك"
+    }
+  },
+  "nativeLanguage": {
+    "title": "ما هي لغتك الأم؟",
+    "subtitle": "سنستخدم هذه المعلومات لتخصيص الترجمات والتفسيرات",
+    "searchPlaceholder": "ابحث عن اللغة...",
+    "noLanguagesFound": "لم يتم العثور على لغات"
+  },
+  "level": {
+    "title": "ما هو مستواك في اللغة الإنجليزية؟",
+    "subtitle": "سيساعدنا هذا في تخصيص تجربة التعلم الخاصة بك",
+    "options": {
+      "beginner": {
+        "name": "مبتدئ",
+        "description": "أعرف بعض الكلمات والعبارات الأساسية"
+      },
+      "elementary": {
+        "name": "ابتدائي",
+        "description": "أستطيع إجراء محادثات بسيطة"
+      },
+      "intermediate": {
+        "name": "متوسط",
+        "description": "أستطيع مناقشة مواضيع مختلفة"
+      },
+      "upperIntermediate": {
+        "name": "فوق المتوسط",
+        "description": "أشعر بالراحة في معظم المواقف"
+      },
+      "advanced": {
+        "name": "متقدم",
+        "description": "أريد إتقان اللغة الإنجليزية"
+      },
+      "upper-intermediate": {
+        "name": "متوسط أعلى",
+        "description": "أشعر بالراحة في معظم المواقف"
+      }
+    }
+  },
+  "goal": {
+    "title": "ما هو هدفك الرئيسي؟",
+    "subtitle": "سنقوم بإنشاء مسار تعلم مخصص لاحتياجاتك",
+    "options": {
+      "career": {
+        "name": "النمو المهني",
+        "description": "احصل على فرص عمل أفضل"
+      },
+      "travel": {
+        "name": "السفر",
+        "description": "التواصل أثناء السفر"
+      },
+      "education": {
+        "name": "التعليم",
+        "description": "الدراسة في الخارج أو اجتياز الامتحانات"
+      },
+      "social": {
+        "name": "اجتماعي",
+        "description": "كوّن صداقات وتواصل"
+      },
+      "personal": {
+        "name": "النمو الشخصي",
+        "description": "تحدي نفسي للتعلم"
+      },
+      "content": {
+        "name": "الترفيه",
+        "description": "استمتع بالأفلام والكتب والموسيقى"
+      }
+    }
+  },
+  "time": {
+    "title": "كم من الوقت يمكنك الممارسة يومياً؟",
+    "subtitle": "الاستمرارية هي المفتاح لتعلم اللغة",
+    "options": {
+      "5": {
+        "name": "5 دقائق",
+        "description": "ممارسة سريعة يومية"
+      },
+      "10": {
+        "name": "10 دقائق",
+        "description": "تقدم ثابت"
+      },
+      "15": {
+        "name": "15 دقيقة",
+        "description": "تقدم ثابت"
+      },
+      "20": {
+        "name": "20+ دقائق",
+        "description": "دراسة مكثفة"
+      },
+      "30": {
+        "name": "30 دقيقة",
+        "description": "تعلم جاد"
+      },
+      "60": {
+        "name": "60+ دقيقة",
+        "description": "دراسة مكثفة"
+      }
+    }
+  },
+  "focus": {
+    "title": "على ماذا تريد التركيز؟",
+    "subtitle": "اختر كل ما ينطبق — يمكنك تغيير هذا لاحقاً",
+    "options": {
+      "speaking": "التحدث",
+      "vocabulary": "المفردات",
+      "grammar": "القواعد",
+      "pronunciation": "النطق"
+    }
+  },
+  "planSummary": {
+    "title": "خطتك الشخصية جاهزة!",
+    "subtitle": "بناءً على تفضيلاتك، أنشأنا مسار تعلم مخصص",
+    "profileTitle": "ملف التعلم الخاص بك",
+    "currentLevel": "المستوى الحالي",
+    "mainGoal": "الهدف الرئيسي",
+    "dailyPractice": "الممارسة اليومية",
+    "focusAreas": "مجالات التركيز",
+    "all": "الكل",
+    "minutes": "دقائق",
+    "projection": "مع {{time}} دقيقة/يوم، يمكنك الوصول إلى المستوى التالي في ~8 أسابيع",
+    "startLearning": "ابدأ التعلم"
+  },
+  "paywall": {
+    "title": "افتح إمكاناتك الكاملة",
+    "subtitle": "انضم إلى آلاف المتعلمين الذين يحسنون لغتهم الإنجليزية كل يوم",
+    "learnersThisMonth": "متعلمين هذا الشهر",
+    "mostPopular": "الأكثر شعبية",
+    "bestValue": "أفضل قيمة",
+    "startTrial": "ابدأ تجربة مجانية لمدة 7 أيام",
+    "trialNote": "يمكنك الإلغاء في أي وقت. لا يتطلب بطاقة ائتمان للتجربة.",
+    "skipToLimited": "الاستمرار بميزات محدودة",
+    "securePayment": "دفع آمن",
+    "moneyBack": "استرداد الأموال خلال 30 يوماً",
+    "cancelAnytime": "الإلغاء في أي وقت",
+    "plans": {
+      "weekly": {
+        "name": "أسبوعي",
+        "period": "أسبوع"
+      },
+      "yearly": {
+        "name": "سنوي",
+        "period": "سنة"
+      },
+      "lifetime": {
+        "name": "مدى الحياة",
+        "period": "مرة واحدة"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "محادثات غير محدودة بالذكاء الاصطناعي",
+      "personalizedPath": "مسار تعلم مخصص",
+      "progressTracking": "تتبع التقدم",
+      "save77": "وفر 77%",
+      "prioritySupport": "دعم ذو أولوية",
+      "offlineAccess": "الوصول دون اتصال",
+      "payOnce": "ادفع مرة واحدة، امتلك للأبد",
+      "futureUpdates": "جميع التحديثات المستقبلية",
+      "premiumSupport": "دعم متميز"
+    }
+  }
+}

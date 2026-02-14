@@ -7,6 +7,8 @@ export const db = drizzle(env.DATABASE_URL);
 export { and, asc, desc, eq, or, sql } from "drizzle-orm";
 // Export schemas
 export * from "./schema/auth";
+export * from "./schema/content";
 export * from "./schema/conversation";
 export * from "./schema/profile";
 export * from "./schema/subscription";
+export * from "./schema/vocabulary";

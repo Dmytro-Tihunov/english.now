@@ -1,5 +1,5 @@
+import { useTranslation } from "@english.now/i18n";
 import { ArrowRight, Check } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
@@ -107,7 +107,7 @@ export default function SelectionStep({
 						onClick={onNext}
 					>
 						{t("actions.continue")}
-						<ArrowRight className="ml-2 size-5" />
+						<ArrowRight className="size-5" />
 					</Button>
 				</div>
 			</div>

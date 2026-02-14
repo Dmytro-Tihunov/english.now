@@ -1,0 +1,179 @@
+{
+  "steps": {
+    "welcome": "환영합니다",
+    "nativeLanguage": "모국어",
+    "level": "당신의 수준",
+    "goal": "당신의 목표",
+    "time": "일일 시간",
+    "focus": "집중 분야",
+    "plan": "당신의 계획",
+    "paywall": "시작하기"
+  },
+  "welcome": {
+    "title": "스마트하게 영어 배우기",
+    "titleHighlight": "스마트하게",
+    "subtitle": "AI와 함께 영어를 연습하고, 어휘를 쌓고, 문법을 마스터하세요 - 모두 당신에게 맞춤화되어 있습니다.",
+    "features": {
+      "conversations": "AI 기반 대화",
+      "personalizedPath": "맞춤 학습 경로",
+      "trackProgress": "진행 상황 추적"
+    }
+  },
+  "nativeLanguage": {
+    "title": "당신의 모국어는 무엇인가요?",
+    "subtitle": "번역과 설명을 맞춤화하기 위해 사용됩니다",
+    "searchPlaceholder": "언어 검색...",
+    "noLanguagesFound": "찾은 언어가 없습니다"
+  },
+  "level": {
+    "title": "당신의 영어 수준은 무엇인가요?",
+    "subtitle": "학습 경험을 맞춤화하는 데 도움이 됩니다",
+    "options": {
+      "beginner": {
+        "name": "초급",
+        "description": "기본적인 단어와 구문을 알고 있습니다"
+      },
+      "elementary": {
+        "name": "초등",
+        "description": "간단한 대화를 할 수 있습니다"
+      },
+      "intermediate": {
+        "name": "중급",
+        "description": "다양한 주제를 논의할 수 있습니다"
+      },
+      "upperIntermediate": {
+        "name": "상급 중급",
+        "description": "대부분의 상황에서 편안합니다"
+      },
+      "advanced": {
+        "name": "고급",
+        "description": "영어를 완벽하게 하고 싶습니다"
+      },
+      "upper-intermediate": {
+        "name": "상급 중급",
+        "description": "대부분의 상황에서 편안합니다"
+      }
+    }
+  },
+  "goal": {
+    "title": "당신의 주요 목표는 무엇인가요?",
+    "subtitle": "당신의 필요에 맞춘 학습 경로를 만듭니다",
+    "options": {
+      "career": {
+        "name": "경력 성장",
+        "description": "더 나은 직업 기회를 얻으세요"
+      },
+      "travel": {
+        "name": "여행",
+        "description": "여행 중 소통하기"
+      },
+      "education": {
+        "name": "교육",
+        "description": "유학하거나 시험에 합격하기"
+      },
+      "social": {
+        "name": "사회적",
+        "description": "친구를 사귀고 연결하기"
+      },
+      "personal": {
+        "name": "개인 성장",
+        "description": "스스로에게 도전하기"
+      },
+      "content": {
+        "name": "엔터테인먼트",
+        "description": "영화, 책, 음악 즐기기"
+      }
+    }
+  },
+  "time": {
+    "title": "매일 얼마나 연습할 수 있나요?",
+    "subtitle": "언어 학습의 핵심은 일관성입니다",
+    "options": {
+      "5": {
+        "name": "5분",
+        "description": "빠른 일일 연습"
+      },
+      "10": {
+        "name": "10분",
+        "description": "꾸준한 진행"
+      },
+      "15": {
+        "name": "15분",
+        "description": "꾸준한 진전"
+      },
+      "20": {
+        "name": "20분 이상",
+        "description": "집중적인 학습"
+      },
+      "30": {
+        "name": "30분",
+        "description": "진지한 학습"
+      },
+      "60": {
+        "name": "60+ 분",
+        "description": "집중 학습"
+      }
+    }
+  },
+  "focus": {
+    "title": "어디에 집중하고 싶으신가요?",
+    "subtitle": "적용 가능한 모든 것을 선택하세요 — 나중에 변경할 수 있습니다",
+    "options": {
+      "speaking": "말하기",
+      "vocabulary": "어휘",
+      "grammar": "문법",
+      "pronunciation": "발음"
+    }
+  },
+  "planSummary": {
+    "title": "당신의 맞춤 계획이 준비되었습니다!",
+    "subtitle": "당신의 선호도에 따라 맞춤 학습 경로를 만들었습니다",
+    "profileTitle": "당신의 학습 프로필",
+    "currentLevel": "현재 수준",
+    "mainGoal": "주요 목표",
+    "dailyPractice": "일일 연습",
+    "focusAreas": "집중 분야",
+    "all": "모두",
+    "minutes": "분",
+    "projection": "{{time}} 분/일로, 약 8주 후에 다음 수준에 도달할 수 있습니다",
+    "startLearning": "학습 시작하기"
+  },
+  "paywall": {
+    "title": "당신의 잠재력을 최대한 발휘하세요",
+    "subtitle": "매일 영어를 향상시키는 수천 명의 학습자에 합류하세요",
+    "learnersThisMonth": "이번 달 학습자",
+    "mostPopular": "가장 인기 있는",
+    "bestValue": "최고의 가치",
+    "startTrial": "7일 무료 체험 시작",
+    "trialNote": "언제든지 취소 가능합니다. 체험을 위해 신용카드는 필요하지 않습니다.",
+    "skipToLimited": "제한된 기능으로 계속하기",
+    "securePayment": "안전한 결제",
+    "moneyBack": "30일 환불 보장",
+    "cancelAnytime": "언제든지 취소 가능",
+    "plans": {
+      "weekly": {
+        "name": "주간",
+        "period": "주"
+      },
+      "yearly": {
+        "name": "연간",
+        "period": "년"
+      },
+      "lifetime": {
+        "name": "평생",
+        "period": "한 번"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "무제한 AI 대화",
+      "personalizedPath": "맞춤 학습 경로",
+      "progressTracking": "진행 상황 추적",
+      "save77": "77% 절약",
+      "prioritySupport": "우선 지원",
+      "offlineAccess": "오프라인 접근",
+      "payOnce": "한 번 결제, 영원히 소유",
+      "futureUpdates": "모든 미래 업데이트",
+      "premiumSupport": "프리미엄 지원"
+    }
+  }
+}

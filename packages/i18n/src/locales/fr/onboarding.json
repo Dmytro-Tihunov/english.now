@@ -42,6 +42,10 @@
       "advanced": {
         "name": "Avancé",
         "description": "Je veux perfectionner mon anglais"
+      },
+      "upper-intermediate": {
+        "name": "Intermédiaire Supérieur",
+        "description": "Je suis à l'aise dans la plupart des situations"
       }
     }
   },
@@ -83,9 +87,17 @@
         "name": "5 minutes",
         "description": "Pratique quotidienne rapide"
       },
+      "10": {
+        "name": "10 minutes",
+        "description": "Progrès constant"
+      },
       "15": {
         "name": "15 minutes",
         "description": "Progrès régulier"
+      },
+      "20": {
+        "name": "20+ minutes",
+        "description": "Étude intensive"
       },
       "30": {
         "name": "30 minutes",
@@ -157,5 +169,11 @@
       "futureUpdates": "Toutes les mises à jour futures",
       "premiumSupport": "Support premium"
     }
+  },
+  "nativeLanguage": {
+    "title": "Quelle est votre langue maternelle ?",
+    "subtitle": "Nous l'utiliserons pour personnaliser les traductions et les explications",
+    "searchPlaceholder": "Rechercher une langue...",
+    "noLanguagesFound": "Aucune langue trouvée"
   }
 }

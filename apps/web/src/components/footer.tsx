@@ -1,53 +1,60 @@
+import { useTranslation } from "@english.now/i18n";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher } from "./language-switcher";
 import { ThemeSwitcher } from "./theme-switcher";
 
-const navigation = [
-	{
-		label: "Product",
-		items: [
-			{ label: "Home", to: "/" },
-			{ label: "Features", to: "/features" },
-			{ label: "Pricing", to: "/pricing" },
-		],
-	},
-	// {
-	// 	label: "Resources",
-	// 	items: [
-	// 		{ label: "Feedback", to: "https://english.userjot.com/board" },
-	// 		{ label: "Roadmap", to: "https://english.userjot.com/roadmap" },
-	// 		{ label: "Updates", to: "https://english.userjot.com/updates" },
-	// 	],
-	// },
-	{
-		label: "Company",
-		items: [
-			{ label: "About", to: "/about" },
-			{ label: "Blog", to: "/blog" },
-			{ label: "Contact", to: "/contact" },
-		],
-	},
-	{
-		label: "Legal",
-		items: [
-			{ label: "Privacy", to: "/privacy-policy" },
-			{ label: "Terms", to: "/terms-of-service" },
-			{
-				label: "Cancellation",
-				to: "/refund",
-			},
-		],
-	},
-	{
-		label: "Social",
-		items: [
-			{ label: "GitHub", to: "https://github.com/Dmytro-Tihunov/english.now" },
-			{ label: "X", to: "https://x.com/tihunov" },
-		],
-	},
-];
-
 export default function Footer() {
+	const { t } = useTranslation("common");
+	const { t: tHome } = useTranslation("home");
+
+	const navigation = [
+		{
+			label: tHome("footer.product"),
+			items: [
+				{ label: t("nav.home"), to: "/" },
+				{ label: t("nav.features"), to: "/features" },
+				{ label: t("nav.pricing"), to: "/pricing" },
+			],
+		},
+		// {
+		// 	label: "Resources",
+		// 	items: [
+		// 		{ label: "Feedback", to: "https://english.userjot.com/board" },
+		// 		{ label: "Roadmap", to: "https://english.userjot.com/roadmap" },
+		// 		{ label: "Updates", to: "https://english.userjot.com/updates" },
+		// 	],
+		// },
+		{
+			label: t("nav.company"),
+			items: [
+				{ label: t("nav.about"), to: "/about" },
+				{ label: t("nav.blog"), to: "/blog" },
+				{ label: tHome("footer.contact"), to: "/contact" },
+			],
+		},
+		{
+			label: tHome("footer.legal"),
+			items: [
+				{ label: tHome("footer.privacy"), to: "/privacy-policy" },
+				{ label: tHome("footer.terms"), to: "/terms-of-service" },
+				{
+					label: tHome("footer.cancellation"),
+					to: "/refund",
+				},
+			],
+		},
+		{
+			label: tHome("footer.social"),
+			items: [
+				{
+					label: "GitHub",
+					to: "https://github.com/Dmytro-Tihunov/english.now",
+				},
+				{ label: "X", to: "https://x.com/tihunov" },
+			],
+		},
+	];
+
 	return (
 		<footer>
 			<div className="container relative z-10 mx-auto max-w-5xl px-4">
@@ -83,11 +90,10 @@ export default function Footer() {
 						</div>
 						<div className="mb-5 text-muted-foreground text-sm leading-relaxed tracking-tight">
 							<span className="h-auto w-fit font-medium text-[13px] text-muted-foreground leading-[20px] tracking-[0.1px]">
-								English.now - English learning platform.
+								{tHome("footer.description")}
 							</span>
 							<p className="mt-1 h-auto w-fit text-[12px] text-muted-foreground leading-[20px] tracking-[0.1px]">
-								It's not ready yet, but I'm working hard to make it better for
-								you. Thank you for your support!
+								{tHome("footer.descriptionNote")}
 							</p>
 						</div>
 					</div>
@@ -119,7 +125,8 @@ export default function Footer() {
 				<div className="mt-8 mb-3 flex flex-row items-center justify-between py-3.5 text-muted-foreground">
 					<div className="flex items-center gap-1.5 text-center text-xs">
 						<div>
-							© {new Date().getFullYear()} English Now. All rights reserved.{" "}
+							© {new Date().getFullYear()} English Now.{" "}
+							{tHome("footer.copyright")}{" "}
 						</div>
 						{/* 
 						<div className="flex flex-col items-center gap-1">

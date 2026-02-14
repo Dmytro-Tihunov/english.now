@@ -11,19 +11,19 @@ export default function Navbar() {
 	const _links = [
 		{
 			to: "/about",
-			label: "About",
+			label: t("nav.about"),
 		},
 		{
 			to: "/features",
-			label: "Features",
+			label: t("nav.features"),
 		},
 		{
 			to: "/pricing",
-			label: "Pricing",
+			label: t("nav.pricing"),
 		},
 		{
 			to: "/blog",
-			label: "Blog",
+			label: t("nav.blog"),
 		},
 	];
 
@@ -31,7 +31,6 @@ export default function Navbar() {
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 0);
 		};
-
 		window.addEventListener("scroll", handleScroll);
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
@@ -71,7 +70,6 @@ export default function Navbar() {
 						<Button
 							asChild
 							className="relative inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-xl bg-linear-to-t from-[#202020] to-[#2F2F2F] font-base text-white shadow-[inset_0_1px_4px_0_rgba(255,255,255,0.4)] outline-none transition-all hover:opacity-90 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40 has-[>svg]:px-2.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:from-[rgb(192,192,192)] dark:to-[rgb(255,255,255)] dark:shadow-[inset_0_1px_4px_0_rgba(128,128,128,0.2)] dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none"
-							// className="rounded-xl bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] text-black text-sm"
 						>
 							<Link to="/signup">
 								{t("auth.signUp")}{" "}

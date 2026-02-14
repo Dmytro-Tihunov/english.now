@@ -1,0 +1,175 @@
+{
+  "steps": {
+    "welcome": "Witamy",
+    "nativeLanguage": "Język ojczysty",
+    "level": "Twój poziom",
+    "goal": "Twój cel",
+    "time": "Codzienny czas",
+    "focus": "Obszary skupienia",
+    "plan": "Twój plan",
+    "paywall": "Rozpocznij"
+  },
+  "welcome": {
+    "title": "Ucz się angielskiego w inteligentny sposób",
+    "titleHighlight": "w inteligentny sposób",
+    "subtitle": "Ćwicz angielski z AI, buduj słownictwo i opanuj gramatykę - wszystko dostosowane do Ciebie.",
+    "features": {
+      "conversations": "Rozmowy zasilane przez AI",
+      "personalizedPath": "Spersonalizowana ścieżka nauki",
+      "trackProgress": "Śledź swoje postępy"
+    }
+  },
+  "nativeLanguage": {
+    "title": "Jaki jest Twój język ojczysty?",
+    "subtitle": "Użyjemy tego, aby spersonalizować tłumaczenia i wyjaśnienia",
+    "searchPlaceholder": "Szukaj języka...",
+    "noLanguagesFound": "Nie znaleziono języków"
+  },
+  "level": {
+    "title": "Jaki jest Twój poziom angielskiego?",
+    "subtitle": "To pomoże nam spersonalizować Twoje doświadczenie w nauce",
+    "options": {
+      "beginner": {
+        "name": "Początkujący",
+        "description": "Znam kilka podstawowych słów i zwrotów"
+      },
+      "elementary": {
+        "name": "Podstawowy",
+        "description": "Potrafię prowadzić proste rozmowy"
+      },
+      "intermediate": {
+        "name": "Średniozaawansowany",
+        "description": "Potrafię omawiać różne tematy"
+      },
+      "upper-intermediate": {
+        "name": "Wyższy średniozaawansowany",
+        "description": "Czuję się swobodnie w większości sytuacji"
+      },
+      "advanced": {
+        "name": "Zaawansowany",
+        "description": "Chcę doskonalić mój angielski"
+      }
+    }
+  },
+  "goal": {
+    "title": "Jaki jest Twój główny cel?",
+    "subtitle": "Stworzymy ścieżkę nauki dostosowaną do Twoich potrzeb",
+    "options": {
+      "career": {
+        "name": "Rozwój kariery",
+        "description": "Zdobądź lepsze możliwości zawodowe"
+      },
+      "travel": {
+        "name": "Podróże",
+        "description": "Komunikuj się podczas podróży"
+      },
+      "education": {
+        "name": "Edukacja",
+        "description": "Studiuj za granicą lub zdawaj egzaminy"
+      },
+      "social": {
+        "name": "Społeczne",
+        "description": "Zawieraj przyjaźnie i nawiązuj kontakty"
+      },
+      "personal": {
+        "name": "Rozwój osobisty",
+        "description": "Podejmij wyzwanie nauki"
+      },
+      "content": {
+        "name": "Rozrywka",
+        "description": "Ciesz się filmami, książkami i muzyką"
+      }
+    }
+  },
+  "time": {
+    "title": "Ile czasu możesz poświęcić na codzienną naukę?",
+    "subtitle": "Konsekwencja jest kluczem do nauki języka",
+    "options": {
+      "5": {
+        "name": "5 minut",
+        "description": "Szybka codzienna praktyka"
+      },
+      "10": {
+        "name": "10 minut",
+        "description": "Stały postęp"
+      },
+      "15": {
+        "name": "15 minut",
+        "description": "Stały postęp"
+      },
+      "20": {
+        "name": "20+ minut",
+        "description": "Intensywna nauka"
+      },
+      "30": {
+        "name": "30 minut",
+        "description": "Poważna nauka"
+      },
+      "60": {
+        "name": "60+ minut",
+        "description": "Intensywna nauka"
+      }
+    }
+  },
+  "focus": {
+    "title": "Na czym chcesz się skupić?",
+    "subtitle": "Wybierz wszystkie, które mają zastosowanie — możesz to zmienić później",
+    "options": {
+      "speaking": "Mówienie",
+      "vocabulary": "Słownictwo",
+      "grammar": "Gramatyka",
+      "pronunciation": "Wymowa"
+    }
+  },
+  "planSummary": {
+    "title": "Twój osobisty plan jest gotowy!",
+    "subtitle": "Na podstawie Twoich preferencji stworzyliśmy spersonalizowaną ścieżkę nauki",
+    "profileTitle": "Twój profil nauki",
+    "currentLevel": "Obecny poziom",
+    "mainGoal": "Główny cel",
+    "dailyPractice": "Codzienna praktyka",
+    "focusAreas": "Obszary skupienia",
+    "all": "Wszystkie",
+    "minutes": "minuty",
+    "projection": "Przy {{time}} min/dzień, możesz osiągnąć następny poziom w ~8 tygodni",
+    "startLearning": "Rozpocznij naukę"
+  },
+  "paywall": {
+    "title": "Odblokuj swój pełny potencjał",
+    "subtitle": "Dołącz do tysięcy uczących się, którzy codziennie poprawiają swój angielski",
+    "learnersThisMonth": "uczących się w tym miesiącu",
+    "mostPopular": "Najbardziej popularne",
+    "bestValue": "Najlepsza wartość",
+    "startTrial": "Rozpocznij 7-dniowy darmowy okres próbny",
+    "trialNote": "Anuluj w dowolnym momencie. Nie jest wymagana karta kredytowa na okres próbny.",
+    "skipToLimited": "Kontynuuj z ograniczonymi funkcjami",
+    "securePayment": "Bezpieczna płatność",
+    "moneyBack": "30-dniowa gwarancja zwrotu pieniędzy",
+    "cancelAnytime": "Anuluj w dowolnym momencie",
+    "plans": {
+      "weekly": {
+        "name": "Tygodniowy",
+        "period": "tydzień"
+      },
+      "yearly": {
+        "name": "Roczny",
+        "period": "rok"
+      },
+      "lifetime": {
+        "name": "Dożywotni",
+        "period": "jednorazowo"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "Nieograniczone rozmowy z AI",
+      "personalizedPath": "Spersonalizowana ścieżka nauki",
+      "progressTracking": "Śledzenie postępów",
+      "save77": "Oszczędź 77%",
+      "prioritySupport": "Priorytetowe wsparcie",
+      "offlineAccess": "Dostęp offline",
+      "payOnce": "Zapłać raz, posiadasz na zawsze",
+      "futureUpdates": "Wszystkie przyszłe aktualizacje",
+      "premiumSupport": "Wsparcie premium"
+    }
+  }
+}

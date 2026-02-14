@@ -120,7 +120,7 @@ export default function Practice() {
 					className="group flex cursor-pointer items-center gap-1 whitespace-nowrap rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] px-2.5 py-1.5 font-medium text-lime-900 text-sm italic shadow-none transition duration-150 ease-in-out will-change-transform hover:bg-lime-700/10 hover:brightness-95 focus:shadow-none focus:outline-none focus-visible:shadow-none"
 				>
 					Practice
-					<span className="font-lyon text-lg text-lime-900/80 italic group-hover:text-lime-900">
+					<span className="-top-px relative font-lyon text-lg text-lime-900/80 italic group-hover:text-lime-900">
 						now
 					</span>
 				</Button>

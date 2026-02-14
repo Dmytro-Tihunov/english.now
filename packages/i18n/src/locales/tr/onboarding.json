@@ -1,0 +1,179 @@
+{
+  "steps": {
+    "welcome": "Hoş Geldiniz",
+    "nativeLanguage": "Ana Dil",
+    "level": "Seviyeniz",
+    "goal": "Hedefiniz",
+    "time": "Günlük Süre",
+    "focus": "Odak Alanları",
+    "plan": "Planınız",
+    "paywall": "Başlayın"
+  },
+  "welcome": {
+    "title": "İngilizceyi Akıllı Yoldan Öğrenin",
+    "titleHighlight": "Akıllı Yoldan",
+    "subtitle": "Yapay zeka ile İngilizce pratiği yapın, kelime dağarcığınızı geliştirin ve dilbilgisini ustalaştırın - hepsi size özel.",
+    "features": {
+      "conversations": "Yapay zeka destekli konuşmalar",
+      "personalizedPath": "Kişiselleştirilmiş öğrenme yolu",
+      "trackProgress": "İlerlemenizi takip edin"
+    }
+  },
+  "nativeLanguage": {
+    "title": "Ana diliniz nedir?",
+    "subtitle": "Çevirileri ve açıklamaları kişiselleştirmek için bunu kullanacağız",
+    "searchPlaceholder": "Dil ara...",
+    "noLanguagesFound": "Dil bulunamadı"
+  },
+  "level": {
+    "title": "İngilizce seviyeniz nedir?",
+    "subtitle": "Bu, öğrenme deneyiminizi kişiselleştirmemize yardımcı olur",
+    "options": {
+      "beginner": {
+        "name": "Başlangıç",
+        "description": "Bazı temel kelimeleri ve ifadeleri biliyorum"
+      },
+      "elementary": {
+        "name": "Temel",
+        "description": "Basit konuşmalar yapabilirim"
+      },
+      "intermediate": {
+        "name": "Orta",
+        "description": "Çeşitli konuları tartışabilirim"
+      },
+      "upperIntermediate": {
+        "name": "Orta Üstü",
+        "description": "Çoğu durumda rahatım"
+      },
+      "advanced": {
+        "name": "İleri",
+        "description": "İngilizcemi mükemmelleştirmek istiyorum"
+      },
+      "upper-intermediate": {
+        "name": "Üst Orta",
+        "description": "Çoğu durumda rahatım"
+      }
+    }
+  },
+  "goal": {
+    "title": "Ana hedefiniz nedir?",
+    "subtitle": "İhtiyaçlarınıza göre özel bir öğrenme yolu oluşturacağız",
+    "options": {
+      "career": {
+        "name": "Kariyer Gelişimi",
+        "description": "Daha iyi iş fırsatları elde edin"
+      },
+      "travel": {
+        "name": "Seyahat",
+        "description": "Seyahat ederken iletişim kurun"
+      },
+      "education": {
+        "name": "Eğitim",
+        "description": "Yurtdışında eğitim alın veya sınavları geçin"
+      },
+      "social": {
+        "name": "Sosyal",
+        "description": "Arkadaş edinin ve bağlantı kurun"
+      },
+      "personal": {
+        "name": "Kişisel Gelişim",
+        "description": "Kendimi öğrenmeye zorlamak"
+      },
+      "content": {
+        "name": "Eğlence",
+        "description": "Filmler, kitaplar ve müziklerin tadını çıkarın"
+      }
+    }
+  },
+  "time": {
+    "title": "Günlük ne kadar süre pratik yapabilirsiniz?",
+    "subtitle": "Dil öğrenmede tutarlılık anahtardır",
+    "options": {
+      "5": {
+        "name": "5 dakika",
+        "description": "Hızlı günlük pratik"
+      },
+      "10": {
+        "name": "10 dakika",
+        "description": "İstikrarlı ilerleme"
+      },
+      "15": {
+        "name": "15 dakika",
+        "description": "Düzenli ilerleme"
+      },
+      "20": {
+        "name": "20+ dakika",
+        "description": "Yoğun çalışma"
+      },
+      "30": {
+        "name": "30 dakika",
+        "description": "Ciddi öğrenme"
+      },
+      "60": {
+        "name": "60+ dakika",
+        "description": "Yoğun çalışma"
+      }
+    }
+  },
+  "focus": {
+    "title": "Neye odaklanmak istiyorsunuz?",
+    "subtitle": "Uygun olanları seçin — bunu daha sonra değiştirebilirsiniz",
+    "options": {
+      "speaking": "Konuşma",
+      "vocabulary": "Kelime Dağarcığı",
+      "grammar": "Dilbilgisi",
+      "pronunciation": "Telaffuz"
+    }
+  },
+  "planSummary": {
+    "title": "Kişisel Planınız Hazır!",
+    "subtitle": "Tercihlerinize göre özel bir öğrenme yolu oluşturduk",
+    "profileTitle": "Öğrenme Profiliniz",
+    "currentLevel": "Mevcut Seviye",
+    "mainGoal": "Ana Hedef",
+    "dailyPractice": "Günlük Pratik",
+    "focusAreas": "Odak Alanları",
+    "all": "Hepsi",
+    "minutes": "dakika",
+    "projection": "{{time}} dk/gün ile, ~8 hafta içinde bir sonraki seviyeye ulaşabilirsiniz",
+    "startLearning": "Öğrenmeye Başla"
+  },
+  "paywall": {
+    "title": "Tam Potansiyelinizi Açığa Çıkarın",
+    "subtitle": "Her gün İngilizcelerini geliştiren binlerce öğrenciye katılın",
+    "learnersThisMonth": "bu ayki öğrenciler",
+    "mostPopular": "En Popüler",
+    "bestValue": "En İyi Değer",
+    "startTrial": "7 Günlük Ücretsiz Deneme Başlat",
+    "trialNote": "İstediğiniz zaman iptal edin. Deneme için kredi kartı gerekmez.",
+    "skipToLimited": "Sınırlı özelliklerle devam et",
+    "securePayment": "Güvenli ödeme",
+    "moneyBack": "30 gün para iade garantisi",
+    "cancelAnytime": "İstediğiniz zaman iptal edin",
+    "plans": {
+      "weekly": {
+        "name": "Haftalık",
+        "period": "hafta"
+      },
+      "yearly": {
+        "name": "Yıllık",
+        "period": "yıl"
+      },
+      "lifetime": {
+        "name": "Ömür Boyu",
+        "period": "bir kez"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "Sınırsız yapay zeka konuşmaları",
+      "personalizedPath": "Kişiselleştirilmiş öğrenme yolu",
+      "progressTracking": "İlerleme takibi",
+      "save77": "%77 tasarruf edin",
+      "prioritySupport": "Öncelikli destek",
+      "offlineAccess": "Çevrimdışı erişim",
+      "payOnce": "Bir kez öde, sonsuza kadar sahip ol",
+      "futureUpdates": "Tüm gelecekteki güncellemeler",
+      "premiumSupport": "Premium destek"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "La dernière application d'apprentissage de l'anglais dont vous aurez besoin.",
+    "subtitle": "Application d'apprentissage de l'anglais alimentée par l'IA qui vous aide à apprendre plus rapidement et plus facilement grâce à des leçons personnalisées, de vraies conversations et des retours instantanés.",
+    "getStarted": "Commencer",
+    "watchDemo": "Regarder la démo",
+    "learners": "Plus de 10k apprenants",
+    "noCard": "Aucune carte requise"
+  },
+  "features": {
+    "title": "L'apprentissage de l'anglais est défaillant.",
+    "titleLine2": "Nous sommes là pour le corriger pour vous",
+    "learnMore": "Vous voulez en savoir plus sur nos fonctionnalités ?",
+    "learnMoreLink": "En savoir plus",
+    "items": {
+      "speaking": "Pratiquez la parole et recevez des retours",
+      "mistakes": "Réviser les erreurs",
+      "vocabulary": "Vocabulaire",
+      "lessons": "Leçons personnalisées"
+    }
+  },
+  "footer": {
+    "description": "English.now - Plateforme d'apprentissage de l'anglais.",
+    "descriptionNote": "Ce n'est pas encore prêt, mais je travaille dur pour l'améliorer pour vous. Merci pour votre soutien !",
+    "product": "Produit",
+    "company": "Entreprise",
+    "legal": "Légal",
+    "social": "Social",
+    "contact": "Contact",
+    "copyright": "Tous droits réservés.",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation",
+    "cancellation": "Politique d'annulation"
+  }
+}

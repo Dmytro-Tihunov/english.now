@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "Die letzte Englisch-Lern-App, die Sie jemals brauchen werden.",
+    "subtitle": "KI-gestützte Englisch-Lern-App, die Ihnen hilft, schneller und einfacher durch personalisierte Lektionen, echte Gespräche und sofortiges Feedback zu lernen.",
+    "getStarted": "Loslegen",
+    "watchDemo": "Demo ansehen",
+    "learners": "10k+ Lernende",
+    "noCard": "Keine Karte erforderlich"
+  },
+  "features": {
+    "title": "Englischlernen ist kaputt.",
+    "titleLine2": "Wir sind hier, um es für Sie zu reparieren",
+    "learnMore": "Möchten Sie mehr über unsere Funktionen erfahren?",
+    "learnMoreLink": "Mehr erfahren",
+    "items": {
+      "speaking": "Sprechen üben & Feedback erhalten",
+      "mistakes": "Fehler überprüfen",
+      "vocabulary": "Wortschatz",
+      "lessons": "Personalisierte Lektionen"
+    }
+  },
+  "footer": {
+    "description": "English.now - Englisch-Lernplattform.",
+    "descriptionNote": "Es ist noch nicht fertig, aber ich arbeite hart daran, es für Sie besser zu machen. Vielen Dank für Ihre Unterstützung!",
+    "product": "Produkt",
+    "company": "Unternehmen",
+    "legal": "Rechtliches",
+    "social": "Sozial",
+    "contact": "Kontakt",
+    "copyright": "Alle Rechte vorbehalten.",
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "cancellation": "Stornierungsbedingungen"
+  }
+}

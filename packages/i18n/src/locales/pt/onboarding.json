@@ -1,0 +1,175 @@
+{
+  "steps": {
+    "welcome": "Bem-vindo",
+    "nativeLanguage": "Idioma Nativo",
+    "level": "Seu Nível",
+    "goal": "Seu Objetivo",
+    "time": "Tempo Diário",
+    "focus": "Áreas de Foco",
+    "plan": "Seu Plano",
+    "paywall": "Começar"
+  },
+  "welcome": {
+    "title": "Aprenda Inglês, De Forma Inteligente",
+    "titleHighlight": "De Forma Inteligente",
+    "subtitle": "Pratique inglês com IA, construa vocabulário e domine a gramática - tudo personalizado para você.",
+    "features": {
+      "conversations": "Conversas impulsionadas por IA",
+      "personalizedPath": "Caminho de aprendizagem personalizado",
+      "trackProgress": "Acompanhe seu progresso"
+    }
+  },
+  "nativeLanguage": {
+    "title": "Qual é o seu idioma nativo?",
+    "subtitle": "Usaremos isso para personalizar traduções e explicações",
+    "searchPlaceholder": "Pesquisar idioma...",
+    "noLanguagesFound": "Nenhum idioma encontrado"
+  },
+  "level": {
+    "title": "Qual é o seu nível de inglês?",
+    "subtitle": "Isso nos ajuda a personalizar sua experiência de aprendizagem",
+    "options": {
+      "beginner": {
+        "name": "Iniciante",
+        "description": "Conheço algumas palavras e frases básicas"
+      },
+      "elementary": {
+        "name": "Elementar",
+        "description": "Posso ter conversas simples"
+      },
+      "intermediate": {
+        "name": "Intermediário",
+        "description": "Posso discutir vários tópicos"
+      },
+      "upper-intermediate": {
+        "name": "Intermediário Superior",
+        "description": "Estou confortável na maioria das situações"
+      },
+      "advanced": {
+        "name": "Avançado",
+        "description": "Quero aperfeiçoar meu inglês"
+      }
+    }
+  },
+  "goal": {
+    "title": "Qual é o seu principal objetivo?",
+    "subtitle": "Vamos criar um caminho de aprendizagem adaptado às suas necessidades",
+    "options": {
+      "career": {
+        "name": "Crescimento Profissional",
+        "description": "Obter melhores oportunidades de emprego"
+      },
+      "travel": {
+        "name": "Viagem",
+        "description": "Comunicar-se enquanto viaja"
+      },
+      "education": {
+        "name": "Educação",
+        "description": "Estudar no exterior ou passar em exames"
+      },
+      "social": {
+        "name": "Social",
+        "description": "Fazer amigos e se conectar"
+      },
+      "personal": {
+        "name": "Crescimento Pessoal",
+        "description": "Desafiar-me a aprender"
+      },
+      "content": {
+        "name": "Entretenimento",
+        "description": "Aproveitar filmes, livros e música"
+      }
+    }
+  },
+  "time": {
+    "title": "Quanto tempo você pode praticar diariamente?",
+    "subtitle": "Consistência é a chave para aprender um idioma",
+    "options": {
+      "5": {
+        "name": "5 minutos",
+        "description": "Prática diária rápida"
+      },
+      "10": {
+        "name": "10 minutos",
+        "description": "Progresso constante"
+      },
+      "15": {
+        "name": "15 minutos",
+        "description": "Progresso constante"
+      },
+      "20": {
+        "name": "20+ minutos",
+        "description": "Estudo intensivo"
+      },
+      "30": {
+        "name": "30 minutos",
+        "description": "Aprendizado sério"
+      },
+      "60": {
+        "name": "60+ minutos",
+        "description": "Estudo intensivo"
+      }
+    }
+  },
+  "focus": {
+    "title": "Em que você quer focar?",
+    "subtitle": "Selecione todos que se aplicam — você pode mudar isso depois",
+    "options": {
+      "speaking": "Fala",
+      "vocabulary": "Vocabulário",
+      "grammar": "Gramática",
+      "pronunciation": "Pronúncia"
+    }
+  },
+  "planSummary": {
+    "title": "Seu Plano Pessoal Está Pronto!",
+    "subtitle": "Com base nas suas preferências, criamos um caminho de aprendizagem personalizado",
+    "profileTitle": "Seu Perfil de Aprendizagem",
+    "currentLevel": "Nível Atual",
+    "mainGoal": "Objetivo Principal",
+    "dailyPractice": "Prática Diária",
+    "focusAreas": "Áreas de Foco",
+    "all": "Todos",
+    "minutes": "minutos",
+    "projection": "Com {{time}} min/dia, você pode alcançar o próximo nível em ~8 semanas",
+    "startLearning": "Começar a Aprender"
+  },
+  "paywall": {
+    "title": "Desbloqueie Todo o Seu Potencial",
+    "subtitle": "Junte-se a milhares de alunos melhorando seu inglês todos os dias",
+    "learnersThisMonth": "alunos este mês",
+    "mostPopular": "Mais Popular",
+    "bestValue": "Melhor Valor",
+    "startTrial": "Iniciar Teste Gratuito de 7 Dias",
+    "trialNote": "Cancele a qualquer momento. Não é necessário cartão de crédito para o teste.",
+    "skipToLimited": "Continuar com recursos limitados",
+    "securePayment": "Pagamento seguro",
+    "moneyBack": "Garantia de devolução de 30 dias",
+    "cancelAnytime": "Cancele a qualquer momento",
+    "plans": {
+      "weekly": {
+        "name": "Semanal",
+        "period": "semana"
+      },
+      "yearly": {
+        "name": "Anual",
+        "period": "ano"
+      },
+      "lifetime": {
+        "name": "Vitalício",
+        "period": "uma vez"
+      }
+    },
+    "features": {
+      "unlimitedConversations": "Conversas ilimitadas com IA",
+      "personalizedPath": "Caminho de aprendizagem personalizado",
+      "progressTracking": "Acompanhamento de progresso",
+      "save77": "Economize 77%",
+      "prioritySupport": "Suporte prioritário",
+      "offlineAccess": "Acesso offline",
+      "payOnce": "Pague uma vez, tenha para sempre",
+      "futureUpdates": "Todas as atualizações futuras",
+      "premiumSupport": "Suporte premium"
+    }
+  }
+}

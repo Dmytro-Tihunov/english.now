@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "The last English learning app you <br/> will ever need.",
+    "subtitle": "AI-powered English learning app that helps you learn faster and easier through personalized lessons, real conversations, and instant feedback.",
+    "getStarted": "Get Started",
+    "watchDemo": "Watch Demo",
+    "learners": "{{count}}+ learners",
+    "noCard": "No card required"
+  },
+  "features": {
+    "title": "English learning is broken.",
+    "titleLine2": "We are here to fix it for you",
+    "learnMore": "Want to more about our features?",
+    "learnMoreLink": "Learn more",
+    "items": {
+      "speaking": "Practice speaking & Get feedback",
+      "mistakes": "Review mistakes",
+      "vocabulary": "Vocabulary",
+      "lessons": "Personalized lessons"
+    }
+  },
+  "footer": {
+    "description": "English.now - English learning platform.",
+    "descriptionNote": "It's not ready yet, but I'm working hard to make it better for you. Thank you for your support!",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "social": "Social",
+    "contact": "Contact",
+    "copyright": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cancellation": "Cancellation Policy"
+  }
+}

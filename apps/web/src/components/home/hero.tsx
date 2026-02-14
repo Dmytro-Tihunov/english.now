@@ -1,10 +1,12 @@
+import { Trans, useTranslation } from "@english.now/i18n";
 import { Link } from "@tanstack/react-router";
-import { Languages, PlayIcon } from "lucide-react";
+import { PlayIcon } from "lucide-react";
 import { useState } from "react";
 import DialogDemo from "../dialog-demo";
 import { Button } from "../ui/button";
 
 export default function Hero() {
+	const { t } = useTranslation("home");
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -13,14 +15,11 @@ export default function Hero() {
 			<div className="relative mx-auto flex flex-col lg:flex-row lg:items-center">
 				<div className="flex flex-1 flex-col items-start gap-6">
 					<h1 className="font-bold font-lyon text-5xl text-neutral-900 tracking-tight sm:text-5xl lg:text-6xl dark:text-white">
-						The last English learning app you <br />
-						will ever need.
+						<Trans components={{ br: <br /> }}>{t("hero.title")}</Trans>
 					</h1>
 
 					<p className="max-w-md text-lg text-muted-foreground leading-relaxed">
-						AI-powered English learning app that helps you learn faster and
-						easier through personalized lessons, real conversations, and instant
-						feedback.
+						{t("hero.subtitle")}
 					</p>
 
 					<div className="flex flex-wrap items-center gap-3 pt-2">
@@ -30,7 +29,7 @@ export default function Hero() {
 							className="relative inline-flex h-12 shrink-0 cursor-pointer items-center overflow-hidden whitespace-nowrap rounded-2xl bg-linear-to-t from-[#202020] to-[#2F2F2F] text-base text-white shadow-[inset_0_1px_4px_0_rgba(255,255,255,0.4)] outline-none transition-all hover:opacity-90 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40 has-[>svg]:px-2.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:from-[rgb(192,192,192)] dark:to-[rgb(255,255,255)] dark:shadow-[inset_0_1px_4px_0_rgba(128,128,128,0.2)] dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none"
 						>
 							<Link to="/login">
-								Get started
+								{t("hero.getStarted")}
 								<span className="font-lyon text-neutral-500 text-xl italic">
 									for free
 								</span>
@@ -41,15 +40,9 @@ export default function Hero() {
 							onClick={() => setOpen(true)}
 							variant="outline"
 							className="h-12 cursor-pointer rounded-2xl border-neutral-300 px-6 text-base hover:bg-neutral-100"
-							// style={{
-							//   background:
-							//     "linear-gradient(0deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.75) 100%)",
-							//   boxShadow:
-							//     "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgb(255, 255, 255, 1) inset, 0px 1px 2px 1px rgba(0, 0, 0, 0.06)",
-							// }}
 						>
 							<PlayIcon fill="currentColor" className="size-4" />
-							Watch Demo
+							{t("hero.watchDemo")}
 						</Button>
 					</div>
 
@@ -65,10 +58,10 @@ export default function Hero() {
 									</div>
 								))}
 							</span>
-							<span>10k+ learners</span>
+							<span>{t("hero.learners", { count: "10k" })}</span>
 						</span>
 						<span className="h-4 w-px bg-neutral-400" />
-						<span>No card required</span>
+						<span>{t("hero.noCard")}</span>
 					</div>
 				</div>
 
@@ -299,9 +292,6 @@ export default function Hero() {
 
 						<div className="space-y-4 p-4">
 							<div className="flex gap-2">
-								{/* <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-radial from-[#EFFF9B] to-[#D8FF76]">
-									<Sparkles className="size-3.5 text-lime-600" />
-								</div> */}
 								<div
 									className="max-w-[90%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
 									style={{
@@ -358,9 +348,6 @@ export default function Hero() {
 							</div>
 
 							<div className="flex gap-2">
-								{/* <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-radial from-[#EFFF9B] to-[#D8FF76]">
-									<Sparkles className="size-3.5 text-lime-600" />
-								</div> */}
 								<div
 									className="max-w-[90%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm"
 									style={{

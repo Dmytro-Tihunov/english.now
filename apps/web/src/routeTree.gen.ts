@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as GeneratingRouteImport } from './routes/generating'
 import { Route as SessionRouteImport } from './routes/_session'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as LoginRouteImport } from './routes/_login'
@@ -46,6 +47,11 @@ import { Route as ConversationConversationSessionIdRouteImport } from './routes/
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeneratingRoute = GeneratingRouteImport.update({
+  id: '/generating',
+  path: '/generating',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SessionRoute = SessionRouteImport.update({
@@ -208,6 +214,7 @@ const ConversationConversationSessionIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/generating': typeof GeneratingRoute
   '/onboarding': typeof OnboardingRoute
   '/courses': typeof DashboardCoursesRouteWithChildren
   '/fluency': typeof DashboardFluencyRoute
@@ -238,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/courses/': typeof DashboardCoursesIndexRoute
 }
 export interface FileRoutesByTo {
+  '/generating': typeof GeneratingRoute
   '/onboarding': typeof OnboardingRoute
   '/fluency': typeof DashboardFluencyRoute
   '/grammar': typeof DashboardGrammarRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/_login': typeof LoginRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_session': typeof SessionRouteWithChildren
+  '/generating': typeof GeneratingRoute
   '/onboarding': typeof OnboardingRoute
   '/_dashboard/courses': typeof DashboardCoursesRouteWithChildren
   '/_dashboard/fluency': typeof DashboardFluencyRoute
@@ -305,6 +314,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/generating'
     | '/onboarding'
     | '/courses'
     | '/fluency'
@@ -335,6 +345,7 @@ export interface FileRouteTypes {
     | '/courses/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/generating'
     | '/onboarding'
     | '/fluency'
     | '/grammar'
@@ -369,6 +380,7 @@ export interface FileRouteTypes {
     | '/_login'
     | '/_public'
     | '/_session'
+    | '/generating'
     | '/onboarding'
     | '/_dashboard/courses'
     | '/_dashboard/fluency'
@@ -405,6 +417,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
   SessionRoute: typeof SessionRouteWithChildren
+  GeneratingRoute: typeof GeneratingRoute
   OnboardingRoute: typeof OnboardingRoute
 }
 
@@ -415,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/generating': {
+      id: '/generating'
+      path: '/generating'
+      fullPath: '/generating'
+      preLoaderRoute: typeof GeneratingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_session': {
@@ -760,6 +780,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
   SessionRoute: SessionRouteWithChildren,
+  GeneratingRoute: GeneratingRoute,
   OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport

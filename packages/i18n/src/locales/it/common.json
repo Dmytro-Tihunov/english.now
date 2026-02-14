@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "English.now"
+  },
+  "actions": {
+    "continue": "Continua",
+    "back": "Indietro",
+    "skip": "Salta",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "confirm": "Conferma",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi",
+    "getStarted": "Inizia"
+  },
+  "errors": {
+    "required": "Questo campo è obbligatorio",
+    "generic": "Qualcosa è andato storto",
+    "networkError": "Errore di rete. Per favore riprova."
+  },
+  "auth": {
+    "signIn": "Accedi",
+    "signUp": "Registrati",
+    "signOut": "Esci",
+    "forgotPassword": "Password dimenticata?",
+    "resetPassword": "Reimposta password",
+    "alreadyHaveAccount": "Ho già un account"
+  },
+  "nav": {
+    "home": "Home",
+    "practice": "Pratica",
+    "vocabulary": "Vocabolario",
+    "lessons": "Lezioni",
+    "settings": "Impostazioni",
+    "pricing": "Prezzi",
+    "about": "Informazioni",
+    "features": "Caratteristiche",
+    "blog": "Blog"
+  }
+}

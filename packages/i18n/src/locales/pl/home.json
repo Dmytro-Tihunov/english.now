@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "Ostatnia aplikacja do nauki angielskiego, której kiedykolwiek będziesz potrzebować.",
+    "subtitle": "Aplikacja do nauki angielskiego zasilana przez AI, która pomaga uczyć się szybciej i łatwiej dzięki spersonalizowanym lekcjom, prawdziwym rozmowom i natychmiastowej informacji zwrotnej.",
+    "getStarted": "Rozpocznij",
+    "watchDemo": "Obejrzyj demo",
+    "learners": "Ponad 10 tys. uczniów",
+    "noCard": "Karta nie jest wymagana"
+  },
+  "features": {
+    "title": "Nauka angielskiego jest wadliwa.",
+    "titleLine2": "Jesteśmy tu, aby to naprawić dla Ciebie",
+    "learnMore": "Chcesz dowiedzieć się więcej o naszych funkcjach?",
+    "learnMoreLink": "Dowiedz się więcej",
+    "items": {
+      "speaking": "Ćwicz mówienie i otrzymuj opinie",
+      "mistakes": "Przeglądaj błędy",
+      "vocabulary": "Słownictwo",
+      "lessons": "Spersonalizowane lekcje"
+    }
+  },
+  "footer": {
+    "description": "English.now - platforma do nauki angielskiego.",
+    "descriptionNote": "Jeszcze nie jest gotowe, ale ciężko pracuję, aby było lepsze dla Ciebie. Dziękuję za wsparcie!",
+    "product": "Produkt",
+    "company": "Firma",
+    "legal": "Prawne",
+    "social": "Społeczność",
+    "contact": "Kontakt",
+    "copyright": "Wszelkie prawa zastrzeżone.",
+    "privacy": "Polityka prywatności",
+    "terms": "Warunki korzystania z usługi",
+    "cancellation": "Polityka anulowania"
+  }
+}

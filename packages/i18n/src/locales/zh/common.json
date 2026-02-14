@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "English.now"
+  },
+  "actions": {
+    "continue": "继续",
+    "back": "返回",
+    "skip": "跳过",
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭",
+    "getStarted": "开始"
+  },
+  "errors": {
+    "required": "此字段为必填项",
+    "generic": "出现错误",
+    "networkError": "网络错误。请重试。"
+  },
+  "auth": {
+    "signIn": "登录",
+    "signUp": "注册",
+    "signOut": "登出",
+    "forgotPassword": "忘记密码？",
+    "resetPassword": "重置密码",
+    "alreadyHaveAccount": "我已有账户"
+  },
+  "nav": {
+    "home": "首页",
+    "practice": "练习",
+    "vocabulary": "词汇",
+    "lessons": "课程",
+    "settings": "设置",
+    "pricing": "价格",
+    "about": "关于",
+    "features": "功能",
+    "blog": "博客"
+  }
+}

@@ -1,7 +1,9 @@
 import { protectedProcedure, publicProcedure, router } from "../index";
+import { contentRouter } from "./content";
 import { conversationRouter } from "./conversation";
 import { profileRouter } from "./profile";
 import { pronunciationRouter } from "./pronunciation";
+import { vocabularyRouter } from "./vocabulary";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => {
@@ -13,6 +15,8 @@ export const appRouter = router({
 			user: ctx.session.user,
 		};
 	}),
+	content: contentRouter,
+	vocabulary: vocabularyRouter,
 	pronunciation: pronunciationRouter,
 	conversation: conversationRouter,
 	profile: profileRouter,

@@ -3,65 +3,14 @@ import { CheckIcon, Loader2, StarIcon } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { openCheckout } from "@/lib/paddle";
+import _plans from "@/lib/plans";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
-const PADDLE_PRICE_IDS = {
-	monthly: import.meta.env.VITE_PADDLE_PRICE_MONTHLY ?? "",
-	yearly: import.meta.env.VITE_PADDLE_PRICE_YEARLY ?? "",
-} as const;
-
 export function Pricing() {
+	const { data: session } = authClient.useSession();
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
-	const { data: session } = authClient.useSession();
-
-	const _plans = [
-		{
-			name: "Free",
-			description: "Great for beginners.",
-			price: 0,
-			isPopular: false,
-			duration: "forever",
-			paddlePriceId: null as string | null,
-			features: [
-				"1 AI conversations per day",
-				"Basic grammar lessons",
-				"Limited vocabulary exercises",
-				"Progress tracking",
-			],
-		},
-		{
-			name: "Monthly",
-			description: "Great for intermediate learners.",
-			price: 12,
-			isPopular: true,
-			duration: "month",
-			paddlePriceId: PADDLE_PRICE_IDS.monthly,
-			features: [
-				"Unlimited AI conversations",
-				"Advanced AI feedback",
-				"Full vocabulary library",
-				"Personalized learning path",
-				"Progress tracking and analytics",
-			],
-		},
-		{
-			name: "Yearly",
-			description: "Great for advanced learners.",
-			price: 100,
-			isPopular: false,
-			duration: "year",
-			paddlePriceId: PADDLE_PRICE_IDS.yearly,
-			features: [
-				"Unlimited AI conversations",
-				"Advanced AI feedback",
-				"Full vocabulary library",
-				"Personalized learning path",
-				"Progress tracking and analytics",
-			],
-		},
-	];
 
 	async function handlePlanClick(plan: (typeof _plans)[number]) {
 		setIsLoading(true);
@@ -104,7 +53,7 @@ export function Pricing() {
 							}}
 						>
 							<div className="relative z-10 mb-4">
-								<div className="flex flex-col gap-2">
+								<div className="flex flex-col gap-1.5">
 									<div
 										data-slot="card-title"
 										className="flex items-center gap-2 font-semibold text-lg"

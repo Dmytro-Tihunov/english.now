@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "마지막으로 필요한 영어 학습 앱.",
+    "subtitle": "개인 맞춤형 수업, 실제 대화, 즉각적인 피드백을 통해 더 빠르고 쉽게 배울 수 있도록 도와주는 AI 기반 영어 학습 앱.",
+    "getStarted": "시작하기",
+    "watchDemo": "데모 보기",
+    "learners": "10,000명 이상의 학습자",
+    "noCard": "카드 필요 없음"
+  },
+  "features": {
+    "title": "영어 학습이 잘못되었습니다.",
+    "titleLine2": "우리가 당신을 위해 그것을 고치러 왔습니다",
+    "learnMore": "우리의 기능에 대해 더 알고 싶으신가요?",
+    "learnMoreLink": "더 알아보기",
+    "items": {
+      "speaking": "말하기 연습 & 피드백 받기",
+      "mistakes": "실수 검토",
+      "vocabulary": "어휘",
+      "lessons": "개인 맞춤형 수업"
+    }
+  },
+  "footer": {
+    "description": "English.now - 영어 학습 플랫폼.",
+    "descriptionNote": "아직 준비되지 않았지만, 더 나은 서비스를 위해 열심히 노력하고 있습니다. 여러분의 지원에 감사드립니다!",
+    "product": "제품",
+    "company": "회사",
+    "legal": "법적",
+    "social": "소셜",
+    "contact": "연락처",
+    "copyright": "모든 권리 보유.",
+    "privacy": "개인정보 보호정책",
+    "terms": "서비스 약관",
+    "cancellation": "취소 정책"
+  }
+}

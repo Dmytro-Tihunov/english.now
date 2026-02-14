@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "English.now"
+  },
+  "actions": {
+    "continue": "जारी रखें",
+    "back": "वापस",
+    "skip": "छोड़ें",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "close": "बंद करें",
+    "getStarted": "शुरू करें"
+  },
+  "errors": {
+    "required": "यह फ़ील्ड आवश्यक है",
+    "generic": "कुछ गलत हो गया",
+    "networkError": "नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।"
+  },
+  "auth": {
+    "signIn": "साइन इन करें",
+    "signUp": "साइन अप करें",
+    "signOut": "साइन आउट करें",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "resetPassword": "पासवर्ड रीसेट करें",
+    "alreadyHaveAccount": "मेरे पास पहले से एक खाता है"
+  },
+  "nav": {
+    "home": "मुख्य पृष्ठ",
+    "practice": "अभ्यास",
+    "vocabulary": "शब्दावली",
+    "lessons": "पाठ",
+    "settings": "सेटिंग्स",
+    "pricing": "मूल्य निर्धारण",
+    "about": "के बारे में",
+    "features": "विशेषताएं",
+    "blog": "ब्लॉग"
+  }
+}

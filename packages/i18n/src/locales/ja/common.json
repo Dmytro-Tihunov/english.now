@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "English.now"
+  },
+  "actions": {
+    "continue": "続ける",
+    "back": "戻る",
+    "skip": "スキップ",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "getStarted": "始める"
+  },
+  "errors": {
+    "required": "このフィールドは必須です",
+    "generic": "何かがうまくいきませんでした",
+    "networkError": "ネットワークエラーです。もう一度お試しください。"
+  },
+  "auth": {
+    "signIn": "サインイン",
+    "signUp": "サインアップ",
+    "signOut": "サインアウト",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "resetPassword": "パスワードをリセット",
+    "alreadyHaveAccount": "すでにアカウントをお持ちです"
+  },
+  "nav": {
+    "home": "ホーム",
+    "practice": "練習",
+    "vocabulary": "語彙",
+    "lessons": "レッスン",
+    "settings": "設定",
+    "pricing": "価格",
+    "about": "概要",
+    "features": "特徴",
+    "blog": "ブログ"
+  }
+}

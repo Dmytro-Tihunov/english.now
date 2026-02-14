@@ -1,4 +1,5 @@
 import { env } from "@english.now/env/client";
+import { useTranslation } from "@english.now/i18n";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import {
@@ -6,16 +7,17 @@ import {
 	BookOpen,
 	Briefcase,
 	Check,
-	Clock,
 	GraduationCap,
+	LogOut,
 	MessageCircle,
 	Plane,
 	Target,
 	Users,
 	Zap,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import Loader from "@/components/loader";
 import Logo from "@/components/logo";
 import NativeLanguageStep from "@/components/onboarding/nativelanguage-step";
 import PaywallStep from "@/components/onboarding/paywall-step";
@@ -23,6 +25,9 @@ import SelectionStep from "@/components/onboarding/selection-step";
 import WelcomeStep from "@/components/onboarding/welcome-step";
 import { Button } from "@/components/ui/button";
 import { getProfile } from "@/functions/get-profile";
+import { authClient } from "@/lib/auth-client";
+import { openCheckout } from "@/lib/paddle";
+import _plans from "@/lib/plans";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/onboarding")({
@@ -37,6 +42,7 @@ export const Route = createFileRoute("/onboarding")({
 });
 
 type OnboardingData = {
+	nativeLanguage: string;
 	level: string;
 	goal: string;
 	time: string;
@@ -134,20 +140,20 @@ const TIME_OPTIONS = [
 		icon: "⚡",
 	},
 	{
-		id: "15",
-		name: "15 minutes",
+		id: "10",
+		name: "10 minutes",
 		description: "Steady progress",
 		icon: "🚶",
 	},
 	{
-		id: "30",
-		name: "30 minutes",
+		id: "15",
+		name: "15 minutes",
 		description: "Serious learning",
 		icon: "🏃",
 	},
 	{
-		id: "60",
-		name: "60+ minutes",
+		id: "20",
+		name: "20+ minutes",
 		description: "Intensive study",
 		icon: "🚀",
 	},
@@ -160,17 +166,41 @@ const FOCUS_AREAS = [
 	{ id: "pronunciation", name: "Pronunciation", icon: Zap },
 ];
 
+const defaultOnboardingData: OnboardingData = {
+	nativeLanguage: "",
+	level: "",
+	goal: "",
+	time: "",
+	focus: [],
+};
+
+function loadSavedProgress(): { data: OnboardingData; step: number } | null {
+	try {
+		const saved = localStorage.getItem("onboarding-progress");
+		if (saved) {
+			const parsed = JSON.parse(saved);
+			return {
+				data: parsed.data || defaultOnboardingData,
+				step: parsed.step || 0,
+			};
+		}
+	} catch (_e) {
+		// Ignore parsing errors
+	}
+	return null;
+}
+
 function OnboardingPage() {
+	const { t } = useTranslation("onboarding");
+	const [isScrolled, setIsScrolled] = useState(false);
 	const navigate = useNavigate();
+	const { data: session } = authClient.useSession();
+	const [isHydrated, setIsHydrated] = useState(false);
 	const [currentStep, setCurrentStep] = useState(0);
-	const [data, setData] = useState<OnboardingData>({
-		level: "",
-		goal: "",
-		time: "",
-		focus: [],
-	});
+	const [data, setData] = useState<OnboardingData>(defaultOnboardingData);
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [selectedPlan, setSelectedPlan] = useState("yearly");
+	const isInitialMount = useRef(true);
 
 	const saveOnboardingMutation = useMutation({
 		mutationFn: async (input: {
@@ -195,27 +225,37 @@ function OnboardingPage() {
 		},
 	});
 
-	// Load saved progress from localStorage
+	// Hydrate state from localStorage before showing any content
 	useEffect(() => {
-		const saved = localStorage.getItem("onboarding-progress");
+		const saved = loadSavedProgress();
 		if (saved) {
-			try {
-				const parsed = JSON.parse(saved);
-				setData(parsed.data || data);
-				setCurrentStep(parsed.step || 0);
-			} catch (_e) {
-				// Ignore parsing errors
-			}
+			setData(saved.data);
+			setCurrentStep(saved.step);
 		}
+		setIsHydrated(true);
 	}, []);
 
-	// Save progress to localStorage
+	// Save progress to localStorage (skip initial mount to avoid overwriting)
 	useEffect(() => {
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
 		localStorage.setItem(
 			"onboarding-progress",
 			JSON.stringify({ data, step: currentStep }),
 		);
 	}, [data, currentStep]);
+
+	// Handle scroll to show navbar
+	useEffect(() => {
+		const handleScroll = () => {
+			setIsScrolled(window.scrollY > 0);
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
 	const nextStep = useCallback(() => {
 		if (currentStep < STEPS.length - 1) {
@@ -229,8 +269,10 @@ function OnboardingPage() {
 
 	const handleComplete = useCallback(async () => {
 		try {
+			const plan = _plans.find((p) => p.name === selectedPlan);
+
 			await saveOnboardingMutation.mutateAsync({
-				nativeLanguage: "en", // Default, could be collected in onboarding
+				nativeLanguage: data.nativeLanguage || "en",
 				proficiencyLevel: data.level,
 				dailyGoal: Number.parseInt(data.time) || 15,
 				focusAreas: data.focus,
@@ -242,17 +284,27 @@ function OnboardingPage() {
 			localStorage.removeItem("onboarding-progress");
 			localStorage.setItem("selected-plan", selectedPlan);
 
-			// Navigate to dashboard
-			navigate({ to: "/home" });
+			// Paid plan (Monthly/Yearly): open Paddle checkout
+			if (plan?.paddlePriceId && session?.user) {
+				await openCheckout({
+					priceId: plan.paddlePriceId,
+					userId: session.user.id,
+					email: session.user.email,
+				});
+				return;
+			}
+
+			// Free plan: continue to content generation
+			navigate({ to: "/generating" });
 		} catch (error) {
 			console.error("Failed to save onboarding:", error);
 		}
-	}, [navigate, selectedPlan, data, saveOnboardingMutation]);
+	}, [navigate, selectedPlan, data, saveOnboardingMutation, session]);
 
 	const handleSkip = useCallback(async () => {
 		try {
 			await saveOnboardingMutation.mutateAsync({
-				nativeLanguage: "en",
+				nativeLanguage: data.nativeLanguage || "en",
 				proficiencyLevel: data.level || "beginner",
 				dailyGoal: Number.parseInt(data.time) || 15,
 				focusAreas: data.focus.length > 0 ? data.focus : ["speaking"],
@@ -261,7 +313,7 @@ function OnboardingPage() {
 			});
 
 			localStorage.removeItem("onboarding-progress");
-			navigate({ to: "/home" });
+			navigate({ to: "/generating" });
 		} catch (error) {
 			console.error("Failed to save onboarding:", error);
 		}
@@ -280,6 +332,8 @@ function OnboardingPage() {
 		switch (STEPS[currentStep]?.id) {
 			case "welcome":
 				return true;
+			case "native-language":
+				return !!data.nativeLanguage;
 			case "level":
 				return !!data.level;
 			case "goal":
@@ -301,9 +355,16 @@ function OnboardingPage() {
 		((currentStep + 1) / STEPS.length) * 100,
 	);
 
+	if (!isHydrated) {
+		return (
+			<div className="flex min-h-dvh items-center justify-center bg-neutral-50">
+				<Loader />
+			</div>
+		);
+	}
+
 	return (
 		<div className="relative flex min-h-dvh flex-col bg-neutral-50">
-			{/* Progress bar */}
 			{currentStep > 0 && currentStep < STEPS.length - 1 && (
 				<div className="fixed top-0 right-0 left-0 z-50 h-1 bg-neutral-200">
 					<div
@@ -313,9 +374,14 @@ function OnboardingPage() {
 				</div>
 			)}
 
-			{/* Header */}
 			{currentStep > 0 && (
-				<header>
+				<header
+					className={cn(
+						isScrolled
+							? "sticky top-0 border-border/50 border-b bg-white/70 backdrop-blur-md"
+							: "border-transparent border-b",
+					)}
+				>
 					<div className="container relative z-10 mx-auto px-4">
 						<nav className="flex items-center justify-between py-5 md:grid-cols-5">
 							<div className="col-span-3 items-center gap-3 md:flex">
@@ -323,6 +389,24 @@ function OnboardingPage() {
 							</div>
 							<div className="relative z-50 flex items-center justify-end gap-2">
 								<LanguageSwitcher className="h-9 rounded-xl" />
+								<Button
+									variant="outline"
+									size="icon"
+									className="rounded-xl"
+									onClick={() => {
+										authClient.signOut({
+											fetchOptions: {
+												onSuccess: () => {
+													navigate({
+														to: "/",
+													});
+												},
+											},
+										});
+									}}
+								>
+									<LogOut className="size-4" />
+								</Button>
 							</div>
 						</nav>
 					</div>
@@ -348,7 +432,6 @@ function OnboardingPage() {
 				</header>
 			)}
 
-			{/* Main content */}
 			<main className="flex flex-1 flex-col">
 				<div
 					className={cn(
@@ -356,18 +439,25 @@ function OnboardingPage() {
 						isAnimating ? "opacity-0" : "opacity-100",
 					)}
 				>
-					{/* Welcome Step */}
 					{currentStep === 0 && <WelcomeStep onNext={nextStep} />}
-
-					{/* Level Step */}
 					{currentStep === 1 && (
+						<NativeLanguageStep
+							selected={data.nativeLanguage}
+							onSelect={(id) =>
+								setData((prev) => ({ ...prev, nativeLanguage: id }))
+							}
+							onNext={nextStep}
+							canProceed={canProceed()}
+						/>
+					)}
+					{currentStep === 2 && (
 						<SelectionStep
-							title="What's your English level?"
-							subtitle="This helps us personalize your learning experience"
+							title={t("level.title")}
+							subtitle={t("level.subtitle")}
 							options={LEVELS.map((l) => ({
 								id: l.id,
-								name: l.name,
-								description: l.description,
+								name: t(`level.options.${l.id}.name`),
+								description: t(`level.options.${l.id}.description`),
 								icon: l.icon,
 							}))}
 							selected={data.level}
@@ -376,16 +466,14 @@ function OnboardingPage() {
 							canProceed={canProceed()}
 						/>
 					)}
-
-					{/* Goal Step */}
-					{currentStep === 2 && (
+					{currentStep === 3 && (
 						<SelectionStep
-							title="What's your main goal?"
-							subtitle="We'll create a learning path tailored to your needs"
+							title={t("goal.title")}
+							subtitle={t("goal.subtitle")}
 							options={GOALS.map((g) => ({
 								id: g.id,
-								name: g.name,
-								description: g.description,
+								name: t(`goal.options.${g.id}.name`),
+								description: t(`goal.options.${g.id}.description`),
 								IconComponent: g.icon,
 							}))}
 							selected={data.goal}
@@ -394,17 +482,15 @@ function OnboardingPage() {
 							canProceed={canProceed()}
 						/>
 					)}
-
-					{/* Time Step */}
-					{currentStep === 3 && (
+					{currentStep === 4 && (
 						<SelectionStep
-							title="How much time can you practice daily?"
-							subtitle="Consistency is key to language learning"
-							options={TIME_OPTIONS.map((t) => ({
-								id: t.id,
-								name: t.name,
-								description: t.description,
-								icon: t.icon,
+							title={t("time.title")}
+							subtitle={t("time.subtitle")}
+							options={TIME_OPTIONS.map((g) => ({
+								id: g.id,
+								name: t(`time.options.${g.id}.name`),
+								description: t(`time.options.${g.id}.description`),
+								icon: g.icon,
 							}))}
 							selected={data.time}
 							onSelect={(id) => setData((prev) => ({ ...prev, time: id }))}
@@ -412,9 +498,7 @@ function OnboardingPage() {
 							canProceed={canProceed()}
 						/>
 					)}
-
-					{/* Focus Areas Step */}
-					{currentStep === 4 && (
+					{currentStep === 5 && (
 						<FocusAreasStep
 							selected={data.focus}
 							onToggle={toggleFocus}
@@ -422,14 +506,10 @@ function OnboardingPage() {
 							canProceed={canProceed()}
 						/>
 					)}
-
-					{/* Plan Summary Step */}
-					{currentStep === 5 && (
+					{currentStep === 6 && (
 						<PlanSummaryStep data={data} onNext={nextStep} />
 					)}
-
-					{/* Paywall Step */}
-					{currentStep === 6 && (
+					{currentStep === 7 && (
 						<PaywallStep
 							selectedPlan={selectedPlan}
 							onSelectPlan={setSelectedPlan}
@@ -442,9 +522,6 @@ function OnboardingPage() {
 		</div>
 	);
 }
-
-// Native Language Step Component
-<NativeLanguageStep />;
 
 // Focus Areas Step Component
 function FocusAreasStep({
@@ -568,7 +645,6 @@ function PlanSummaryStep({
 					Based on your preferences, we've created a custom learning path
 				</p>
 
-				{/* Summary Card */}
 				<div
 					className="mt-8 mb-8 rounded-3xl bg-white p-6 text-left"
 					style={{
@@ -624,6 +700,3 @@ function PlanSummaryStep({
 		</div>
 	);
 }
-
-// Paywall Step Component
-<PaywallStep />;

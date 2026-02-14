@@ -40,7 +40,7 @@ export default function NotFound() {
 				>
 					<Link to="/">
 						Back{" "}
-						<span className="font-lyon text-lg text-neutral-700/80 italic leading-0 group-hover:text-neutral-700">
+						<span className="relative font-lyon text-lg text-neutral-700/80 italic leading-0 group-hover:text-neutral-700">
 							home
 						</span>
 					</Link>

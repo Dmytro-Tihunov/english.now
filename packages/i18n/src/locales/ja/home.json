@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "最後に必要な英語学習アプリ。",
+    "subtitle": "AIを活用した英語学習アプリで、個別のレッスン、実際の会話、即時フィードバックを通じて、より速く、より簡単に学べます。",
+    "getStarted": "始める",
+    "watchDemo": "デモを見る",
+    "learners": "1万人以上の学習者",
+    "noCard": "カード不要"
+  },
+  "features": {
+    "title": "英語学習は壊れています。",
+    "titleLine2": "私たちはそれをあなたのために修正します",
+    "learnMore": "私たちの機能についてもっと知りたいですか？",
+    "learnMoreLink": "もっと知る",
+    "items": {
+      "speaking": "話す練習 & フィードバックを得る",
+      "mistakes": "間違いを見直す",
+      "vocabulary": "語彙",
+      "lessons": "個別のレッスン"
+    }
+  },
+  "footer": {
+    "description": "English.now - 英語学習プラットフォーム。",
+    "descriptionNote": "まだ準備ができていませんが、皆さんのためにより良いものにするために頑張っています。ご支援ありがとうございます！",
+    "product": "製品",
+    "company": "会社",
+    "legal": "法務",
+    "social": "ソーシャル",
+    "contact": "連絡先",
+    "copyright": "全著作権所有。",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "cancellation": "キャンセルポリシー"
+  }
+}
