@@ -19,6 +19,10 @@
       "lessons": "Personalized lessons"
     }
   },
+  "start": {
+    "title": "It was supposed to take <br/> a weekend, not a life.",
+    "subtitle": "7-day free trial, no credit card required"
+  },
   "footer": {
     "description": "English.now - English learning platform.",
     "descriptionNote": "It's not ready yet, but I'm working hard to make it better for you. Thank you for your support!",

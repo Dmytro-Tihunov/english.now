@@ -622,7 +622,7 @@ function LessonDetailDialog({
 										key={ex}
 										type="button"
 										className={cn(
-											"flex items-center gap-2 rounded-full border px-4 py-2 font-medium text-sm transition-colors hover:opacity-80",
+											"flex items-center gap-2 rounded-full border px-3 py-1.5 font-medium text-sm transition-colors hover:opacity-80",
 											exConfig.borderColor,
 											exConfig.bgColor,
 											exConfig.color,
@@ -845,7 +845,6 @@ function RouteComponent() {
 						<FooterMessage message="Finish these lessons to receive new material." />
 					</div>
 
-					{/* Sidebar */}
 					<div className="space-y-4">
 						<div
 							className="overflow-hidden rounded-3xl bg-white p-5"
@@ -865,27 +864,6 @@ function RouteComponent() {
 							</div>
 							<div className="mb-4 h-2 w-full overflow-hidden rounded-full bg-neutral-100">
 								<div className="h-full w-[2%] rounded-full bg-neutral-800" />
-							</div>
-
-							<div>
-								<div className="flex flex-wrap gap-1.5">
-									{units
-										.find((u) => u.status === "active")
-										?.lessons.slice(0, 5)
-										.map((l) => (
-											<Badge
-												key={l.id}
-												variant="outline"
-												className="rounded-full border-neutral-200 bg-neutral-50 font-normal text-xs"
-											>
-												{l.title}
-											</Badge>
-										)) ?? (
-										<span className="text-muted-foreground text-xs">
-											No active topics
-										</span>
-									)}
-								</div>
 							</div>
 						</div>
 					</div>

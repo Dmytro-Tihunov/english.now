@@ -31,5 +31,9 @@
     "privacy": "Política de Privacidad",
     "terms": "Términos del Servicio",
     "cancellation": "Política de Cancelación"
+  },
+  "start": {
+    "title": "Se suponía que tomaría <br/> un fin de semana, no una vida.",
+    "subtitle": "Prueba gratuita de 7 días, no se requiere tarjeta de crédito"
   }
 }

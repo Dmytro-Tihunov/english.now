@@ -6,6 +6,7 @@ interface StreakProps {
 	currentStreak: number;
 	longestStreak: number;
 	lastActivityAt: Date | null;
+	timezone: string | null;
 }
 
 const WEEK_DAYS = [
@@ -18,26 +19,33 @@ const WEEK_DAYS = [
 	{ key: "sun", label: "S" },
 ] as const;
 
-function getDateInTimezone(date: Date, timezone: string): string {
-	return date.toLocaleDateString("en-CA", { timeZone: timezone }); // "YYYY-MM-DD"
-}
+const DAY_NAME_TO_INDEX: Record<string, number> = {
+	Mon: 0,
+	Tue: 1,
+	Wed: 2,
+	Thu: 3,
+	Fri: 4,
+	Sat: 5,
+	Sun: 6,
+};
 
-function isYesterday(lastDate: string, today: string): boolean {
-	const last = new Date(lastDate);
-	const curr = new Date(today);
-	const diffTime = curr.getTime() - last.getTime();
-	const diffDays = diffTime / (1000 * 60 * 60 * 24);
-	return diffDays === 1;
+function getTodayIndex(timezone: string): number {
+	const dayName = new Date().toLocaleDateString("en-US", {
+		timeZone: timezone,
+		weekday: "short",
+	});
+	return DAY_NAME_TO_INDEX[dayName] ?? 0;
 }
 
 export default function Streak({
 	currentStreak,
 	longestStreak,
-	lastActivityDate,
+	lastActivityAt: _lastActivityAt,
+	timezone,
 }: StreakProps) {
-	const today = new Date().getDay();
-	// Convert: Sunday=0 -> index 1, Saturday=6 -> index 0, others shift by +1
-	const todayIndex = today === 0 ? 1 : today === 6 ? 0 : today + 1;
+	const resolvedTimezone =
+		timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+	const todayIndex = getTodayIndex(resolvedTimezone);
 
 	// Mock data - in real app this would come from props/API
 	const streak = currentStreak ?? 0;

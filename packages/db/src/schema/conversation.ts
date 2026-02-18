@@ -1,6 +1,20 @@
 import { jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
+export type ConversationTopic = {
+	id: string;
+	name: string;
+	icon: string;
+};
+
+export type ConversationRoleplay = {
+	id: string;
+	name: string;
+	icon: string;
+	description: string;
+	aiRole: string;
+};
+
 export const conversationSession = pgTable("conversation_session", {
 	id: text("id").primaryKey(),
 	userId: text("user_id")
@@ -16,6 +30,7 @@ export const conversationSession = pgTable("conversation_session", {
 	status: text("status").notNull().default("active"), // active, completed, abandoned
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	deletedAt: timestamp("deleted_at"),
 });
 
 export const conversationMessage = pgTable("conversation_message", {
@@ -42,6 +57,19 @@ export const conversationMessage = pgTable("conversation_message", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const conversationSuggestion = pgTable("conversation_suggestion", {
+	id: text("id").primaryKey(),
+	userId: text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	topics: jsonb("topics").$type<ConversationTopic[]>().notNull(),
+	roleplays: jsonb("roleplays").$type<ConversationRoleplay[]>().notNull(),
+	generatedAt: timestamp("generated_at").notNull().defaultNow(),
+});
+
+export type ConversationSuggestion = typeof conversationSuggestion.$inferSelect;
+export type NewConversationSuggestion =
+	typeof conversationSuggestion.$inferInsert;
 export type ConversationSession = typeof conversationSession.$inferSelect;
 export type NewConversationSession = typeof conversationSession.$inferInsert;
 export type ConversationMessage = typeof conversationMessage.$inferSelect;

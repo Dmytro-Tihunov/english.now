@@ -22,6 +22,8 @@ export const env = createEnv({
 		// AI Services
 		OPENAI_API_KEY: z.string().min(1),
 		DEEPGRAM_API_KEY: z.string().min(1),
+		AZURE_SPEECH_KEY: z.string().min(1),
+		AZURE_SPEECH_REGION: z.string().min(1),
 
 		// Cloudflare R2 Storage
 		R2_ENDPOINT: z.url(),
@@ -39,9 +41,7 @@ export const env = createEnv({
 		// Paddle Payments
 		PADDLE_API_KEY: z.string().min(1),
 		PADDLE_WEBHOOK_SECRET: z.string().min(1),
-		PADDLE_ENVIRONMENT: z
-			.enum(["sandbox", "production"])
-			.default("sandbox"),
+		PADDLE_ENVIRONMENT: z.enum(["sandbox", "production"]).default("sandbox"),
 
 		// Server
 		PORT: z.coerce.number().default(3000),

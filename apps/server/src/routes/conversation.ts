@@ -7,10 +7,13 @@ import {
 	userProfile,
 } from "@english.now/db";
 import { env } from "@english.now/env/server";
+import { generateText, Output } from "ai";
 import type { Context, Next } from "hono";
 import { Hono } from "hono";
 import { streamText } from "hono/streaming";
 import { z } from "zod";
+import { generateTTSBase64 } from "../services/tts";
+import { openai } from "../utils/ai";
 
 type Variables = {
 	session: Awaited<ReturnType<typeof auth.api.getSession>>;
@@ -37,40 +40,6 @@ const speakSchema = z.object({
 	voice: z.string().default("aura-asteria-en"), // Deepgram voice model
 });
 
-// Helper function to generate TTS audio using Deepgram
-async function generateTTS(
-	text: string,
-	voice = "aura-asteria-en",
-): Promise<string | null> {
-	try {
-		const response = await fetch(
-			`https://api.deepgram.com/v1/speak?model=${voice}`,
-			{
-				method: "POST",
-				headers: {
-					Authorization: `Token ${env.DEEPGRAM_API_KEY}`,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ text }),
-			},
-		);
-
-		if (!response.ok) {
-			const errorText = await response.text();
-			console.error("Deepgram TTS error:", errorText);
-			return null;
-		}
-
-		// Get audio as ArrayBuffer and convert to base64
-		const audioBuffer = await response.arrayBuffer();
-		const base64Audio = Buffer.from(audioBuffer).toString("base64");
-		return base64Audio;
-	} catch (error) {
-		console.error("TTS generation error:", error);
-		return null;
-	}
-}
-
 // Middleware to check auth
 const requireAuth = async (
 	c: Context<{ Variables: Variables }>,
@@ -96,9 +65,12 @@ conversation.post("/start", requireAuth, async (c) => {
 	}
 	const body = await c.req.json();
 
-	const { scenario } = z
+	const { scenario, scenarioName, scenarioDescription, aiRole } = z
 		.object({
 			scenario: z.string(),
+			scenarioName: z.string().optional(),
+			scenarioDescription: z.string().optional(),
+			aiRole: z.string().optional(),
 		})
 		.parse(body);
 
@@ -112,8 +84,35 @@ conversation.post("/start", requireAuth, async (c) => {
 
 	const level = profile[0]?.level ?? "beginner";
 
-	// Get scenario config (simplified version here)
-	const scenarioConfig = getScenarioConfig(scenario, level);
+	// Check if it's a built-in scenario
+	const builtInConfig = getScenarioConfig(scenario, level);
+	const isBuiltIn = scenario in getBuiltInScenarioIds();
+
+	let finalName: string;
+	let finalDescription: string;
+	let finalSystemPrompt: string;
+	let greeting: string;
+
+	if (isBuiltIn) {
+		finalName = builtInConfig.name;
+		finalDescription = builtInConfig.description;
+		finalSystemPrompt = builtInConfig.context.systemPrompt;
+		greeting = builtInConfig.greeting;
+	} else {
+		finalName = scenarioName ?? scenario.replace(/-/g, " ");
+		finalDescription =
+			scenarioDescription ??
+			`Practice English through a ${finalName} conversation`;
+		const role = aiRole ?? "conversation partner";
+		finalSystemPrompt = `You are a ${role} in a ${finalName} scenario. ${finalDescription}.
+The person you're talking to is learning English at a ${level} level.
+- Keep your language appropriate for their level
+- Be encouraging and supportive
+- After they respond, provide helpful corrections for any grammar or vocabulary mistakes
+- Ask follow-up questions to keep the conversation flowing
+- Use natural, authentic language for this scenario`;
+		greeting = generateDynamicGreeting(finalName, role, level);
+	}
 
 	await db.insert(conversationSession).values({
 		id: sessionId,
@@ -121,8 +120,8 @@ conversation.post("/start", requireAuth, async (c) => {
 		scenario,
 		level,
 		context: {
-			systemPrompt: scenarioConfig.context.systemPrompt,
-			scenarioDescription: scenarioConfig.context.scenarioDescription,
+			systemPrompt: finalSystemPrompt,
+			scenarioDescription: finalDescription,
 			goals: [],
 		},
 		status: "active",
@@ -136,26 +135,26 @@ conversation.post("/start", requireAuth, async (c) => {
 		id: messageId,
 		sessionId,
 		role: "assistant",
-		content: scenarioConfig.greeting,
+		content: greeting,
 		createdAt: new Date(),
 	});
 
 	// Generate TTS for the initial greeting
-	const greetingAudio = await generateTTS(scenarioConfig.greeting);
+	const greetingAudio = await generateTTSBase64(greeting);
 
 	return c.json({
 		sessionId,
 		scenario: {
 			id: scenario,
-			name: scenarioConfig.name,
-			description: scenarioConfig.description,
+			name: finalName,
+			description: finalDescription,
 		},
 		level,
 		initialMessage: {
 			id: messageId,
 			role: "assistant",
-			content: scenarioConfig.greeting,
-			audio: greetingAudio, // base64 encoded audio or null
+			content: greeting,
+			audio: greetingAudio,
 		},
 	});
 });
@@ -297,7 +296,7 @@ conversation.post("/send", requireAuth, async (c) => {
 
 			// Generate TTS audio for the assistant response
 			if (fullResponse.trim()) {
-				const audioBase64 = await generateTTS(fullResponse);
+				const audioBase64 = await generateTTSBase64(fullResponse);
 				if (audioBase64) {
 					// Send a special delimiter followed by audio data
 					// Format: \n__TTS_AUDIO__<base64_audio_data>
@@ -319,7 +318,7 @@ conversation.post("/speak", requireAuth, async (c) => {
 	const { text, voice } = speakSchema.parse(body);
 
 	try {
-		const audioBase64 = await generateTTS(text, voice);
+		const audioBase64 = await generateTTSBase64(text, voice);
 
 		if (!audioBase64) {
 			return c.json({ error: "Failed to generate speech" }, 500);
@@ -385,6 +384,148 @@ conversation.post("/transcribe", requireAuth, async (c) => {
 		console.error("Transcription error:", error);
 		return c.json({ error: "Failed to transcribe audio" }, 500);
 	}
+});
+
+// Translate a message to user's native language
+conversation.post("/translate", requireAuth, async (c) => {
+	const session = c.get("session");
+	if (!session) {
+		return c.json({ error: "Unauthorized" }, 401);
+	}
+
+	const body = await c.req.json();
+	const { text } = z
+		.object({
+			text: z.string().min(1).max(5000),
+		})
+		.parse(body);
+
+	try {
+		// Get user's native language from profile
+		const profile = await db
+			.select()
+			.from(userProfile)
+			.where(eq(userProfile.userId, session.user.id))
+			.limit(1);
+
+		const nativeLanguage = profile[0]?.nativeLanguage ?? "Spanish";
+
+		const { output } = await generateText({
+			model: openai("gpt-4o-mini"),
+			output: Output.text(),
+			system: `You are a translator. Translate the following English text to ${nativeLanguage}. Return ONLY the translation, nothing else.`,
+			prompt: text,
+			temperature: 0.3,
+		});
+
+		if (!output) {
+			throw new Error("Failed to generate translation");
+		}
+
+		return c.json({ translation: output });
+	} catch (error) {
+		console.error("Translation error:", error);
+		return c.json({ error: "Failed to translate message" }, 500);
+	}
+});
+
+// Generate a contextual hint (what to say next)
+conversation.post("/hint", requireAuth, async (c) => {
+	const session = c.get("session");
+	if (!session) {
+		return c.json({ error: "Unauthorized" }, 401);
+	}
+
+	const body = await c.req.json();
+	const { sessionId } = z
+		.object({ sessionId: z.string() })
+		.parse(body);
+
+	const conversationSessionResult = await db
+		.select()
+		.from(conversationSession)
+		.where(eq(conversationSession.id, sessionId))
+		.limit(1);
+
+	const sessionData = conversationSessionResult[0];
+	if (!sessionData || sessionData.userId !== session.user.id) {
+		return c.json({ error: "Session not found" }, 404);
+	}
+
+	const profile = await db
+		.select()
+		.from(userProfile)
+		.where(eq(userProfile.userId, session.user.id))
+		.limit(1);
+
+	const nativeLanguage = profile[0]?.nativeLanguage ?? "Spanish";
+	const level = sessionData.level ?? "beginner";
+
+	const history = await db
+		.select()
+		.from(conversationMessage)
+		.where(eq(conversationMessage.sessionId, sessionId))
+		.orderBy(conversationMessage.createdAt);
+
+	const conversationHistory = history
+		.map((m) => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`)
+		.join("\n");
+
+	const { output } = await generateText({
+		model: openai("gpt-4o-mini"),
+		output: Output.text(),
+		system: `You help English learners figure out what to say next in a conversation.
+The learner speaks ${nativeLanguage} and is at a ${level} English level.
+Based on the conversation so far, suggest 2-3 short response options the user could say (in English).
+Keep suggestions appropriate for their level.
+Format each suggestion on its own line, prefixed with "•". Do NOT add explanations — just the suggestions.`,
+		prompt: conversationHistory,
+		temperature: 0.7,
+	});
+
+	const suggestions = (output ?? "")
+		.split("\n")
+		.map((l) => l.replace(/^•\s*/, "").trim())
+		.filter(Boolean);
+
+	return c.json({ suggestions });
+});
+
+// Translate from user's native language to English
+conversation.post("/native-to-english", requireAuth, async (c) => {
+	const session = c.get("session");
+	if (!session) {
+		return c.json({ error: "Unauthorized" }, 401);
+	}
+
+	const body = await c.req.json();
+	const { text } = z
+		.object({ text: z.string().min(1).max(5000) })
+		.parse(body);
+
+	const profile = await db
+		.select()
+		.from(userProfile)
+		.where(eq(userProfile.userId, session.user.id))
+		.limit(1);
+
+	const nativeLanguage = profile[0]?.nativeLanguage ?? "Spanish";
+
+	const { output } = await generateText({
+		model: openai("gpt-4o-mini"),
+		output: Output.text(),
+		system: `You are a translation assistant for English learners whose native language is ${nativeLanguage}.
+The user will write something in ${nativeLanguage}. Translate it to natural, conversational English.
+Return ONLY the English translation, nothing else. No quotes, no explanations.`,
+		prompt: text,
+		temperature: 0.3,
+	});
+
+	if (!output) {
+		return c.json({ error: "Translation failed" }, 500);
+	}
+
+	return c.json({ english: output.trim() });
 });
 
 // Get conversation history
@@ -513,6 +654,33 @@ function getScenarioConfig(scenario: string, level: string) {
 			scenarioDescription: config.description,
 		},
 	};
+}
+
+function getBuiltInScenarioIds(): Record<string, boolean> {
+	return {
+		"job-interview": true,
+		"restaurant-order": true,
+		"travel-directions": true,
+		"small-talk": true,
+		"doctor-visit": true,
+		shopping: true,
+	};
+}
+
+function generateDynamicGreeting(
+	scenarioName: string,
+	aiRole: string,
+	level: string,
+): string {
+	const greetings: Record<string, string> = {
+		beginner: `Hello! I'm your ${aiRole} today. Let's talk about ${scenarioName}. Are you ready to start?`,
+		intermediate: `Hi there! Welcome to our ${scenarioName} session. I'll be your ${aiRole} today. How are you doing? Let's get started!`,
+		advanced: `Good to meet you! I'll be acting as your ${aiRole} for this ${scenarioName} scenario. Feel free to jump right in — I'm here to make this feel as natural and engaging as possible. What's on your mind?`,
+	};
+	return (
+		greetings[level] ??
+		`Hello! I'm your ${aiRole} today. Let's talk about ${scenarioName}. Are you ready to start?`
+	);
 }
 
 function getDefaultSystemPrompt(level: string): string {

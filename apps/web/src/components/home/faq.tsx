@@ -45,7 +45,7 @@ const faqData: FAQItem[] = [
 
 export default function FAQ() {
 	return (
-		<div className="group mx-auto my-32">
+		<div className="group mx-auto my-20 md:my-32">
 			<div className="flex flex-col gap-4 md:flex-row">
 				<div className="md:w-1/4">
 					<h2 className="mb-4 font-bold font-lyon text-5xl tracking-tight md:text-5xl">
@@ -84,7 +84,7 @@ export default function FAQ() {
 										{item.question}
 									</AccordionTrigger>
 									<AccordionContent>
-										<p className="text-muted-foreground leading-relaxed transition-all duration-300">
+										<p className="text-muted-foreground text-sm leading-relaxed transition-all duration-300 md:text-base">
 											{item.answer}
 										</p>
 									</AccordionContent>

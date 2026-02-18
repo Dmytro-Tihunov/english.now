@@ -25,11 +25,21 @@ export default function Footer() {
 		// 	],
 		// },
 		{
-			label: t("nav.company"),
+			label: tHome("footer.company"),
 			items: [
 				{ label: t("nav.about"), to: "/about" },
 				{ label: t("nav.blog"), to: "/blog" },
 				{ label: tHome("footer.contact"), to: "/contact" },
+			],
+		},
+		{
+			label: tHome("footer.social"),
+			items: [
+				{
+					label: "GitHub",
+					to: "https://github.com/Dmytro-Tihunov/english.now",
+				},
+				{ label: "X", to: "https://x.com/tihunov" },
 			],
 		},
 		{
@@ -43,22 +53,12 @@ export default function Footer() {
 				},
 			],
 		},
-		{
-			label: tHome("footer.social"),
-			items: [
-				{
-					label: "GitHub",
-					to: "https://github.com/Dmytro-Tihunov/english.now",
-				},
-				{ label: "X", to: "https://x.com/tihunov" },
-			],
-		},
 	];
 
 	return (
 		<footer>
 			<div className="container relative z-10 mx-auto max-w-5xl px-4">
-				<div className="mx-auto grid grid-cols-3 border-border/50 border-t pt-12">
+				<div className="mx-auto grid grid-cols-1 border-border/50 border-t pt-12 md:grid-cols-3">
 					<div className="col-span-1">
 						<div className="mb-5 flex items-center gap-2">
 							<Link to="/" className="flex items-center gap-3">
@@ -97,7 +97,7 @@ export default function Footer() {
 							</p>
 						</div>
 					</div>
-					<div className="col-span-2 pl-18">
+					<div className="col-span-2 md:pl-18">
 						<div className="grid grid-cols-4 gap-4">
 							{navigation.map(({ label, items }) => (
 								<div key={label} className="flex flex-col">
@@ -108,7 +108,7 @@ export default function Footer() {
 										{items.map(({ label, to }) => (
 											<li key={to}>
 												<Link
-													className="font-medium text-sm hover:text-neutral-700"
+													className="font-medium text-xs hover:text-neutral-700 md:text-sm"
 													to={to}
 												>
 													{label}
@@ -152,7 +152,7 @@ export default function Footer() {
 
 					<div className="flex items-center gap-2">
 						<LanguageSwitcher />
-						<ThemeSwitcher />
+						{/* <ThemeSwitcher /> */}
 					</div>
 				</div>
 			</div>

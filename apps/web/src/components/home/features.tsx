@@ -201,7 +201,7 @@ function PracticeSpeakingDemo() {
 			</div>
 
 			<div
-				className="relative w-[180px] self-stretch rounded-2xl bg-white p-4 pt-3"
+				className="relative hidden w-[180px] self-stretch rounded-2xl bg-white p-4 pt-3 md:block"
 				style={{
 					boxShadow:
 						"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
@@ -466,7 +466,7 @@ function PersonalizedLessonsDemo() {
 		<div className="relative flex h-full w-full gap-4">
 			<div className="flex flex-col gap-2.5">
 				<div
-					className="relative w-[200px] rounded-2xl bg-white p-4 pt-3"
+					className="relative hidden w-[200px] rounded-2xl bg-white p-4 pt-3 md:block"
 					style={{
 						boxShadow:
 							"0 0 0 1px rgba(0,0,0,.05),0 10px 10px -5px rgba(0,0,0,.04),0 20px 25px -5px rgba(0,0,0,.04),0 20px 32px -12px rgba(0,0,0,.04)",
@@ -662,12 +662,12 @@ export function Features() {
 	return (
 		<div className="relative mx-auto md:mt-24">
 			<div>
-				<div className="mb-14">
-					<h1 className="mb-4 text-center font-bold font-lyon text-5xl tracking-tight md:text-5xl">
+				<div className="mb-10 md:mb-14">
+					<h2 className="mb-4 text-center font-bold font-lyon text-4xl tracking-tight md:text-5xl">
 						{t("features.title")}
 						<br />
 						{t("features.titleLine2")}
-					</h1>
+					</h2>
 					<p className="flex items-center justify-center gap-2 text-balance text-muted-foreground text-sm md:max-w-boundary-sm md:text-lg">
 						{t("features.learnMore")}{" "}
 						<Link
@@ -686,7 +686,7 @@ export function Features() {
 								"relative h-full min-h-[400px] w-full overflow-hidden rounded-3xl border border-border/50",
 								feature.id === "grammar" || feature.id === "lessons"
 									? "col-span-2"
-									: "",
+									: "col-span-1",
 							)}
 							key={feature.id}
 						>

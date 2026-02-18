@@ -5,6 +5,7 @@ import {
 	KeyboardIcon,
 	Languages,
 	Lightbulb,
+	Loader,
 	Loader2,
 	Mic,
 	MicOff,
@@ -15,6 +16,16 @@ import {
 	X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
 	Popover,
@@ -77,10 +88,18 @@ function ConversationPage() {
 	const [recordingState, setRecordingState] = useState<RecordingState>("idle");
 	const [isLoading, setIsLoading] = useState(false);
 	const [showHint, setShowHint] = useState(false);
-	const [hint, setHint] = useState<string>("");
+	const [hintSuggestions, setHintSuggestions] = useState<string[]>([]);
+	const [isLoadingHint, setIsLoadingHint] = useState(false);
 	const [popoverOpen, setPopoverOpen] = useState(false);
 	const [popoverText, setPopoverText] = useState("");
-
+	const [popoverMode, setPopoverMode] = useState<"english" | "native">(
+		"english",
+	);
+	const [nativeTranslation, setNativeTranslation] = useState("");
+	const [isTranslatingNative, setIsTranslatingNative] = useState(false);
+	const [translations, setTranslations] = useState<Record<string, string>>({});
+	const [translatingId, setTranslatingId] = useState<string | null>(null);
+	const [showFinishDialog, setShowFinishDialog] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const audioChunksRef = useRef<Blob[]>([]);
@@ -176,17 +195,94 @@ function ConversationPage() {
 		}
 	}, []);
 
-	// Generate hint based on AI's last message
-	const generateHint = useCallback((_lastAiMessage: string) => {
-		const hints = [
-			"Try responding with 'Yes, I...' or 'No, I don't...'",
-			"You could ask a question like 'What do you recommend?'",
-			"Share something about yourself: 'I like...' or 'I work as...'",
-			"Ask for clarification: 'Could you repeat that?' or 'What does ... mean?'",
-			"Express your opinion: 'I think that...' or 'In my opinion...'",
-		];
-		setHint(hints[Math.floor(Math.random() * hints.length)] || hints[0]);
+	// Fetch AI-generated hint suggestions
+	const fetchHintSuggestions = useCallback(async () => {
+		if (!sessionId) return;
+		setIsLoadingHint(true);
+		try {
+			const response = await fetch(
+				`${env.VITE_SERVER_URL}/api/conversation/hint`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					credentials: "include",
+					body: JSON.stringify({ sessionId }),
+				},
+			);
+			if (!response.ok) throw new Error("Failed to fetch hints");
+			const { suggestions } = await response.json();
+			setHintSuggestions(suggestions ?? []);
+		} catch (err) {
+			console.error("Hint generation error:", err);
+			setHintSuggestions(["I'm not sure what to say…"]);
+		} finally {
+			setIsLoadingHint(false);
+		}
+	}, [sessionId]);
+
+	// Translate native language text to English
+	const translateNativeToEnglish = useCallback(async (text: string) => {
+		if (!text.trim()) {
+			setNativeTranslation("");
+			return;
+		}
+		setIsTranslatingNative(true);
+		try {
+			const response = await fetch(
+				`${env.VITE_SERVER_URL}/api/conversation/native-to-english`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					credentials: "include",
+					body: JSON.stringify({ text }),
+				},
+			);
+			if (!response.ok) throw new Error("Translation failed");
+			const { english } = await response.json();
+			setNativeTranslation(english ?? "");
+		} catch (err) {
+			console.error("Native translation error:", err);
+			setNativeTranslation("");
+		} finally {
+			setIsTranslatingNative(false);
+		}
 	}, []);
+
+	// Translate an assistant message to user's native language
+	const translateMessage = useCallback(
+		async (messageId: string, text: string) => {
+			// Toggle off if already translated
+			if (translations[messageId]) {
+				setTranslations((prev) => {
+					const next = { ...prev };
+					delete next[messageId];
+					return next;
+				});
+				return;
+			}
+
+			setTranslatingId(messageId);
+			try {
+				const response = await fetch(
+					`${env.VITE_SERVER_URL}/api/conversation/translate`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						credentials: "include",
+						body: JSON.stringify({ text }),
+					},
+				);
+				if (!response.ok) throw new Error("Translation failed");
+				const { translation } = await response.json();
+				setTranslations((prev) => ({ ...prev, [messageId]: translation }));
+			} catch (err) {
+				console.error("Translation error:", err);
+			} finally {
+				setTranslatingId(null);
+			}
+		},
+		[translations],
+	);
 
 	// Load messages from session data and autoplay last assistant message
 	useEffect(() => {
@@ -198,15 +294,11 @@ function ConversationPage() {
 			}));
 			setMessages(loadedMessages);
 
-			// Generate hint for the last AI message
 			const lastAiMessage = sessionData.messages
 				.filter((m) => m.role === "assistant")
 				.pop();
 
 			if (lastAiMessage) {
-				generateHint(lastAiMessage.content);
-
-				// Generate and autoplay TTS for the last assistant message
 				hasPlayedInitialAudio.current = true;
 				generateTTS(lastAiMessage.content, lastAiMessage.id).then((audio) => {
 					if (audio) {
@@ -215,7 +307,7 @@ function ConversationPage() {
 				});
 			}
 		}
-	}, [sessionData, generateTTS, playAudio, generateHint]);
+	}, [sessionData, generateTTS, playAudio]);
 
 	// Redirect to practice if session not found
 	useEffect(() => {
@@ -257,6 +349,7 @@ function ConversationPage() {
 			setInputText("");
 			setIsLoading(true);
 			setShowHint(false);
+			setHintSuggestions([]);
 
 			const aiMessageId = crypto.randomUUID();
 			setMessages((prev) => [
@@ -330,8 +423,6 @@ function ConversationPage() {
 					),
 				);
 
-				generateHint(textContent);
-
 				if (audioBase64) {
 					playAudio(audioBase64, aiMessageId);
 				}
@@ -352,7 +443,7 @@ function ConversationPage() {
 				setIsLoading(false);
 			}
 		},
-		[sessionId, generateHint, playAudio],
+		[sessionId, playAudio],
 	);
 
 	// Start recording
@@ -448,7 +539,7 @@ function ConversationPage() {
 		return (
 			<div className="container mx-auto flex min-h-dvh max-w-3xl flex-col items-center justify-center px-4 py-8">
 				<div className="flex flex-col items-center gap-4">
-					<Loader2 className="size-8 animate-spin text-lime-600" />
+					<Loader className="size-7 animate-spin text-lime-600" />
 					<p className="font-medium text-foreground-muted">
 						Loading conversation...
 					</p>
@@ -537,11 +628,33 @@ function ConversationPage() {
 										<Button
 											variant="outline"
 											size="sm"
-											className="rounded-lg text-xs"
+											className={cn(
+												"rounded-lg text-xs",
+												translations[message.id] &&
+													"border-blue-300 bg-blue-100",
+											)}
+											onClick={() =>
+												translateMessage(message.id, message.content)
+											}
+											disabled={translatingId === message.id}
+											title={
+												translations[message.id]
+													? "Hide translation"
+													: "Translate to your language"
+											}
 										>
-											<Languages className="size-3" />
+											{translatingId === message.id ? (
+												<Loader2 className="size-3 animate-spin" />
+											) : (
+												<Languages className="size-3" />
+											)}
 										</Button>
 									</div>
+								)}
+								{translations[message.id] && (
+									<p className="mt-2 border-black/10 border-t border-dashed pt-2 text-muted-foreground text-xs italic leading-relaxed">
+										{translations[message.id]}
+									</p>
 								)}
 							</p>
 						</div>
@@ -550,11 +663,37 @@ function ConversationPage() {
 				<div ref={messagesEndRef} />
 			</div>
 
-			{/* Hint */}
-			{showHint && hint && (
-				<div className="mb-3 flex cursor-pointer items-start gap-2 rounded-xl bg-amber-50 p-3 text-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
-					<Lightbulb className="mt-0.5 size-4 shrink-0" />
-					<p className="text-sm">{hint}</p>
+			{/* Hint suggestions */}
+			{showHint && (
+				<div className="mx-auto mb-3 max-w-xl rounded-xl border border-amber-200 border-dashed bg-amber-50 p-3 dark:bg-amber-950/30">
+					<div className="mb-2 flex items-center gap-2 text-amber-900 dark:text-amber-200">
+						{/* <Lightbulb className="size-4 shrink-0" /> */}
+						<p className="font-medium text-xs">You could say:</p>
+					</div>
+					{isLoadingHint ? (
+						<div className="flex items-center gap-2 py-2 text-amber-700">
+							<Loader2 className="size-3.5 animate-spin" />
+							<span className="text-xs">Thinking of suggestions...</span>
+						</div>
+					) : (
+						<div className="flex flex-col gap-1.5">
+							{hintSuggestions.map((suggestion) => (
+								<button
+									key={suggestion}
+									type="button"
+									className="flex items-start gap-2 rounded-lg border border-amber-100 bg-white/70 px-3 py-2 text-left text-amber-900 text-sm transition-colors hover:border-amber-200 hover:bg-white dark:bg-white/10 dark:text-amber-100 dark:hover:bg-white/20"
+									onClick={() => {
+										sendMessage(suggestion);
+										setShowHint(false);
+									}}
+									disabled={isLoading}
+								>
+									{/* <ArrowRight className="size-3 shrink-0 text-amber-500" /> */}
+									{suggestion}
+								</button>
+							))}
+						</div>
+					)}
 				</div>
 			)}
 
@@ -614,20 +753,35 @@ function ConversationPage() {
 									size="lg"
 									className={cn(
 										"shrink-0 rounded-xl",
-										showHint && "text-amber-500",
+										showHint && "bg-neutral-100",
 									)}
-									onClick={() => setShowHint(!showHint)}
+									onClick={() => {
+										const next = !showHint;
+										setShowHint(next);
+										if (next && hintSuggestions.length === 0) {
+											fetchHintSuggestions();
+										}
+									}}
+									disabled={isLoading}
 									title="Get a hint"
 								>
-									<Lightbulb
-										className={cn("size-5", showHint && "text-amber-500")}
-									/>
+									<Lightbulb className={cn("size-5")} />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent>Get a hint</TooltipContent>
 						</Tooltip>
 
-						<Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+						<Popover
+							open={popoverOpen}
+							onOpenChange={(open) => {
+								setPopoverOpen(open);
+								if (!open) {
+									setPopoverText("");
+									setNativeTranslation("");
+									setPopoverMode("english");
+								}
+							}}
+						>
 							<PopoverTrigger asChild>
 								<Button
 									type="button"
@@ -648,36 +802,127 @@ function ConversationPage() {
 								className="w-80 rounded-xl p-3 shadow-none"
 							>
 								<div className="flex flex-col gap-3">
-									<Textarea
-										value={popoverText}
-										onChange={(e) => setPopoverText(e.target.value)}
-										placeholder="Type your message..."
-										className="min-h-24 resize-none rounded-lg"
-										disabled={isLoading}
-									/>
-									<Button
-										type="button"
-										className="self-end rounded-lg"
-										disabled={!popoverText.trim() || isLoading}
-										onClick={() => {
-											if (popoverText.trim()) {
-												sendMessage(popoverText.trim());
+									{/* Mode toggle */}
+									<div className="flex rounded-lg bg-neutral-100 p-0.5">
+										<button
+											type="button"
+											className={cn(
+												"flex-1 rounded-md px-3 py-1.5 font-medium text-xs transition-colors",
+												popoverMode === "english"
+													? "bg-white shadow-sm"
+													: "text-muted-foreground hover:text-foreground",
+											)}
+											onClick={() => {
+												setPopoverMode("english");
 												setPopoverText("");
-												setPopoverOpen(false);
+												setNativeTranslation("");
+											}}
+										>
+											English
+										</button>
+										<button
+											type="button"
+											className={cn(
+												"flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 font-medium text-xs transition-colors",
+												popoverMode === "native"
+													? "bg-white shadow-sm"
+													: "text-muted-foreground hover:text-foreground",
+											)}
+											onClick={() => {
+												setPopoverMode("native");
+												setPopoverText("");
+												setNativeTranslation("");
+											}}
+										>
+											<Languages className="size-3" />
+											My language
+										</button>
+									</div>
+									<div className="relative">
+										<Textarea
+											value={popoverText}
+											onChange={(e) => {
+												setPopoverText(e.target.value);
+												if (popoverMode === "native") {
+													setNativeTranslation("");
+												}
+											}}
+											placeholder={
+												popoverMode === "english"
+													? "Type your message in English..."
+													: "Type in your native language..."
 											}
-										}}
-									>
-										{isLoading ? (
-											<Loader2 className="size-4 animate-spin" />
-										) : (
-											<Send className="size-4" />
-										)}
-										Send
-									</Button>
+											className="min-h-24 resize-none rounded-lg"
+											disabled={isLoading}
+										/>
+										<Button
+											type="button"
+											size="icon"
+											className="absolute right-2 bottom-2 flex size-8 shrink-0 cursor-pointer items-center justify-center gap-1.5 self-end overflow-hidden whitespace-nowrap rounded-lg bg-linear-to-t from-[#202020] to-[#2F2F2F] font-base text-white shadow-[inset_0_1px_4px_0_rgba(255,255,255,0.4)] outline-none backdrop-blur transition-all hover:opacity-90 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:from-[rgb(192,192,192)] dark:to-[rgb(255,255,255)] dark:shadow-[inset_0_1px_4px_0_rgba(128,128,128,0.2)] dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none"
+											disabled={
+												popoverMode === "english"
+													? !popoverText.trim() || isLoading
+													: !nativeTranslation || isLoading
+											}
+											onClick={() => {
+												const textToSend =
+													popoverMode === "english"
+														? popoverText.trim()
+														: nativeTranslation;
+												if (textToSend) {
+													sendMessage(textToSend);
+													setPopoverText("");
+													setNativeTranslation("");
+													setPopoverOpen(false);
+												}
+											}}
+										>
+											{isLoading ? (
+												<Loader2 className="size-4 animate-spin" />
+											) : (
+												<Send className="size-4" />
+											)}
+										</Button>
+									</div>
+									{/* Native mode: translate button & English preview */}
+									{popoverMode === "native" && (
+										<>
+											<Button
+												type="button"
+												variant="outline"
+												size="sm"
+												className="self-start rounded-lg text-xs"
+												disabled={
+													!popoverText.trim() ||
+													isTranslatingNative ||
+													isLoading
+												}
+												onClick={() =>
+													translateNativeToEnglish(popoverText.trim())
+												}
+											>
+												{isTranslatingNative ? (
+													<Loader2 className="size-3 animate-spin" />
+												) : (
+													<Languages className="size-3" />
+												)}
+												Translate to English
+											</Button>
+											{nativeTranslation && (
+												<div className="rounded-lg border border-lime-200 bg-lime-50 p-3">
+													<p className="mb-1 font-medium text-[10px] text-lime-700 uppercase tracking-wider">
+														In English:
+													</p>
+													<p className="text-sm leading-relaxed">
+														{nativeTranslation}
+													</p>
+												</div>
+											)}
+										</>
+									)}
 								</div>
 							</PopoverContent>
 						</Popover>
-
 						<Button
 							type="button"
 							variant="ghost"
@@ -693,6 +938,9 @@ function ConversationPage() {
 								type="button"
 								variant="ghost"
 								size="lg"
+								onClick={() => {
+									setShowFinishDialog(true);
+								}}
 								className="flex shrink-0 cursor-pointer items-center justify-center rounded-xl border border-red-600 bg-radial from-[#e28b8b] to-[#EF4444] text-red-800 hover:text-red-700/80"
 							>
 								<X className="size-5" />
@@ -702,6 +950,31 @@ function ConversationPage() {
 					</Tooltip>
 				</form>
 			</div>
+			<AlertDialog open={showFinishDialog} onOpenChange={setShowFinishDialog}>
+				<AlertDialogContent className="w-sm">
+					<AlertDialogHeader>
+						<AlertDialogTitle>Finish conversation</AlertDialogTitle>
+						<AlertDialogDescription>
+							Are you sure you want to finish the conversation? This action
+							cannot be undone.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel className="rounded-xl bg-neutral-100 text-neutral-900 hover:bg-neutral-200">
+							Cancel
+						</AlertDialogCancel>
+						<AlertDialogAction
+							variant="destructive"
+							className="rounded-xl bg-red-600 text-white hover:bg-red-700"
+							onClick={() => {
+								navigate({ to: "/practice" });
+							}}
+						>
+							Finish
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }

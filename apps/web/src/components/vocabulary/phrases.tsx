@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -20,7 +21,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTRPC } from "@/utils/trpc";
 
@@ -137,9 +137,9 @@ export default function Phrases() {
 				</div>
 				<Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
 					<DialogTrigger asChild>
-						<Button className="gap-2">
+						<Button className="group flex cursor-pointer items-center gap-1 whitespace-nowrap rounded-xl border border-neutral-200 bg-linear-to-b from-neutral-50 to-neutral-100 px-2.5 py-1.5 font-medium text-neutral-700 text-sm shadow-none transition duration-150 ease-in-out will-change-transform hover:brightness-95 focus:shadow-none focus:outline-none focus-visible:shadow-none">
 							<Plus className="size-4" />
-							Add Your First Phrase
+							Add Manually
 						</Button>
 					</DialogTrigger>
 					<AddPhraseDialogContent
@@ -277,19 +277,13 @@ export default function Phrases() {
 						>
 							<button
 								type="button"
-								onClick={() =>
-									deletePhraseMutation.mutate({ phraseId: p.id })
-								}
+								onClick={() => deletePhraseMutation.mutate({ phraseId: p.id })}
 								className="absolute top-3 right-3 rounded-lg p-1.5 text-muted-foreground opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
 							>
 								<Trash2 className="size-3.5" />
 							</button>
 							<div className="mb-3 flex items-center justify-between">
-								<Badge
-									variant={p.level as CEFRLevel}
-								>
-									{p.level}
-								</Badge>
+								<Badge variant={p.level as CEFRLevel}>{p.level}</Badge>
 								<Badge
 									variant={
 										p.mastery === "mastered"

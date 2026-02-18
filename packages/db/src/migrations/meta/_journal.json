@@ -57,6 +57,34 @@
       "when": 1770985953616,
       "tag": "0007_material_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1771276976723,
+      "tag": "0008_spicy_daimon_hellstrom",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1771363200000,
+      "tag": "0009_personalized_conversation_suggestions",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1771321099850,
+      "tag": "0010_safe_speedball",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1771409879811,
+      "tag": "0011_soft_delete_sessions",
+      "breakpoints": true
     }
   ]
 }

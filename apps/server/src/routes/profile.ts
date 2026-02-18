@@ -4,7 +4,6 @@ import { Hono } from "hono";
 
 const profile = new Hono();
 
-// Save onboarding data
 profile.post("/onboarding", async (c) => {
 	const session = await auth.api.getSession({
 		headers: c.req.raw.headers,
@@ -20,6 +19,7 @@ profile.post("/onboarding", async (c) => {
 		proficiencyLevel,
 		dailyGoal,
 		focusAreas,
+		interests,
 		goal,
 		timezone,
 	} = body;
@@ -31,6 +31,7 @@ profile.post("/onboarding", async (c) => {
 			level: proficiencyLevel,
 			dailyGoal,
 			focusAreas,
+			interests,
 			goal,
 			timezone,
 			isOnboardingCompleted: true,

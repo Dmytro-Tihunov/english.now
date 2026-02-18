@@ -125,32 +125,26 @@ export default function Practice() {
 					</span>
 				</Button>
 			</DialogTrigger>
-			<DialogContent
-				className="max-w-md overflow-hidden p-0"
-				showCloseButton={false}
-			>
-				{/* Header with gradient background */}
-				<div className="relative bg-linear-to-b from-lime-200 to-white px-6 pt-6 pb-4">
-					{/* <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-full bg-linear-to-br from-lime-400 to-lime-500 shadow-lg shadow-lime-200">
+			<DialogContent className="max-w-md" showCloseButton={false}>
+				{/* <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-full bg-linear-to-br from-lime-400 to-lime-500 shadow-lg shadow-lime-200">
 						<CheckCircle2 className="size-7 text-white" />
 					</div> */}
-					<DialogHeader className="text-center">
-						<DialogTitle className="font-bold font-lyon text-2xl tracking-tight">
-							Practice Session
-						</DialogTitle>
-						<DialogDescription className="text-neutral-500">
-							Customize your practice to fit your goals
-						</DialogDescription>
-					</DialogHeader>
-				</div>
+				<DialogHeader>
+					<DialogTitle className="font-bold font-lyon text-2xl tracking-tight">
+						Practice Session
+					</DialogTitle>
+					<DialogDescription className="text-neutral-500">
+						Customize your practice to fit your goals
+					</DialogDescription>
+				</DialogHeader>
 
-				<div className="space-y-5 px-6 pb-6">
+				<div className="space-y-5 pb-6">
 					{/* What to Practice */}
 					<div className="space-y-3">
 						<h3 className="font-semibold text-neutral-700 text-sm uppercase tracking-wide">
 							What to Practice
 						</h3>
-						<div className="space-y-2">
+						<div className="flex flex-row space-y-2">
 							{contentOptions.map((option) => (
 								<div
 									key={option.id}
@@ -264,7 +258,7 @@ export default function Practice() {
 				</div>
 
 				{/* Footer */}
-				<DialogFooter className="border-neutral-100 border-t bg-neutral-50 px-6 py-4">
+				<DialogFooter>
 					<DialogClose asChild>
 						<Button variant="ghost" className="flex-1 sm:flex-none">
 							Cancel

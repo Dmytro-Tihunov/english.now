@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
@@ -8,6 +8,7 @@ import { openCheckout } from "@/lib/paddle";
 import { Button } from "../ui/button";
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
@@ -73,13 +74,20 @@ export default function Upgrade() {
 							Upgrade
 						</button>
 					</DialogTrigger>
-					<DialogContent className="sm:max-w-[425px]">
+					<DialogContent showCloseButton={false} className="sm:max-w-[425px]">
 						<DialogHeader>
 							<DialogTitle>Upgrade Plan</DialogTitle>
 							<DialogDescription>
 								Choose the plan that works best for you.
 							</DialogDescription>
 						</DialogHeader>
+						<button
+							type="button"
+							onClick={() => DialogClose.close()}
+							className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-500 transition-colors hover:bg-neutral-200"
+						>
+							<X className="size-4" />
+						</button>
 						<div className="grid gap-4 py-4">
 							<div className="flex items-center justify-center gap-4">
 								<span

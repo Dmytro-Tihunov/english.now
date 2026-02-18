@@ -7,12 +7,19 @@ import {
 	BookOpen,
 	Briefcase,
 	Check,
+	Clapperboard,
+	Cpu,
+	Dumbbell,
+	Gamepad2,
 	GraduationCap,
 	LogOut,
 	MessageCircle,
+	Music,
+	Palette,
 	Plane,
 	Target,
 	Users,
+	UtensilsCrossed,
 	Zap,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -47,6 +54,7 @@ type OnboardingData = {
 	goal: string;
 	time: string;
 	focus: string[];
+	interests: string[];
 };
 
 const STEPS = [
@@ -56,6 +64,7 @@ const STEPS = [
 	{ id: "goal", title: "Your Goal" },
 	{ id: "time", title: "Daily Time" },
 	{ id: "focus", title: "Focus Areas" },
+	{ id: "interests", title: "Interests" },
 	{ id: "plan", title: "Your Plan" },
 	{ id: "paywall", title: "Get Started" },
 ];
@@ -166,12 +175,26 @@ const FOCUS_AREAS = [
 	{ id: "pronunciation", name: "Pronunciation", icon: Zap },
 ];
 
+const INTERESTS = [
+	{ id: "technology", name: "Technology", icon: Cpu },
+	{ id: "travel", name: "Travel", icon: Plane },
+	{ id: "music", name: "Music", icon: Music },
+	{ id: "movies", name: "Movies & TV", icon: Clapperboard },
+	{ id: "food", name: "Food & Cooking", icon: UtensilsCrossed },
+	{ id: "fitness", name: "Health & Fitness", icon: Dumbbell },
+	{ id: "business", name: "Business", icon: Briefcase },
+	{ id: "art", name: "Art & Design", icon: Palette },
+	{ id: "gaming", name: "Gaming", icon: Gamepad2 },
+	{ id: "books", name: "Books & Literature", icon: BookOpen },
+];
+
 const defaultOnboardingData: OnboardingData = {
 	nativeLanguage: "",
 	level: "",
 	goal: "",
 	time: "",
 	focus: [],
+	interests: [],
 };
 
 function loadSavedProgress(): { data: OnboardingData; step: number } | null {
@@ -208,6 +231,7 @@ function OnboardingPage() {
 			proficiencyLevel: string;
 			dailyGoal: number;
 			focusAreas: string[];
+			interests: string[];
 			goal: string;
 			timezone: string;
 		}) => {
@@ -276,6 +300,7 @@ function OnboardingPage() {
 				proficiencyLevel: data.level,
 				dailyGoal: Number.parseInt(data.time) || 15,
 				focusAreas: data.focus,
+				interests: data.interests,
 				goal: data.goal,
 				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 			});
@@ -308,6 +333,7 @@ function OnboardingPage() {
 				proficiencyLevel: data.level || "beginner",
 				dailyGoal: Number.parseInt(data.time) || 15,
 				focusAreas: data.focus.length > 0 ? data.focus : ["speaking"],
+				interests: data.interests,
 				goal: data.goal || "personal",
 				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 			});
@@ -328,6 +354,15 @@ function OnboardingPage() {
 		}));
 	};
 
+	const toggleInterest = (interestId: string) => {
+		setData((prev) => ({
+			...prev,
+			interests: prev.interests.includes(interestId)
+				? prev.interests.filter((i) => i !== interestId)
+				: [...prev.interests, interestId],
+		}));
+	};
+
 	const canProceed = () => {
 		switch (STEPS[currentStep]?.id) {
 			case "welcome":
@@ -342,6 +377,8 @@ function OnboardingPage() {
 				return !!data.time;
 			case "focus":
 				return data.focus.length > 0;
+			case "interests":
+				return data.interests.length > 0;
 			case "plan":
 				return true;
 			case "paywall":
@@ -507,9 +544,17 @@ function OnboardingPage() {
 						/>
 					)}
 					{currentStep === 6 && (
-						<PlanSummaryStep data={data} onNext={nextStep} />
+						<InterestsStep
+							selected={data.interests}
+							onToggle={toggleInterest}
+							onNext={nextStep}
+							canProceed={canProceed()}
+						/>
 					)}
 					{currentStep === 7 && (
+						<PlanSummaryStep data={data} onNext={nextStep} />
+					)}
+					{currentStep === 8 && (
 						<PaywallStep
 							selectedPlan={selectedPlan}
 							onSelectPlan={setSelectedPlan}
@@ -519,6 +564,95 @@ function OnboardingPage() {
 					)}
 				</div>
 			</main>
+		</div>
+	);
+}
+
+// Interests Step Component
+function InterestsStep({
+	selected,
+	onToggle,
+	onNext,
+	canProceed,
+}: {
+	selected: string[];
+	onToggle: (id: string) => void;
+	onNext: () => void;
+	canProceed: boolean;
+}) {
+	return (
+		<div className="flex flex-1 flex-col px-4 py-8">
+			<div className="mx-auto w-full max-w-lg">
+				<div className="mb-8 text-center">
+					<h1 className="mb-2 font-bold font-lyon text-4xl tracking-tight md:text-5xl">
+						What are you interested in?
+					</h1>
+					<p className="text-muted-foreground md:text-lg">
+						Pick topics you enjoy — we'll tailor conversations to your interests
+					</p>
+				</div>
+
+				<div className="grid grid-cols-2 gap-3">
+					{INTERESTS.map((interest) => {
+						const isSelected = selected.includes(interest.id);
+						return (
+							<button
+								key={interest.id}
+								type="button"
+								onClick={() => onToggle(interest.id)}
+								className={cn(
+									"relative flex flex-col items-center gap-3 rounded-2xl border-2 p-5 text-center transition-all",
+									isSelected
+										? "border-lime-500 bg-lime-50"
+										: "border-transparent bg-white hover:bg-neutral-50",
+								)}
+								style={
+									!isSelected
+										? {
+												boxShadow:
+													"0 0 0 1px rgba(0,0,0,.05),0 2px 4px rgba(0,0,0,.04)",
+											}
+										: undefined
+								}
+							>
+								{isSelected && (
+									<div className="absolute top-3 right-3 flex size-5 items-center justify-center rounded-full bg-lime-500">
+										<Check className="size-3 text-white" />
+									</div>
+								)}
+								<div
+									className={cn(
+										"flex size-14 items-center justify-center rounded-xl",
+										isSelected
+											? "bg-radial from-[#EFFF9B] to-[#D8FF76]"
+											: "bg-neutral-100",
+									)}
+								>
+									<interest.icon
+										className={cn(
+											"size-7",
+											isSelected ? "text-lime-700" : "text-neutral-600",
+										)}
+									/>
+								</div>
+								<span className="font-semibold">{interest.name}</span>
+							</button>
+						);
+					})}
+				</div>
+
+				<div className="mx-auto mt-8 max-w-md">
+					<Button
+						size="lg"
+						className="en-button-gradient h-14 w-full rounded-2xl text-base text-lime-900"
+						disabled={!canProceed}
+						onClick={onNext}
+					>
+						Continue
+						<ArrowRight className="ml-2 size-5" />
+					</Button>
+				</div>
+			</div>
 		</div>
 	);
 }
@@ -626,18 +760,13 @@ function PlanSummaryStep({
 	const focusNames = data.focus
 		.map((f) => FOCUS_AREAS.find((a) => a.id === f)?.name)
 		.filter(Boolean);
+	const interestNames = data.interests
+		.map((i) => INTERESTS.find((a) => a.id === i)?.name)
+		.filter(Boolean);
 
 	return (
 		<div className="flex flex-1 flex-col items-center justify-center px-4 py-8">
 			<div className="mx-auto w-full max-w-md text-center">
-				{/* Success animation */}
-				{/* <div className="relative mx-auto mb-6 flex size-16 justify-center">
-					<div className="absolute inset-0 animate-ping rounded-full bg-lime-200 opacity-75" />
-					<div className="relative flex size-24 items-center justify-center rounded-full bg-radial from-[#EFFF9B] to-[#D8FF76]">
-						<Sparkles className="size-10 text-lime-700" />
-					</div>
-				</div> */}
-
 				<h1 className="mb-4 font-bold font-lyon text-4xl tracking-tight md:text-5xl">
 					Your Personal Plan is Ready!
 				</h1>
@@ -668,10 +797,16 @@ function PlanSummaryStep({
 							<span className="text-muted-foreground">Daily Practice</span>
 							<span className="font-medium">{timeMinutes} minutes</span>
 						</div>
-						<div className="flex items-center justify-between">
+						<div className="flex items-center justify-between border-b border-dashed pb-3">
 							<span className="text-muted-foreground">Focus Areas</span>
 							<span className="font-medium">
 								{focusNames.join(", ") || "All"}
+							</span>
+						</div>
+						<div className="flex items-center justify-between">
+							<span className="text-muted-foreground">Interests</span>
+							<span className="max-w-[60%] text-right font-medium">
+								{interestNames.join(", ") || "—"}
 							</span>
 						</div>
 					</div>

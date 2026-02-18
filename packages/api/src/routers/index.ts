@@ -1,6 +1,7 @@
 import { protectedProcedure, publicProcedure, router } from "../index";
 import { contentRouter } from "./content";
 import { conversationRouter } from "./conversation";
+import { practiceRouter } from "./practice";
 import { profileRouter } from "./profile";
 import { pronunciationRouter } from "./pronunciation";
 import { vocabularyRouter } from "./vocabulary";
@@ -19,6 +20,7 @@ export const appRouter = router({
 	vocabulary: vocabularyRouter,
 	pronunciation: pronunciationRouter,
 	conversation: conversationRouter,
+	practice: practiceRouter,
 	profile: profileRouter,
 });
 export type AppRouter = typeof appRouter;

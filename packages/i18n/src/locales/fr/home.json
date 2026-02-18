@@ -31,5 +31,9 @@
     "privacy": "Politique de confidentialité",
     "terms": "Conditions d'utilisation",
     "cancellation": "Politique d'annulation"
+  },
+  "start": {
+    "title": "C'était censé prendre <br/> un week-end, pas une vie.",
+    "subtitle": "Essai gratuit de 7 jours, aucune carte de crédit requise"
   }
 }

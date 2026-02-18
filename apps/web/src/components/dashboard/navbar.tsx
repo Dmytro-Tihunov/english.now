@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { CheckIcon, LogOutIcon, Settings, Zap } from "lucide-react";
+import { CheckIcon, LogOutIcon, Settings, X, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Loader from "@/components/loader";
@@ -35,6 +35,7 @@ const PADDLE_PRICE_IDS = {
 } as const;
 
 function UpgradeDialog() {
+	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [plan, setPlan] = useState<"monthly" | "yearly">("monthly");
 	const { data: session } = authClient.useSession();
@@ -61,7 +62,7 @@ function UpgradeDialog() {
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
 					<DialogTitle className="mb-2 font-bold font-lyon text-[1.7rem] leading-tight">
-						Upgrade Your Plan
+						Upgrade to Pro
 					</DialogTitle>
 					<DialogDescription className="text-lg">
 						Join{" "}
@@ -71,6 +72,13 @@ function UpgradeDialog() {
 						learners and start your <br /> journey to fluency today.
 					</DialogDescription>
 				</DialogHeader>
+				{/* <button
+					type="button"
+					onClick={() => setOpen(false)}
+					className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-500 transition-colors hover:bg-neutral-200"
+				>
+					<X className="size-4" />
+				</button> */}
 				<div className="grid gap-4 py-4">
 					<div className="space-y-2">
 						{features.map((feature) => (
@@ -286,7 +294,7 @@ export default function Navbar() {
 			<div className="container relative z-10 mx-auto max-w-5xl px-4">
 				<nav className="flex grid-cols-2 items-center justify-between py-5 md:grid-cols-5">
 					<div className="col-span-3 items-center gap-3 md:flex">
-						<Logo />
+						<Logo link="/home" />
 						<div className="hidden gap-1.5 md:flex">
 							{_links.map((link) => (
 								<Link
@@ -303,11 +311,11 @@ export default function Navbar() {
 						</div>
 					</div>
 
-					<div className="relative flex items-center justify-end gap-2">
+					<div className="relative flex items-center justify-end gap-3">
 						<UpgradeDialog />
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<div className="ml-2 flex w-full cursor-pointer flex-col items-start transition-opacity hover:opacity-80">
+								<div className="flex w-full cursor-pointer flex-col items-start transition-opacity hover:opacity-80">
 									<div className="flex flex-row items-center gap-2">
 										{isPending || !session ? (
 											<Skeleton className="size-8.5 rounded-full" />

@@ -11,6 +11,7 @@ import contentRoutes from "./routes/content";
 import conversationRoutes from "./routes/conversation";
 import paddleRoutes from "./routes/paddle";
 import profileRoutes from "./routes/profile";
+import pronunciationRoutes from "./routes/pronunciation";
 import uploadRoutes from "./routes/upload";
 
 const app = new Hono();
@@ -36,6 +37,9 @@ app.route("/api/content", contentRoutes);
 
 // REST API routes for conversation (streaming support)
 app.route("/api/conversation", conversationRoutes);
+
+// REST API routes for pronunciation assessment (Azure Speech)
+app.route("/api/pronunciation", pronunciationRoutes);
 
 // REST API routes for file uploads
 app.route("/api/upload", uploadRoutes);

@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 export const Letter = () => {
 	return (
 		<div className="container mx-auto max-w-5xl pt-24">
-			<div className="mx-auto mb-14 max-w-xl text-center">
+			<div className="mx-auto mb-10 max-w-xl text-center md:mb-14">
 				<h2 className="mb-4 font-bold font-lyon text-4xl tracking-tight md:text-5xl">
 					The story behind English Now
 				</h2>
@@ -41,7 +41,7 @@ export const Letter = () => {
 								d="M30.632 33.25c4.345 0 7.868-3.526 7.868-7.875 0-4.35-3.523-7.875-7.868-7.875-1.085 0-2.12.22-3.06.618.187-.343.39-.666.608-.974 1.374-1.945 3.406-3.427 6.044-5.188a1.751 1.751 0 0 0 .485-2.427 1.747 1.747 0 0 0-2.424-.485c-2.606 1.74-5.164 3.538-6.96 6.078-1.845 2.611-2.787 5.85-2.56 10.301.026 4.327 3.538 7.827 7.867 7.827ZM11.4 33.25c4.346 0 7.868-3.526 7.868-7.875 0-4.35-3.522-7.875-7.867-7.875-1.086 0-2.12.22-3.061.618.187-.343.391-.666.609-.974 1.374-1.945 3.405-3.427 6.044-5.188a1.751 1.751 0 0 0 .485-2.427 1.747 1.747 0 0 0-2.425-.485c-2.606 1.74-5.164 3.538-6.959 6.078-1.845 2.611-2.788 5.85-2.56 10.301.025 4.327 3.538 7.827 7.867 7.827Z"
 							/>
 						</svg>
-						<p className="mt-5 text-base text-muted-foreground leading-relaxed md:mt-5 md:mb-8">
+						<p className="mt-5 text-muted-foreground text-xs leading-relaxed md:mt-5 md:mb-8 md:text-base">
 							Hi, I'm Dmytro. <br />
 							<br />I grew up in Ukraine where learning English felt like an
 							impossible mountain to climb. Traditional classes were boring,

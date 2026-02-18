@@ -1,9 +1,4 @@
-import {
-	createFileRoute,
-	Link,
-	Outlet,
-	redirect,
-} from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Check, Loader2, SettingsIcon, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import Logo from "@/components/logo";
@@ -73,7 +68,7 @@ function ConversationLayout() {
 	return (
 		<div className="flex h-dvh w-full bg-neutral-50 dark:bg-neutral-900">
 			<main className="relative flex h-full w-full flex-1 flex-col overflow-auto">
-				<div className="sticky border-black/5 border-b dark:bg-neutral-900">
+				<div className="sticky border-black/5 border-b bg-white">
 					<div className="container relative z-10 mx-auto max-w-3xl px-4">
 						<nav className="flex grid-cols-2 items-center justify-between py-5 md:grid-cols-5">
 							<div className="items-center gap-2 md:flex">
@@ -90,7 +85,7 @@ function ConversationLayout() {
 										<Button
 											variant="outline"
 											size="icon"
-											className="size-10 rounded-xl"
+											className="size-9 rounded-xl"
 										>
 											<SettingsIcon className="size-4" />
 										</Button>

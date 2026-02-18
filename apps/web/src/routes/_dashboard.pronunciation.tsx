@@ -1,7 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { env } from "@english.now/env/client";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
 	ArrowRight,
+	Calendar,
 	Check,
+	ChevronLeft,
+	Clock,
+	Loader2,
 	Mic,
 	MicOff,
 	Pause,
@@ -13,13 +19,25 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTRPC } from "@/utils/trpc";
+
+// ============================================
+// ROUTE
+// ============================================
+
+type PronunciationSearch = {
+	mode?: string;
+};
 
 export const Route = createFileRoute("/_dashboard/pronunciation")({
+	validateSearch: (search: Record<string, unknown>): PronunciationSearch => ({
+		mode: typeof search.mode === "string" ? search.mode : undefined,
+	}),
 	component: PronunciationPage,
 });
 
 // ============================================
-// DATA
+// TYPES
 // ============================================
 
 type PracticeMode =
@@ -27,6 +45,21 @@ type PracticeMode =
 	| "tongue-twisters"
 	| "minimal-pairs"
 	| "shadowing";
+
+type Difficulty = "beginner" | "intermediate" | "advanced";
+
+type SessionSummary = {
+	averageScore: number;
+	totalAttempts: number;
+	bestScore: number;
+	worstScore: number;
+	weakWords: string[];
+	itemScores: { itemIndex: number; bestScore: number; attempts: number }[];
+};
+
+// ============================================
+// DATA
+// ============================================
 
 const MODES = [
 	{
@@ -58,60 +91,6 @@ const MODES = [
 		color: "from-green-500 to-emerald-500",
 	},
 ];
-
-const READ_ALOUD_TEXTS = {
-	beginner: [
-		"Hello, how are you today?",
-		"The weather is nice outside.",
-		"I like to read books.",
-		"Can you help me please?",
-		"Thank you very much.",
-	],
-	intermediate: [
-		"I would appreciate it if you could help me with this task.",
-		"The conference will be held next Thursday afternoon.",
-		"She has been working on this project for three months.",
-		"Could you please repeat that more slowly?",
-		"I'm looking forward to meeting you soon.",
-	],
-	advanced: [
-		"The technological advancements of the twenty-first century have revolutionized communication.",
-		"Despite the challenging circumstances, the team persevered and achieved remarkable results.",
-		"The phenomenon of globalization has significantly impacted international trade relationships.",
-		"Sustainability initiatives require collaborative efforts from both governments and corporations.",
-		"The intricate relationship between economics and environmental policy demands careful consideration.",
-	],
-};
-
-const TONGUE_TWISTERS = {
-	beginner: [
-		{ text: "Red lorry, yellow lorry.", speed: "slow" },
-		{ text: "She sees cheese.", speed: "slow" },
-		{ text: "Fresh French fish.", speed: "slow" },
-		{ text: "Six sticky sticks.", speed: "slow" },
-		{ text: "Toy boat. Toy boat. Toy boat.", speed: "medium" },
-	],
-	intermediate: [
-		{ text: "She sells seashells by the seashore.", speed: "medium" },
-		{ text: "Peter Piper picked a peck of pickled peppers.", speed: "medium" },
-		{ text: "How much wood would a woodchuck chuck?", speed: "medium" },
-		{
-			text: "I scream, you scream, we all scream for ice cream.",
-			speed: "medium",
-		},
-		{ text: "Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair.", speed: "fast" },
-	],
-	advanced: [
-		{ text: "The sixth sick sheikh's sixth sheep's sick.", speed: "fast" },
-		{ text: "Pad kid poured curd pulled cold.", speed: "fast" },
-		{
-			text: "Brisk brave brigadiers brandished broad bright blades.",
-			speed: "fast",
-		},
-		{ text: "How can a clam cram in a clean cream can?", speed: "fast" },
-		{ text: "Six Czech cricket critics.", speed: "fast" },
-	],
-};
 
 const MINIMAL_PAIRS = [
 	{ word1: "ship", word2: "sheep", phoneme: "/ɪ/ vs /iː/", category: "vowels" },
@@ -146,7 +125,7 @@ const MINIMAL_PAIRS = [
 	{ word1: "wet", word2: "vet", phoneme: "/w/ vs /v/", category: "consonants" },
 ];
 
-const SHADOWING_TEXTS = {
+const SHADOWING_TEXTS: Record<Difficulty, string[]> = {
 	beginner: [
 		"Nice to meet you.",
 		"Where are you from?",
@@ -174,87 +153,146 @@ const SHADOWING_TEXTS = {
 // HOOKS
 // ============================================
 
-function useSpeechRecognition() {
-	const [isListening, setIsListening] = useState(false);
+function useVoiceRecorder() {
+	const [isRecording, setIsRecording] = useState(false);
+	const [isTranscribing, setIsTranscribing] = useState(false);
 	const [transcript, setTranscript] = useState("");
-	const [isSupported, setIsSupported] = useState(true);
-	const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+	const audioChunksRef = useRef<Blob[]>([]);
+	const streamRef = useRef<MediaStream | null>(null);
 
-	useEffect(() => {
-		const SpeechRecognitionAPI =
-			window.SpeechRecognition || window.webkitSpeechRecognition;
-		if (!SpeechRecognitionAPI) {
-			setIsSupported(false);
-			return;
-		}
-
-		const recognition = new SpeechRecognitionAPI();
-		recognition.continuous = false;
-		recognition.interimResults = true;
-		recognition.lang = "en-US";
-
-		recognition.onresult = (event: SpeechRecognitionEvent) => {
-			const current = event.resultIndex;
-			const result = event.results[current];
-			if (result) {
-				const alternative = result[0];
-				setTranscript(alternative?.transcript ?? "");
+	const stopMediaStream = useCallback(() => {
+		if (streamRef.current) {
+			for (const track of streamRef.current.getTracks()) {
+				track.stop();
 			}
-		};
-
-		recognition.onend = () => {
-			setIsListening(false);
-		};
-
-		recognition.onerror = () => {
-			setIsListening(false);
-		};
-
-		recognitionRef.current = recognition;
-
-		return () => {
-			recognition.abort();
-		};
+			streamRef.current = null;
+		}
 	}, []);
 
-	const startListening = useCallback(() => {
-		if (recognitionRef.current) {
+	const transcribeAudio = useCallback(async (blob: Blob): Promise<string> => {
+		const arrayBuffer = await blob.arrayBuffer();
+		const bytes = new Uint8Array(arrayBuffer);
+		let binary = "";
+		for (let i = 0; i < bytes.length; i++) {
+			binary += String.fromCharCode(bytes[i] ?? 0);
+		}
+		const base64 = btoa(binary);
+
+		const response = await fetch(
+			`${env.VITE_SERVER_URL}/api/conversation/transcribe`,
+			{
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				credentials: "include",
+				body: JSON.stringify({ audio: base64 }),
+			},
+		);
+
+		if (!response.ok) throw new Error("Transcription failed");
+
+		const data = await response.json();
+		return data.transcript || "";
+	}, []);
+
+	const startRecording = useCallback(async () => {
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({
+				audio: true,
+			});
+			streamRef.current = stream;
+
+			const mediaRecorder = new MediaRecorder(stream, {
+				mimeType: "audio/webm;codecs=opus",
+			});
+			mediaRecorderRef.current = mediaRecorder;
+			audioChunksRef.current = [];
+
+			mediaRecorder.ondataavailable = (event) => {
+				if (event.data.size > 0) {
+					audioChunksRef.current.push(event.data);
+				}
+			};
+
+			mediaRecorder.start();
+			setIsRecording(true);
 			setTranscript("");
-			recognitionRef.current.start();
-			setIsListening(true);
+		} catch (err) {
+			console.error("Error accessing microphone:", err);
 		}
 	}, []);
 
-	const stopListening = useCallback(() => {
-		if (recognitionRef.current) {
-			recognitionRef.current.stop();
-			setIsListening(false);
-		}
-	}, []);
+	const stopRecording = useCallback(async () => {
+		if (!mediaRecorderRef.current || !isRecording) return;
+
+		return new Promise<string>((resolve) => {
+			const recorder = mediaRecorderRef.current;
+			if (!recorder) {
+				resolve("");
+				return;
+			}
+
+			recorder.onstop = async () => {
+				stopMediaStream();
+				const blob = new Blob(audioChunksRef.current, {
+					type: "audio/webm",
+				});
+
+				setIsRecording(false);
+				setIsTranscribing(true);
+
+				try {
+					const text = await transcribeAudio(blob);
+					setTranscript(text);
+					resolve(text);
+				} catch (err) {
+					console.error("Transcription error:", err);
+					resolve("");
+				} finally {
+					setIsTranscribing(false);
+				}
+			};
+
+			recorder.stop();
+		});
+	}, [isRecording, stopMediaStream, transcribeAudio]);
 
 	const resetTranscript = useCallback(() => {
 		setTranscript("");
 	}, []);
 
+	useEffect(() => {
+		return () => {
+			if (
+				mediaRecorderRef.current &&
+				mediaRecorderRef.current.state !== "inactive"
+			) {
+				try {
+					mediaRecorderRef.current.stop();
+				} catch (_) {
+					// ignore
+				}
+			}
+			if (streamRef.current) {
+				for (const track of streamRef.current.getTracks()) {
+					track.stop();
+				}
+			}
+		};
+	}, []);
+
 	return {
-		isListening,
+		isRecording,
+		isTranscribing,
 		transcript,
-		isSupported,
-		startListening,
-		stopListening,
+		startRecording,
+		stopRecording,
 		resetTranscript,
 	};
 }
 
 function useSpeechSynthesis() {
 	const [isSpeaking, setIsSpeaking] = useState(false);
-	const [isSupported, setIsSupported] = useState(true);
-
-	useEffect(() => {
-		if (!window.speechSynthesis) {
-			setIsSupported(false);
-		}
-	}, []);
 
 	const speak = useCallback((text: string, rate = 1) => {
 		if (!window.speechSynthesis) return;
@@ -276,11 +314,11 @@ function useSpeechSynthesis() {
 		setIsSpeaking(false);
 	}, []);
 
-	return { isSpeaking, isSupported, speak, stop };
+	return { isSpeaking, speak, stop };
 }
 
 // ============================================
-// UTILITIES
+// CLIENT-SIDE TEXT COMPARISON (for hardcoded modes)
 // ============================================
 
 function compareTexts(
@@ -300,11 +338,10 @@ function compareTexts(
 	let correct = 0;
 
 	for (let i = 0; i < expectedWords.length; i++) {
-		const expected = expectedWords[i] || "";
-		const actual = actualWords[i] || "";
-		const isCorrect =
-			expected === actual || levenshteinDistance(expected, actual) <= 1;
-		words.push({ word: expected, correct: isCorrect });
+		const exp = expectedWords[i] || "";
+		const act = actualWords[i] || "";
+		const isCorrect = exp === act || levenshteinDistance(exp, act) <= 1;
+		words.push({ word: exp, correct: isCorrect });
 		if (isCorrect) correct++;
 	}
 
@@ -319,34 +356,115 @@ function levenshteinDistance(a: string, b: string): number {
 	const matrix: number[][] = Array.from({ length: b.length + 1 }, () =>
 		Array.from({ length: a.length + 1 }, () => 0),
 	);
-
 	for (let i = 0; i <= b.length; i++) {
-		matrix[i][0] = i;
+		const row = matrix[i];
+		if (row) row[0] = i;
 	}
 	for (let j = 0; j <= a.length; j++) {
-		matrix[0][j] = j;
+		const row = matrix[0];
+		if (row) row[j] = j;
 	}
-
 	for (let i = 1; i <= b.length; i++) {
 		for (let j = 1; j <= a.length; j++) {
+			const prevRow = matrix[i - 1];
+			const currRow = matrix[i];
+			if (!prevRow || !currRow) continue;
 			if (b.charAt(i - 1) === a.charAt(j - 1)) {
-				matrix[i][j] = matrix[i - 1][j - 1];
+				currRow[j] = prevRow[j - 1] ?? 0;
 			} else {
-				matrix[i][j] = Math.min(
-					matrix[i - 1][j - 1] + 1,
-					matrix[i][j - 1] + 1,
-					matrix[i - 1][j] + 1,
+				currRow[j] = Math.min(
+					(prevRow[j - 1] ?? 0) + 1,
+					(currRow[j - 1] ?? 0) + 1,
+					(prevRow[j] ?? 0) + 1,
 				);
 			}
 		}
 	}
-
-	return matrix[b.length][a.length];
+	return matrix[b.length]?.[a.length] ?? 0;
 }
 
 // ============================================
-// COMPONENTS
+// SHARED UI COMPONENTS
 // ============================================
+
+function DifficultySelector({
+	selected,
+	onSelect,
+}: {
+	selected: Difficulty;
+	onSelect: (level: Difficulty) => void;
+}) {
+	return (
+		<div className="flex gap-2">
+			{(["beginner", "intermediate", "advanced"] as const).map((level) => (
+				<button
+					key={level}
+					type="button"
+					onClick={() => onSelect(level)}
+					className={cn(
+						"rounded-full px-4 py-2 font-medium text-sm capitalize transition-all",
+						selected === level
+							? "bg-primary text-primary-foreground"
+							: "bg-muted hover:bg-muted/80",
+					)}
+				>
+					{level}
+				</button>
+			))}
+		</div>
+	);
+}
+
+function ScoreDisplay({ score }: { score: number }) {
+	const getColor = () => {
+		if (score >= 80) return "text-green-500";
+		if (score >= 60) return "text-yellow-500";
+		return "text-red-500";
+	};
+
+	const getMessage = () => {
+		if (score >= 90) return "Excellent!";
+		if (score >= 80) return "Great job!";
+		if (score >= 60) return "Good effort!";
+		return "Keep practicing!";
+	};
+
+	return (
+		<div className="text-center">
+			<div className={cn("font-bold text-6xl", getColor())}>{score}%</div>
+			<p className="mt-2 text-lg text-muted-foreground">{getMessage()}</p>
+		</div>
+	);
+}
+
+function WordHighlight({
+	words,
+}: {
+	words: { word: string; correct: boolean }[];
+}) {
+	return (
+		<div className="flex flex-wrap gap-2">
+			{words.map((item, idx) => (
+				<span
+					key={`${item.word}-${idx}`}
+					className={cn(
+						"rounded-lg px-3 py-1.5 font-medium text-lg",
+						item.correct
+							? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+							: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+					)}
+				>
+					{item.word}
+					{item.correct ? (
+						<Check className="ml-1 inline size-4" />
+					) : (
+						<X className="ml-1 inline size-4" />
+					)}
+				</span>
+			))}
+		</div>
+	);
+}
 
 function ModeSelector({
 	selectedMode,
@@ -395,481 +513,184 @@ function ModeSelector({
 	);
 }
 
-function DifficultySelector({
-	selected,
-	onSelect,
+// ============================================
+// SESSION STARTER (redirects to session URL)
+// ============================================
+
+function SessionStarter({
+	mode,
+	onBack,
 }: {
-	selected: "beginner" | "intermediate" | "advanced";
-	onSelect: (level: "beginner" | "intermediate" | "advanced") => void;
+	mode: "read-aloud" | "tongue-twisters";
+	onBack: () => void;
 }) {
+	const trpc = useTRPC();
+	const navigate = useNavigate();
+	const [difficulty, setDifficulty] = useState<Difficulty>("beginner");
+
+	const startSession = useMutation(
+		trpc.pronunciation.startSession.mutationOptions({
+			onSuccess: (data) => {
+				navigate({
+					to: "/pronunciation/$sessionId",
+					params: { sessionId: data.sessionId },
+				});
+			},
+		}),
+	);
+
+	const modeName = mode === "read-aloud" ? "Read Aloud" : "Tongue Twisters";
+
 	return (
-		<div className="flex gap-2">
-			{(["beginner", "intermediate", "advanced"] as const).map((level) => (
+		<div className="space-y-8">
+			<div>
 				<button
-					key={level}
 					type="button"
-					onClick={() => onSelect(level)}
-					className={cn(
-						"rounded-full px-4 py-2 font-medium text-sm capitalize transition-all",
-						selected === level
-							? "bg-primary text-primary-foreground"
-							: "bg-muted hover:bg-muted/80",
-					)}
+					onClick={onBack}
+					className="mb-4 flex items-center gap-1 text-muted-foreground text-sm transition-colors hover:text-foreground"
 				>
-					{level}
+					<ChevronLeft className="size-4" />
+					Back to modes
 				</button>
-			))}
-		</div>
-	);
-}
-
-function ScoreDisplay({ score }: { score: number }) {
-	const getColor = () => {
-		if (score >= 80) return "text-green-500";
-		if (score >= 60) return "text-yellow-500";
-		return "text-red-500";
-	};
-
-	const getMessage = () => {
-		if (score >= 90) return "Excellent! 🎉";
-		if (score >= 80) return "Great job! 👏";
-		if (score >= 60) return "Good effort! 💪";
-		return "Keep practicing! 🔄";
-	};
-
-	return (
-		<div className="text-center">
-			<div className={cn("font-bold text-6xl", getColor())}>{score}%</div>
-			<p className="mt-2 text-lg text-muted-foreground">{getMessage()}</p>
-		</div>
-	);
-}
-
-function WordHighlight({
-	words,
-}: {
-	words: { word: string; correct: boolean }[];
-}) {
-	return (
-		<div className="flex flex-wrap gap-2">
-			{words.map((item) => (
-				<span
-					key={`${item.word}-${item.correct}`}
-					className={cn(
-						"rounded-lg px-3 py-1.5 font-medium text-lg",
-						item.correct
-							? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-							: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-					)}
-				>
-					{item.word}
-					{item.correct ? (
-						<Check className="ml-1 inline size-4" />
-					) : (
-						<X className="ml-1 inline size-4" />
-					)}
-				</span>
-			))}
-		</div>
-	);
-}
-
-// ============================================
-// MODE COMPONENTS
-// ============================================
-
-function ReadAloudMode() {
-	const [difficulty, setDifficulty] = useState<
-		"beginner" | "intermediate" | "advanced"
-	>("beginner");
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const [result, setResult] = useState<{
-		score: number;
-		words: { word: string; correct: boolean }[];
-	} | null>(null);
-
-	const {
-		isListening,
-		transcript,
-		isSupported,
-		startListening,
-		stopListening,
-		resetTranscript,
-	} = useSpeechRecognition();
-	const { isSpeaking, speak, stop } = useSpeechSynthesis();
-
-	const texts = READ_ALOUD_TEXTS[difficulty];
-	const currentText = texts[currentIndex] ?? texts[0] ?? "";
-
-	const handleRecord = () => {
-		if (isListening) {
-			stopListening();
-		} else {
-			resetTranscript();
-			setResult(null);
-			startListening();
-		}
-	};
-
-	const handleCheck = () => {
-		if (transcript) {
-			const comparison = compareTexts(currentText, transcript);
-			setResult(comparison);
-		}
-	};
-
-	const handleNext = () => {
-		setCurrentIndex((prev) => (prev + 1) % texts.length);
-		resetTranscript();
-		setResult(null);
-	};
-
-	const handleListen = () => {
-		if (isSpeaking) {
-			stop();
-		} else {
-			speak(currentText, 0.9);
-		}
-	};
-
-	//   if (!isSupported) {
-	//     return (
-	//       <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center dark:border-red-800 dark:bg-red-900/20">
-	//         <p className="text-red-600 dark:text-red-400">
-	//           Speech recognition is not supported in your browser. Please try Chrome
-	//           or Edge.
-	//         </p>
-	//       </div>
-	//     );
-	//   }
-
-	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<DifficultySelector
-					selected={difficulty}
-					onSelect={(level) => {
-						setDifficulty(level);
-						setCurrentIndex(0);
-						setResult(null);
-						resetTranscript();
-					}}
-				/>
-				<span className="text-muted-foreground text-sm">
-					{currentIndex + 1} / {texts.length}
-				</span>
-			</div>
-
-			{/* Text to read */}
-			<div className="rounded-2xl border bg-linear-to-br from-blue-50 to-cyan-50 p-8 dark:from-blue-950/30 dark:to-cyan-950/30">
-				<p className="text-center font-medium text-2xl leading-relaxed">
-					{currentText}
+				<h2 className="font-bold font-lyon text-3xl tracking-tight">
+					{modeName}
+				</h2>
+				<p className="mt-1 text-muted-foreground">
+					Choose your difficulty level to start practicing
 				</p>
 			</div>
 
-			{/* Listen button */}
+			<div className="rounded-2xl border bg-card p-6">
+				<h3 className="mb-4 font-semibold">Difficulty</h3>
+				<div className="grid grid-cols-3 gap-3">
+					{(["beginner", "intermediate", "advanced"] as const).map((level) => (
+						<button
+							key={level}
+							type="button"
+							onClick={() => setDifficulty(level)}
+							className={cn(
+								"rounded-xl border-2 p-4 text-center capitalize transition-all",
+								difficulty === level
+									? "border-primary bg-primary/5"
+									: "border-transparent bg-muted/40 hover:border-primary/30",
+							)}
+						>
+							<span className="font-medium">{level}</span>
+						</button>
+					))}
+				</div>
+			</div>
+
 			<div className="flex justify-center">
 				<Button
-					variant="outline"
 					size="lg"
-					onClick={handleListen}
-					className="gap-2"
+					onClick={() => startSession.mutate({ mode, difficulty })}
+					disabled={startSession.isPending}
+					className="gap-2 px-8"
 				>
-					{isSpeaking ? (
-						<Pause className="size-5" />
+					{startSession.isPending ? (
+						<>
+							<Loader2 className="size-5 animate-spin" />
+							Generating content...
+						</>
 					) : (
-						<Volume2 className="size-5" />
+						<>
+							<Play className="size-5" />
+							Start Practice
+						</>
 					)}
-					{isSpeaking ? "Stop" : "Listen to pronunciation"}
 				</Button>
-			</div>
-
-			{/* Recording area */}
-			<div className="space-y-4">
-				<div className="flex justify-center gap-4">
-					<Button
-						size="lg"
-						variant={isListening ? "destructive" : "default"}
-						onClick={handleRecord}
-						className={cn(
-							"gap-2 transition-all",
-							isListening && "animate-pulse",
-						)}
-					>
-						{isListening ? (
-							<MicOff className="size-5" />
-						) : (
-							<Mic className="size-5" />
-						)}
-						{isListening ? "Stop Recording" : "Start Recording"}
-					</Button>
-					{transcript && !result && (
-						<Button
-							size="lg"
-							variant="secondary"
-							onClick={handleCheck}
-							className="gap-2"
-						>
-							<Check className="size-5" />
-							Check
-						</Button>
-					)}
-				</div>
-
-				{/* Transcript */}
-				{transcript && (
-					<div className="rounded-xl border bg-muted/50 p-4">
-						<p className="text-center text-muted-foreground text-sm">
-							You said:
-						</p>
-						<p className="mt-2 text-center text-lg">{transcript}</p>
-					</div>
-				)}
-
-				{/* Results */}
-				{result && (
-					<div className="space-y-6 rounded-2xl border bg-card p-6">
-						<ScoreDisplay score={result.score} />
-						<div className="space-y-2">
-							<p className="font-medium text-muted-foreground text-sm">
-								Word by word:
-							</p>
-							<WordHighlight words={result.words} />
-						</div>
-						<div className="flex justify-center gap-4">
-							<Button
-								variant="outline"
-								onClick={() => {
-									resetTranscript();
-									setResult(null);
-								}}
-								className="gap-2"
-							>
-								<RefreshCw className="size-4" />
-								Try Again
-							</Button>
-							<Button onClick={handleNext} className="gap-2">
-								Next
-								<ArrowRight className="size-4" />
-							</Button>
-						</div>
-					</div>
-				)}
 			</div>
 		</div>
 	);
 }
 
-function TongueTwistersMode() {
-	const [difficulty, setDifficulty] = useState<
-		"beginner" | "intermediate" | "advanced"
-	>("beginner");
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const [attempts, setAttempts] = useState(0);
-	const [bestScore, setBestScore] = useState(0);
-	const [result, setResult] = useState<{
-		score: number;
-		words: { word: string; correct: boolean }[];
-	} | null>(null);
+// ============================================
+// HISTORY DISPLAY
+// ============================================
 
-	const {
-		isListening,
-		transcript,
-		isSupported,
-		startListening,
-		stopListening,
-		resetTranscript,
-	} = useSpeechRecognition();
-	const { isSpeaking, speak, stop } = useSpeechSynthesis();
+function SessionHistory() {
+	const trpc = useTRPC();
+	const navigate = useNavigate();
+	const { data: history, isLoading } = useQuery(
+		trpc.pronunciation.getHistory.queryOptions({ limit: 5 }),
+	);
 
-	const twisters = TONGUE_TWISTERS[difficulty];
-	const current = twisters[currentIndex] ??
-		twisters[0] ?? { text: "", speed: "slow" as const };
-
-	const getRate = () => {
-		switch (current.speed) {
-			case "slow":
-				return 0.8;
-			case "medium":
-				return 1;
-			case "fast":
-				return 1.2;
-			default:
-				return 1;
-		}
-	};
-
-	const handleRecord = () => {
-		if (isListening) {
-			stopListening();
-		} else {
-			resetTranscript();
-			setResult(null);
-			startListening();
-		}
-	};
-
-	const handleCheck = () => {
-		if (transcript) {
-			const comparison = compareTexts(current.text, transcript);
-			setResult(comparison);
-			setAttempts((prev) => prev + 1);
-			if (comparison.score > bestScore) {
-				setBestScore(comparison.score);
-			}
-		}
-	};
-
-	const handleNext = () => {
-		setCurrentIndex((prev) => (prev + 1) % twisters.length);
-		resetTranscript();
-		setResult(null);
-		setAttempts(0);
-		setBestScore(0);
-	};
-
-	const handleListen = () => {
-		if (isSpeaking) {
-			stop();
-		} else {
-			speak(current.text, getRate());
-		}
-	};
-
-	//   if (!isSupported) {
-	//     return (
-	//       <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center dark:border-red-800 dark:bg-red-900/20">
-	//         <p className="text-red-600 dark:text-red-400">
-	//           Speech recognition is not supported in your browser. Please try Chrome
-	//           or Edge.
-	//         </p>
-	//       </div>
-	//     );
-	//   }
+	if (isLoading || !history || history.length === 0) return null;
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<DifficultySelector
-					selected={difficulty}
-					onSelect={(level) => {
-						setDifficulty(level);
-						setCurrentIndex(0);
-						setResult(null);
-						resetTranscript();
-						setAttempts(0);
-						setBestScore(0);
-					}}
-				/>
-				<div className="flex items-center gap-4 text-sm">
-					<span className="text-muted-foreground">Attempts: {attempts}</span>
-					<span className="font-medium text-green-600">Best: {bestScore}%</span>
-				</div>
-			</div>
+		<div className="mt-8">
+			<h2 className="mb-4 font-semibold text-lg">Recent Sessions</h2>
+			<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+				{history.map((session) => {
+					const summary = session.summary as SessionSummary | null;
+					const modeInfo = MODES.find((m) => m.id === session.mode);
+					const date = new Date(session.createdAt);
+					const isActive = session.status === "active";
 
-			{/* Tongue twister card */}
-			<div className="relative overflow-hidden rounded-2xl border bg-linear-to-br from-purple-50 to-pink-50 p-8 dark:from-purple-950/30 dark:to-pink-950/30">
-				<div className="absolute top-4 right-4">
-					<span
-						className={cn(
-							"rounded-full px-3 py-1 font-medium text-xs",
-							current.speed === "slow" && "bg-green-100 text-green-700",
-							current.speed === "medium" && "bg-yellow-100 text-yellow-700",
-							current.speed === "fast" && "bg-red-100 text-red-700",
-						)}
-					>
-						{current.speed} pace
-					</span>
-				</div>
-				<div className="flex items-center justify-center pt-4">
-					<span className="text-6xl">👅</span>
-				</div>
-				<p className="mt-6 text-center font-medium text-2xl leading-relaxed">
-					{current.text}
-				</p>
-				<p className="mt-4 text-center text-muted-foreground text-sm">
-					{currentIndex + 1} of {twisters.length}
-				</p>
-			</div>
-
-			{/* Controls */}
-			<div className="flex flex-col items-center gap-4">
-				<Button
-					variant="outline"
-					size="lg"
-					onClick={handleListen}
-					className="gap-2"
-				>
-					{isSpeaking ? (
-						<Pause className="size-5" />
-					) : (
-						<Volume2 className="size-5" />
-					)}
-					{isSpeaking ? "Stop" : "Listen first"}
-				</Button>
-
-				<div className="flex gap-4">
-					<Button
-						size="lg"
-						variant={isListening ? "destructive" : "default"}
-						onClick={handleRecord}
-						className={cn("gap-2", isListening && "animate-pulse")}
-					>
-						{isListening ? (
-							<MicOff className="size-5" />
-						) : (
-							<Mic className="size-5" />
-						)}
-						{isListening ? "Stop" : "Record"}
-					</Button>
-					{transcript && !result && (
-						<Button
-							size="lg"
-							variant="secondary"
-							onClick={handleCheck}
-							className="gap-2"
-						>
-							<Check className="size-5" />
-							Check
-						</Button>
-					)}
-				</div>
-			</div>
-
-			{/* Transcript */}
-			{transcript && !result && (
-				<div className="rounded-xl border bg-muted/50 p-4">
-					<p className="text-center text-lg">{transcript}</p>
-				</div>
-			)}
-
-			{/* Results */}
-			{result && (
-				<div className="space-y-6 rounded-2xl border bg-card p-6">
-					<ScoreDisplay score={result.score} />
-					<WordHighlight words={result.words} />
-					<div className="flex justify-center gap-4">
-						<Button
-							variant="outline"
+					return (
+						<button
+							key={session.id}
+							type="button"
 							onClick={() => {
-								resetTranscript();
-								setResult(null);
+								if (isActive) {
+									navigate({
+										to: "/pronunciation/$sessionId",
+										params: { sessionId: session.id },
+									});
+								}
 							}}
-							className="gap-2"
+							className={cn(
+								"rounded-xl border bg-card p-4 text-left transition-colors hover:bg-muted/50",
+								isActive && "cursor-pointer border-primary/30",
+							)}
 						>
-							<RefreshCw className="size-4" />
-							Try Again
-						</Button>
-						<Button onClick={handleNext} className="gap-2">
-							Next Twister
-							<ArrowRight className="size-4" />
-						</Button>
-					</div>
-				</div>
-			)}
+							<div className="flex items-center justify-between">
+								<span className="text-2xl">{modeInfo?.icon ?? "🎤"}</span>
+								{summary && (
+									<span
+										className={cn(
+											"font-bold text-lg",
+											summary.averageScore >= 80
+												? "text-green-500"
+												: summary.averageScore >= 60
+													? "text-yellow-500"
+													: "text-red-500",
+										)}
+									>
+										{summary.averageScore}%
+									</span>
+								)}
+								{!summary && (
+									<span className="rounded-full bg-yellow-100 px-2 py-0.5 text-xs text-yellow-700">
+										In progress
+									</span>
+								)}
+							</div>
+							<p className="mt-2 font-medium text-sm">
+								{modeInfo?.name ?? session.mode}
+							</p>
+							<div className="mt-1 flex items-center gap-3 text-muted-foreground text-xs">
+								<span className="flex items-center gap-1 capitalize">
+									<Clock className="size-3" />
+									{session.difficulty}
+								</span>
+								<span className="flex items-center gap-1">
+									<Calendar className="size-3" />
+									{date.toLocaleDateString()}
+								</span>
+							</div>
+						</button>
+					);
+				})}
+			</div>
 		</div>
 	);
 }
+
+// ============================================
+// HARDCODED MODES (Minimal Pairs + Shadowing)
+// ============================================
 
 function MinimalPairsMode() {
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -879,13 +700,13 @@ function MinimalPairsMode() {
 	const [mode, setMode] = useState<"listen" | "speak">("listen");
 
 	const {
-		isListening,
+		isRecording,
+		isTranscribing,
 		transcript,
-		isSupported,
-		startListening,
-		stopListening,
+		startRecording,
+		stopRecording,
 		resetTranscript,
-	} = useSpeechRecognition();
+	} = useVoiceRecorder();
 	const { isSpeaking, speak, stop } = useSpeechSynthesis();
 
 	const pair = MINIMAL_PAIRS[currentIndex] ??
@@ -951,20 +772,8 @@ function MinimalPairsMode() {
 		resetTranscript();
 	};
 
-	//   if (!isSupported) {
-	//     return (
-	//       <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center dark:border-red-800 dark:bg-red-900/20">
-	//         <p className="text-red-600 dark:text-red-400">
-	//           Speech features are not supported in your browser. Please try Chrome
-	//           or Edge.
-	//         </p>
-	//       </div>
-	//     );
-	//   }
-
 	return (
 		<div className="space-y-6">
-			{/* Mode toggle */}
 			<div className="flex items-center justify-between">
 				<div className="flex gap-2 rounded-full bg-muted p-1">
 					<button
@@ -980,7 +789,7 @@ function MinimalPairsMode() {
 							mode === "listen" ? "bg-background shadow" : "",
 						)}
 					>
-						👂 Listen & Choose
+						Listen & Choose
 					</button>
 					<button
 						type="button"
@@ -995,7 +804,7 @@ function MinimalPairsMode() {
 							mode === "speak" ? "bg-background shadow" : "",
 						)}
 					>
-						🎤 Speak the Word
+						Speak the Word
 					</button>
 				</div>
 				<div className="font-medium text-sm">
@@ -1004,7 +813,6 @@ function MinimalPairsMode() {
 				</div>
 			</div>
 
-			{/* Pair display */}
 			<div className="rounded-2xl border bg-linear-to-br from-orange-50 to-red-50 p-8 dark:from-orange-950/30 dark:to-red-950/30">
 				<div className="mb-4 text-center">
 					<span className="rounded-full bg-orange-100 px-3 py-1 font-mono text-orange-700 text-sm dark:bg-orange-900/30 dark:text-orange-300">
@@ -1084,7 +892,6 @@ function MinimalPairsMode() {
 				</div>
 			</div>
 
-			{/* Actions */}
 			<div className="flex flex-col items-center gap-4">
 				{mode === "listen" &&
 					(!showAnswer ? (
@@ -1103,8 +910,8 @@ function MinimalPairsMode() {
 								)}
 							>
 								{selectedWord === targetWord
-									? "✓ Correct!"
-									: `✗ It was "${targetWord === 1 ? pair.word1 : pair.word2}"`}
+									? "Correct!"
+									: `It was "${targetWord === 1 ? pair.word1 : pair.word2}"`}
 							</p>
 							<Button onClick={handleNext} className="gap-2">
 								Next Pair
@@ -1134,16 +941,19 @@ function MinimalPairsMode() {
 								</Button>
 								<Button
 									size="lg"
-									variant={isListening ? "destructive" : "default"}
-									onClick={isListening ? stopListening : startListening}
-									className={cn("gap-2", isListening && "animate-pulse")}
+									variant={isRecording ? "destructive" : "default"}
+									onClick={isRecording ? stopRecording : startRecording}
+									disabled={isTranscribing}
+									className={cn("gap-2", isRecording && "animate-pulse")}
 								>
-									{isListening ? (
+									{isTranscribing ? (
+										<Loader2 className="size-5 animate-spin" />
+									) : isRecording ? (
 										<MicOff className="size-5" />
 									) : (
 										<Mic className="size-5" />
 									)}
-									{isListening ? "Stop" : "Record"}
+									{isTranscribing ? "..." : isRecording ? "Stop" : "Record"}
 								</Button>
 							</div>
 						)}
@@ -1151,7 +961,7 @@ function MinimalPairsMode() {
 						{transcript && !showAnswer && (
 							<div className="space-y-2 text-center">
 								<p className="text-muted-foreground text-sm">
-									You said: "{transcript}"
+									You said: &quot;{transcript}&quot;
 								</p>
 								<Button onClick={handleSpeakCheck}>Check Answer</Button>
 							</div>
@@ -1175,9 +985,7 @@ function MinimalPairsMode() {
 }
 
 function ShadowingMode() {
-	const [difficulty, setDifficulty] = useState<
-		"beginner" | "intermediate" | "advanced"
-	>("beginner");
+	const [difficulty, setDifficulty] = useState<Difficulty>("beginner");
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [phase, setPhase] = useState<"listen" | "record" | "compare">("listen");
 	const [result, setResult] = useState<{
@@ -1186,13 +994,13 @@ function ShadowingMode() {
 	} | null>(null);
 
 	const {
-		isListening,
+		isRecording,
+		isTranscribing,
 		transcript,
-		isSupported,
-		startListening,
-		stopListening,
+		startRecording,
+		stopRecording,
 		resetTranscript,
-	} = useSpeechRecognition();
+	} = useVoiceRecorder();
 	const { isSpeaking, speak, stop } = useSpeechSynthesis();
 
 	const texts = SHADOWING_TEXTS[difficulty];
@@ -1207,18 +1015,18 @@ function ShadowingMode() {
 		}
 	};
 
-	const handleRecord = () => {
-		if (isListening) {
-			stopListening();
-			if (transcript) {
-				const comparison = compareTexts(currentText, transcript);
+	const handleRecord = async () => {
+		if (isRecording) {
+			const text = await stopRecording();
+			if (text) {
+				const comparison = compareTexts(currentText, text);
 				setResult(comparison);
 				setPhase("compare");
 			}
 		} else {
 			resetTranscript();
 			setResult(null);
-			startListening();
+			await startRecording();
 			setPhase("record");
 		}
 	};
@@ -1235,17 +1043,6 @@ function ShadowingMode() {
 		setResult(null);
 		setPhase("listen");
 	};
-
-	if (!isSupported) {
-		return (
-			<div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center dark:border-red-800 dark:bg-red-900/20">
-				<p className="text-red-600 dark:text-red-400">
-					Speech features are not supported in your browser. Please try Chrome
-					or Edge.
-				</p>
-			</div>
-		);
-	}
 
 	return (
 		<div className="space-y-6">
@@ -1265,48 +1062,31 @@ function ShadowingMode() {
 				</span>
 			</div>
 
-			{/* Main card */}
 			<div className="rounded-2xl border bg-linear-to-br from-green-50 to-emerald-50 p-8 dark:from-green-950/30 dark:to-emerald-950/30">
 				<div className="mb-6 flex items-center justify-center gap-2">
-					<div
-						className={cn(
-							"flex size-8 items-center justify-center rounded-full font-bold text-sm",
-							phase === "listen"
-								? "bg-green-500 text-white"
-								: "bg-muted text-muted-foreground",
-						)}
-					>
-						1
-					</div>
-					<div className="h-1 w-8 rounded-full bg-muted" />
-					<div
-						className={cn(
-							"flex size-8 items-center justify-center rounded-full font-bold text-sm",
-							phase === "record"
-								? "bg-green-500 text-white"
-								: "bg-muted text-muted-foreground",
-						)}
-					>
-						2
-					</div>
-					<div className="h-1 w-8 rounded-full bg-muted" />
-					<div
-						className={cn(
-							"flex size-8 items-center justify-center rounded-full font-bold text-sm",
-							phase === "compare"
-								? "bg-green-500 text-white"
-								: "bg-muted text-muted-foreground",
-						)}
-					>
-						3
-					</div>
+					{(["listen", "record", "compare"] as const).map((p, idx) => (
+						<>
+							{idx > 0 && <div className="h-1 w-8 rounded-full bg-muted" />}
+							<div
+								key={p}
+								className={cn(
+									"flex size-8 items-center justify-center rounded-full font-bold text-sm",
+									phase === p
+										? "bg-green-500 text-white"
+										: "bg-muted text-muted-foreground",
+								)}
+							>
+								{idx + 1}
+							</div>
+						</>
+					))}
 				</div>
 
 				<div className="mb-4 text-center">
 					<span className="rounded-full bg-green-100 px-3 py-1 font-medium text-green-700 text-sm dark:bg-green-900/30 dark:text-green-300">
-						{phase === "listen" && "👂 Listen"}
-						{phase === "record" && "🎤 Repeat"}
-						{phase === "compare" && "📊 Results"}
+						{phase === "listen" && "Listen"}
+						{phase === "record" && "Repeat"}
+						{phase === "compare" && "Results"}
 					</span>
 				</div>
 
@@ -1315,7 +1095,6 @@ function ShadowingMode() {
 				</p>
 			</div>
 
-			{/* Controls */}
 			<div className="flex flex-col items-center gap-4">
 				<div className="flex gap-4">
 					<Button
@@ -1334,31 +1113,35 @@ function ShadowingMode() {
 
 					<Button
 						size="lg"
-						variant={isListening ? "destructive" : "default"}
+						variant={isRecording ? "destructive" : "default"}
 						onClick={handleRecord}
-						className={cn("gap-2", isListening && "animate-pulse")}
+						disabled={isTranscribing}
+						className={cn("gap-2", isRecording && "animate-pulse")}
 					>
-						{isListening ? (
+						{isTranscribing ? (
+							<Loader2 className="size-5 animate-spin" />
+						) : isRecording ? (
 							<MicOff className="size-5" />
 						) : (
 							<Mic className="size-5" />
 						)}
-						{isListening ? "Stop & Check" : "Record"}
+						{isTranscribing
+							? "Transcribing..."
+							: isRecording
+								? "Stop & Check"
+								: "Record"}
 					</Button>
 				</div>
 
-				{/* Live transcript */}
-				{isListening && transcript && (
+				{isRecording && (
 					<div className="w-full rounded-xl border bg-muted/50 p-4">
 						<p className="text-center text-muted-foreground text-sm">
-							You're saying:
+							Recording... Click &quot;Stop &amp; Check&quot; when done.
 						</p>
-						<p className="mt-1 text-center text-lg">{transcript}</p>
 					</div>
 				)}
 			</div>
 
-			{/* Results */}
 			{result && (
 				<div className="space-y-6 rounded-2xl border bg-card p-6">
 					<ScoreDisplay score={result.score} />
@@ -1400,105 +1183,85 @@ function ShadowingMode() {
 // MAIN PAGE
 // ============================================
 
-function PronunciationPage() {
-	const [selectedMode, setSelectedMode] = useState<PracticeMode | null>(null);
+type PageView =
+	| { type: "select" }
+	| { type: "difficulty"; mode: "read-aloud" | "tongue-twisters" }
+	| { type: "practice"; mode: "minimal-pairs" | "shadowing" };
 
-	const handleBack = () => {
-		setSelectedMode(null);
+function PronunciationPage() {
+	const { mode: searchMode } = Route.useSearch();
+	const [view, setView] = useState<PageView>(() => {
+		if (searchMode === "read-aloud" || searchMode === "tongue-twisters") {
+			return { type: "difficulty", mode: searchMode };
+		}
+		if (searchMode === "minimal-pairs" || searchMode === "shadowing") {
+			return { type: "practice", mode: searchMode };
+		}
+		return { type: "select" };
+	});
+
+	const handleModeSelect = (mode: PracticeMode) => {
+		if (mode === "read-aloud" || mode === "tongue-twisters") {
+			setView({ type: "difficulty", mode });
+		} else {
+			setView({ type: "practice", mode });
+		}
+	};
+
+	const handleBackToModes = () => {
+		setView({ type: "select" });
 	};
 
 	return (
 		<div className="min-h-screen pb-12">
 			<div className="container relative z-10 mx-auto max-w-5xl px-4 py-6 pt-8">
 				{/* Header */}
-				<div className="mb-8">
-					{selectedMode && (
-						<button
-							type="button"
-							onClick={handleBack}
-							className="mb-4 flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
-						>
-							<ArrowRight className="size-4 rotate-180" />
-							Back to modes
-						</button>
-					)}
-					<h1 className="font-bold font-lyon text-4xl tracking-tight">
-						{selectedMode
-							? MODES.find((m) => m.id === selectedMode)?.name
-							: "Pronunciation Practice"}
-					</h1>
-					<p className="mt-2 text-lg text-muted-foreground">
-						{selectedMode
-							? MODES.find((m) => m.id === selectedMode)?.description
-							: "Choose a practice mode to improve your English pronunciation"}
-					</p>
-				</div>
+				{(view.type === "select" || view.type === "practice") && (
+					<div className="mb-8">
+						{view.type === "practice" && (
+							<button
+								type="button"
+								onClick={handleBackToModes}
+								className="mb-4 flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
+							>
+								<ArrowRight className="size-4 rotate-180" />
+								Back to modes
+							</button>
+						)}
+						<h1 className="font-bold font-lyon text-4xl tracking-tight">
+							{view.type === "practice"
+								? MODES.find((m) => m.id === view.mode)?.name
+								: "Pronunciation Practice"}
+						</h1>
+						<p className="mt-2 text-lg text-muted-foreground">
+							{view.type === "practice"
+								? MODES.find((m) => m.id === view.mode)?.description
+								: "Choose a practice mode to improve your English pronunciation"}
+						</p>
+					</div>
+				)}
 
 				{/* Content */}
-				{!selectedMode ? (
-					<ModeSelector
-						selectedMode={selectedMode}
-						onSelect={setSelectedMode}
-					/>
-				) : (
+				{view.type === "select" && (
+					<>
+						<ModeSelector selectedMode={null} onSelect={handleModeSelect} />
+						<SessionHistory />
+					</>
+				)}
+
+				{view.type === "difficulty" && (
 					<div className="fade-in slide-in-from-bottom-4 animate-in duration-300">
-						{selectedMode === "read-aloud" && <ReadAloudMode />}
-						{selectedMode === "tongue-twisters" && <TongueTwistersMode />}
-						{selectedMode === "minimal-pairs" && <MinimalPairsMode />}
-						{selectedMode === "shadowing" && <ShadowingMode />}
+						<SessionStarter mode={view.mode} onBack={handleBackToModes} />
+					</div>
+				)}
+
+				{view.type === "practice" && (
+					<div className="fade-in slide-in-from-bottom-4 animate-in duration-300">
+						{view.mode === "minimal-pairs" && <MinimalPairsMode />}
+						{view.mode === "shadowing" && <ShadowingMode />}
 					</div>
 				)}
 			</div>
 		</div>
 	);
-}
-
-// ============================================
-// TYPE DECLARATIONS
-// ============================================
-
-interface SpeechRecognitionEvent extends Event {
-	resultIndex: number;
-	results: SpeechRecognitionResultList;
-}
-
-interface SpeechRecognitionResultList {
-	length: number;
-	item(index: number): SpeechRecognitionResult;
-	[index: number]: SpeechRecognitionResult;
-}
-
-interface SpeechRecognitionResult {
-	isFinal: boolean;
-	length: number;
-	item(index: number): SpeechRecognitionAlternative;
-	[index: number]: SpeechRecognitionAlternative;
-}
-
-interface SpeechRecognitionAlternative {
-	transcript: string;
-	confidence: number;
-}
-
-interface SpeechRecognitionInstance extends EventTarget {
-	continuous: boolean;
-	interimResults: boolean;
-	lang: string;
-	onresult: ((event: SpeechRecognitionEvent) => void) | null;
-	onend: (() => void) | null;
-	onerror: (() => void) | null;
-	start(): void;
-	stop(): void;
-	abort(): void;
-}
-
-interface SpeechRecognitionConstructor {
-	new (): SpeechRecognitionInstance;
-}
-
-declare global {
-	interface Window {
-		SpeechRecognition: SpeechRecognitionConstructor;
-		webkitSpeechRecognition: SpeechRecognitionConstructor;
-	}
 }

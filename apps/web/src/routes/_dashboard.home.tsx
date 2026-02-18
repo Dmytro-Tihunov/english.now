@@ -33,6 +33,7 @@ function RouteComponent() {
 						currentStreak={profile?.currentStreak}
 						longestStreak={profile?.longestStreak}
 						lastActivityAt={profile?.lastActivityAt}
+						timezone={profile?.timezone}
 					/>
 					<Lessons />
 					<DailyPracticeTime />
