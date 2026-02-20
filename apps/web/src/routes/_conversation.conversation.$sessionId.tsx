@@ -100,12 +100,14 @@ function ConversationPage() {
 	const [translations, setTranslations] = useState<Record<string, string>>({});
 	const [translatingId, setTranslatingId] = useState<string | null>(null);
 	const [showFinishDialog, setShowFinishDialog] = useState(false);
+	const [isFinishing, setIsFinishing] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const audioChunksRef = useRef<Blob[]>([]);
 	const streamRef = useRef<MediaStream | null>(null);
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const [isPlaying, setIsPlaying] = useState<string | null>(null);
+	const [generatingTTS, setGeneratingTTS] = useState<Set<string>>(new Set());
 	const hasPlayedInitialAudio = useRef(false);
 
 	// Fetch existing session data
@@ -170,6 +172,7 @@ function ConversationPage() {
 
 	// Generate TTS audio for a message
 	const generateTTS = useCallback(async (text: string, messageId: string) => {
+		setGeneratingTTS((prev) => new Set(prev).add(messageId));
 		try {
 			const response = await fetch(
 				`${env.VITE_SERVER_URL}/api/conversation/speak`,
@@ -183,7 +186,6 @@ function ConversationPage() {
 			if (!response.ok) return null;
 			const { audio } = await response.json();
 
-			// Update message with audio
 			setMessages((prev) =>
 				prev.map((m) => (m.id === messageId ? { ...m, audio } : m)),
 			);
@@ -192,6 +194,12 @@ function ConversationPage() {
 		} catch (err) {
 			console.error("TTS generation error:", err);
 			return null;
+		} finally {
+			setGeneratingTTS((prev) => {
+				const next = new Set(prev);
+				next.delete(messageId);
+				return next;
+			});
 		}
 	}, []);
 
@@ -309,6 +317,17 @@ function ConversationPage() {
 		}
 	}, [sessionData, generateTTS, playAudio]);
 
+	// Redirect to feedback if session is already completed
+	useEffect(() => {
+		if (sessionData?.session.status === "completed") {
+			navigate({
+				to: "/feedback/$sessionId",
+				params: { sessionId },
+				replace: true,
+			});
+		}
+	}, [sessionData, sessionId, navigate]);
+
 	// Redirect to practice if session not found
 	useEffect(() => {
 		if (sessionError) {
@@ -336,9 +355,61 @@ function ConversationPage() {
 		};
 	}, []);
 
+	// Warn before leaving mid-session
+	useEffect(() => {
+		const handler = (e: BeforeUnloadEvent) => {
+			if (messages.filter((m) => m.role === "user").length > 0) {
+				e.preventDefault();
+			}
+		};
+		window.addEventListener("beforeunload", handler);
+		return () => window.removeEventListener("beforeunload", handler);
+	}, [messages]);
+
+	const userMessageCount = messages.filter((m) => m.role === "user").length;
+	const canGetFeedback = userMessageCount >= 3;
+
+	const handleFinishSession = useCallback(async () => {
+		if (!sessionId) return;
+		setIsFinishing(true);
+		try {
+			if (canGetFeedback) {
+				const response = await fetch(
+					`${env.VITE_SERVER_URL}/api/conversation/finish`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						credentials: "include",
+						body: JSON.stringify({ sessionId }),
+					},
+				);
+				if (!response.ok) throw new Error("Failed to finish session");
+				navigate({
+					to: "/feedback/$sessionId",
+					params: { sessionId },
+				});
+			} else {
+				await fetch(`${env.VITE_SERVER_URL}/api/conversation/finish`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					credentials: "include",
+					body: JSON.stringify({ sessionId }),
+				});
+				navigate({ to: "/practice" });
+			}
+		} catch (error) {
+			console.error("Error finishing session:", error);
+			setIsFinishing(false);
+		}
+	}, [sessionId, canGetFeedback, navigate]);
+
 	// Send message and stream response
 	const sendMessage = useCallback(
-		async (content: string, inputType: "text" | "voice" = "text") => {
+		async (
+			content: string,
+			inputType: "text" | "voice" = "text",
+			audioUrl?: string,
+		) => {
 			if (!sessionId || !content.trim()) return;
 
 			const userMessageId = crypto.randomUUID();
@@ -370,6 +441,7 @@ function ConversationPage() {
 							sessionId,
 							content,
 							inputType,
+							audioUrl,
 						}),
 					},
 				);
@@ -505,16 +577,16 @@ function ConversationPage() {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					credentials: "include",
-					body: JSON.stringify({ audio: base64 }),
+					body: JSON.stringify({ audio: base64, sessionId }),
 				},
 			);
 
 			if (!response.ok) throw new Error("Transcription failed");
 
-			const { transcript } = await response.json();
+			const { transcript, audioUrl } = await response.json();
 
 			if (transcript) {
-				await sendMessage(transcript, "voice");
+				await sendMessage(transcript, "voice", audioUrl);
 			} else {
 				alert("Couldn't understand the audio. Please try again.");
 			}
@@ -600,6 +672,7 @@ function ConversationPage() {
 													"border-lime-300 bg-lime-100",
 											)}
 											onClick={() => {
+												if (generatingTTS.has(message.id)) return;
 												if (isPlaying === message.id) {
 													if (audioRef.current) {
 														audioRef.current.pause();
@@ -608,18 +681,28 @@ function ConversationPage() {
 													setIsPlaying(null);
 												} else if (message.audio) {
 													playAudio(message.audio, message.id);
+												} else {
+													generateTTS(message.content, message.id).then(
+														(audio) => {
+															if (audio) {
+																playAudio(audio, message.id);
+															}
+														},
+													);
 												}
 											}}
-											disabled={!message.audio}
+											disabled={generatingTTS.has(message.id)}
 											title={
-												message.audio
-													? isPlaying === message.id
+												generatingTTS.has(message.id)
+													? "Generating audio..."
+													: isPlaying === message.id
 														? "Stop"
 														: "Play"
-													: "No audio available"
 											}
 										>
-											{isPlaying === message.id ? (
+											{generatingTTS.has(message.id) ? (
+												<Loader2 className="size-3 animate-spin" />
+											) : isPlaying === message.id ? (
 												<PauseIcon className="size-3" fill="currentColor" />
 											) : (
 												<PlayIcon className="size-3" fill="currentColor" />
@@ -706,43 +789,6 @@ function ConversationPage() {
 				}}
 			>
 				<form onSubmit={handleSubmit} className="flex gap-2">
-					{/* Voice record button */}
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								type="button"
-								size="lg"
-								variant={
-									recordingState === "recording" ? "destructive" : "outline"
-								}
-								className={cn(
-									"flex shrink-0 cursor-pointer items-center justify-center rounded-xl border border-[#C6F64D] bg-radial from-[#EFFF9B] to-[#D8FF76]",
-									recordingState === "recording" &&
-										"animate-pulse border-[#FFBABA] bg-radial from-[#FFE4E4] to-[#FFBABA]",
-								)}
-								onClick={
-									recordingState === "recording"
-										? stopRecording
-										: startRecording
-								}
-								disabled={isLoading || recordingState === "transcribing"}
-							>
-								{recordingState === "transcribing" ? (
-									<Loader2 className="size-5 animate-spin" />
-								) : recordingState === "recording" ? (
-									<MicOff className="size-5" />
-								) : (
-									<Mic className="size-5" />
-								)}
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>
-							{recordingState === "recording"
-								? "Stop recording"
-								: "Record voice"}
-						</TooltipContent>
-					</Tooltip>
-
 					<div className="flex">
 						{/* Hint button */}
 						<Tooltip>
@@ -771,6 +817,44 @@ function ConversationPage() {
 							<TooltipContent>Get a hint</TooltipContent>
 						</Tooltip>
 
+						{/* Voice record button */}
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button
+									type="button"
+									size="lg"
+									variant={
+										recordingState === "recording" ? "destructive" : "outline"
+									}
+									className={cn(
+										"flex shrink-0 cursor-pointer items-center justify-center rounded-xl border border-[#C6F64D] bg-radial from-[#EFFF9B] to-[#D8FF76]",
+										recordingState === "recording" &&
+											"animate-pulse border-[#FFBABA] bg-radial from-[#FFE4E4] to-[#FFBABA]",
+									)}
+									onClick={
+										recordingState === "recording"
+											? stopRecording
+											: startRecording
+									}
+									disabled={isLoading || recordingState === "transcribing"}
+								>
+									{recordingState === "transcribing" ? (
+										<Loader2 className="size-5 animate-spin" />
+									) : recordingState === "recording" ? (
+										<MicOff className="size-5" />
+									) : (
+										<Mic className="size-5" />
+									)}
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent>
+								{recordingState === "recording"
+									? "Stop recording"
+									: "Record voice"}
+							</TooltipContent>
+						</Tooltip>
+
+						{/* 
 						<Popover
 							open={popoverOpen}
 							onOpenChange={(open) => {
@@ -802,7 +886,7 @@ function ConversationPage() {
 								className="w-80 rounded-xl p-3 shadow-none"
 							>
 								<div className="flex flex-col gap-3">
-									{/* Mode toggle */}
+								
 									<div className="flex rounded-lg bg-neutral-100 p-0.5">
 										<button
 											type="button"
@@ -884,7 +968,7 @@ function ConversationPage() {
 											)}
 										</Button>
 									</div>
-									{/* Native mode: translate button & English preview */}
+							
 									{popoverMode === "native" && (
 										<>
 											<Button
@@ -922,7 +1006,7 @@ function ConversationPage() {
 									)}
 								</div>
 							</PopoverContent>
-						</Popover>
+						</Popover> */}
 						<Button
 							type="button"
 							variant="ghost"
@@ -941,12 +1025,13 @@ function ConversationPage() {
 								onClick={() => {
 									setShowFinishDialog(true);
 								}}
-								className="flex shrink-0 cursor-pointer items-center justify-center rounded-xl border border-red-600 bg-radial from-[#e28b8b] to-[#EF4444] text-red-800 hover:text-red-700/80"
+								className="shrink-0 cursor-pointer rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700"
+								disabled={isLoading || isFinishing}
 							>
 								<X className="size-5" />
 							</Button>
 						</TooltipTrigger>
-						<TooltipContent>Finish</TooltipContent>
+						<TooltipContent>Finish session</TooltipContent>
 					</Tooltip>
 				</form>
 			</div>
@@ -955,22 +1040,35 @@ function ConversationPage() {
 					<AlertDialogHeader>
 						<AlertDialogTitle>Finish conversation</AlertDialogTitle>
 						<AlertDialogDescription>
-							Are you sure you want to finish the conversation? This action
-							cannot be undone.
+							{canGetFeedback
+								? "Your session will be analyzed for pronunciation, grammar, vocabulary, and fluency. You'll receive detailed feedback."
+								: `You need at least 3 responses to receive feedback (you have ${userMessageCount}). Are you sure you want to leave?`}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel className="rounded-xl bg-neutral-100 text-neutral-900 hover:bg-neutral-200">
+						<AlertDialogCancel
+							className="rounded-xl bg-neutral-100 text-neutral-900 hover:bg-neutral-200"
+							disabled={isFinishing}
+						>
 							Cancel
 						</AlertDialogCancel>
 						<AlertDialogAction
-							variant="destructive"
-							className="rounded-xl bg-red-600 text-white hover:bg-red-700"
-							onClick={() => {
-								navigate({ to: "/practice" });
-							}}
+							className={cn(
+								"rounded-xl text-white",
+								canGetFeedback
+									? "bg-lime-600 hover:bg-lime-700"
+									: "bg-red-600 hover:bg-red-700",
+							)}
+							onClick={handleFinishSession}
+							disabled={isFinishing}
 						>
-							Finish
+							{isFinishing ? (
+								<Loader2 className="size-4 animate-spin" />
+							) : canGetFeedback ? (
+								"Finish & Get Feedback"
+							) : (
+								"Leave without feedback"
+							)}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

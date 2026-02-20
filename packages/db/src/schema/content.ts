@@ -12,6 +12,8 @@ export const learningPath = pgTable("learning_path", {
 	goal: text("goal").notNull(),
 	focusAreas: jsonb("focus_areas").$type<string[]>().notNull(),
 	status: text("status").notNull().default("generating"), // generating | ready | failed
+	progress: integer("progress").notNull().default(0), // 0-100
+	progressMessage: text("progress_message"),
 	generatedAt: timestamp("generated_at"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });

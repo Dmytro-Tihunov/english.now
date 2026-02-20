@@ -24,7 +24,7 @@ export const userProfile = pgTable("user_profile", {
 	isOnboardingCompleted: boolean("is_onboarding_completed")
 		.notNull()
 		.default(false),
-	// Streak tracking
+	voiceModel: text("voice_model").default("aura-2-asteria-en"), // Deepgram voice model
 	currentStreak: integer("current_streak").notNull().default(0),
 	longestStreak: integer("longest_streak").notNull().default(0),
 	lastActivityAt: timestamp("last_activity_at").notNull().defaultNow(),

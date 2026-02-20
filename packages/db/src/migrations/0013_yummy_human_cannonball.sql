@@ -1,0 +1,1 @@
+ALTER TABLE "user_profile" ADD COLUMN "voice_model" text DEFAULT 'aura-2-thalia-en';

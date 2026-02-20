@@ -1,6 +1,7 @@
 import { protectedProcedure, publicProcedure, router } from "../index";
 import { contentRouter } from "./content";
 import { conversationRouter } from "./conversation";
+import { feedbackRouter } from "./feedback";
 import { practiceRouter } from "./practice";
 import { profileRouter } from "./profile";
 import { pronunciationRouter } from "./pronunciation";
@@ -20,6 +21,7 @@ export const appRouter = router({
 	vocabulary: vocabularyRouter,
 	pronunciation: pronunciationRouter,
 	conversation: conversationRouter,
+	feedback: feedbackRouter,
 	practice: practiceRouter,
 	profile: profileRouter,
 });

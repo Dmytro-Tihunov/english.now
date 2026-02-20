@@ -1,8 +1,9 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { auth } from "@english.now/auth";
 import { env } from "@english.now/env/server";
 import type { Context, Next } from "hono";
 import { Hono } from "hono";
+import s3Client from "../utils/r2";
 
 type Variables = {
 	session: Awaited<ReturnType<typeof auth.api.getSession>>;
@@ -10,16 +11,7 @@ type Variables = {
 
 const upload = new Hono<{ Variables: Variables }>();
 
-const s3Client = new S3Client({
-	region: "auto",
-	endpoint: env.R2_ENDPOINT,
-	credentials: {
-		accessKeyId: env.R2_ACCESS_KEY_ID,
-		secretAccessKey: env.R2_SECRET_ACCESS_KEY,
-	},
-});
-
-const BUCKET_NAME = env.R2_BUCKET_NAME;
+const BUCKET_NAME_AVATARS = "_avatars";
 const PUBLIC_URL = env.R2_PUBLIC_URL;
 
 // Middleware to check auth
@@ -74,7 +66,7 @@ upload.post("/avatar", requireAuth, async (c) => {
 
 		// Upload to R2
 		const command = new PutObjectCommand({
-			Bucket: BUCKET_NAME,
+			Bucket: BUCKET_NAME_AVATARS,
 			Key: key,
 			Body: buffer,
 			ContentType: file.type,
@@ -83,7 +75,7 @@ upload.post("/avatar", requireAuth, async (c) => {
 		await s3Client.send(command);
 
 		// Public URL for accessing the uploaded file
-		const publicUrl = `${PUBLIC_URL}/${BUCKET_NAME}/${key}`;
+		const publicUrl = `${PUBLIC_URL}/${BUCKET_NAME_AVATARS}/${key}`;
 
 		return c.json({
 			publicUrl,

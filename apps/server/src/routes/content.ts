@@ -2,12 +2,12 @@ import { auth } from "@english.now/auth";
 import { db, eq, learningPath } from "@english.now/db";
 import type { Context, Next } from "hono";
 import { Hono } from "hono";
-import { streamSSE } from "hono/streaming";
 import {
 	generatePhraseList,
 	generateWordList,
 } from "../services/generate-custom-list";
-import { generateLearningPath } from "../services/generate-learning-path";
+import { enqueueGenerateLearningPath } from "../jobs";
+import { getQueue } from "../utils/queue";
 
 type Variables = {
 	session: Awaited<ReturnType<typeof auth.api.getSession>>;
@@ -15,7 +15,6 @@ type Variables = {
 
 const content = new Hono<{ Variables: Variables }>();
 
-// Auth middleware (same pattern as conversation routes)
 const requireAuth = async (
 	c: Context<{ Variables: Variables }>,
 	next: Next,
@@ -32,7 +31,7 @@ const requireAuth = async (
 	return next();
 };
 
-// POST /api/content/generate - Generate learning path with SSE progress
+// POST /api/content/generate — enqueue learning path generation
 content.post("/generate", requireAuth, async (c) => {
 	const session = c.get("session");
 	if (!session) {
@@ -41,7 +40,6 @@ content.post("/generate", requireAuth, async (c) => {
 
 	const userId = session.user.id;
 
-	// Check if user already has a ready learning path
 	const [existing] = await db
 		.select()
 		.from(learningPath)
@@ -49,52 +47,21 @@ content.post("/generate", requireAuth, async (c) => {
 		.limit(1);
 
 	if (existing?.status === "ready") {
-		return c.json({
-			status: "already_exists",
-			learningPathId: existing.id,
-		});
+		return c.json({ status: "already_exists", learningPathId: existing.id });
 	}
 
-	// If a failed attempt exists, delete it so we can retry
+	if (existing?.status === "generating") {
+		return c.json({ status: "generating", learningPathId: existing.id });
+	}
+
 	if (existing?.status === "failed") {
-		// Delete cascade will handle units, lessons
 		await db.delete(learningPath).where(eq(learningPath.id, existing.id));
 	}
 
-	// If currently generating, let the client know
-	if (existing?.status === "generating") {
-		return c.json({ status: "generating" });
-	}
+	const boss = getQueue();
+	const jobId = await enqueueGenerateLearningPath(boss, { userId });
 
-	// Stream SSE progress events
-	return streamSSE(c, async (stream) => {
-		try {
-			const result = await generateLearningPath(userId, (event) => {
-				stream.writeSSE({
-					event: "progress",
-					data: JSON.stringify(event),
-				});
-			});
-
-			await stream.writeSSE({
-				event: "done",
-				data: JSON.stringify({
-					learningPathId: result.learningPathId,
-				}),
-			});
-		} catch (error) {
-			console.error("Content generation error:", error);
-			await stream.writeSSE({
-				event: "error",
-				data: JSON.stringify({
-					message:
-						error instanceof Error
-							? error.message
-							: "Failed to generate learning path",
-				}),
-			});
-		}
-	});
+	return c.json({ status: "queued", jobId });
 });
 
 // POST /api/content/generate-list - Generate a custom word or phrase list

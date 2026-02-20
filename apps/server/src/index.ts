@@ -7,12 +7,14 @@ import { trpcServer } from "@hono/trpc-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { registerAllWorkers } from "./jobs";
 import contentRoutes from "./routes/content";
 import conversationRoutes from "./routes/conversation";
 import paddleRoutes from "./routes/paddle";
 import profileRoutes from "./routes/profile";
 import pronunciationRoutes from "./routes/pronunciation";
 import uploadRoutes from "./routes/upload";
+import { getQueue } from "./utils/queue";
 
 const app = new Hono();
 
@@ -63,7 +65,15 @@ app.get("/", (c) => {
 
 import { serve } from "@hono/node-server";
 
-serve(
+const boss = getQueue();
+
+boss.start().then(async () => {
+	console.log("[pg-boss] started");
+	await registerAllWorkers(boss);
+	console.log("[pg-boss] workers registered");
+});
+
+const server = serve(
 	{
 		fetch: app.fetch,
 		port: env.PORT,
@@ -72,3 +82,13 @@ serve(
 		console.log(`Server is running on http://localhost:${info.port}`);
 	},
 );
+
+async function shutdown() {
+	console.log("Shutting down...");
+	await boss.stop({ graceful: true, timeout: 30_000 });
+	server.close();
+	process.exit(0);
+}
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);

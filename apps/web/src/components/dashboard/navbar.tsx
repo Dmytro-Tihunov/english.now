@@ -1,22 +1,17 @@
-import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { CheckIcon, LogOutIcon, Settings, X, Zap } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import Loader from "@/components/loader";
-import Logo from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
-import { openCheckout } from "@/lib/paddle";
-import { cn } from "@/lib/utils";
-import SettingsModal from "../settings-modal";
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "../ui/dialog";
+	changeLanguage,
+	getCurrentLanguage,
+	languageNames,
+	type SupportedLanguage,
+	supportedLanguages,
+	useTranslation,
+} from "@english.now/i18n";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { Headphones, LogOutIcon, Settings } from "lucide-react";
+import { useEffect, useState } from "react";
+import Logo from "@/components/logo";
+import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -25,237 +20,36 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Label } from "../ui/label";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "../ui/select";
 import { Skeleton } from "../ui/skeleton";
-
-const PADDLE_PRICE_IDS = {
-	monthly: import.meta.env.VITE_PADDLE_PRICE_MONTHLY ?? "",
-	yearly: import.meta.env.VITE_PADDLE_PRICE_YEARLY ?? "",
-} as const;
-
-function UpgradeDialog() {
-	const [open, setOpen] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [plan, setPlan] = useState<"monthly" | "yearly">("monthly");
-	const { data: session } = authClient.useSession();
-
-	const features = [
-		"Unlimited AI conversations",
-		"Advanced AI feedback",
-		"Full vocabulary library",
-		"Personalized learning path",
-		"Progress tracking and analytics",
-	];
-	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<button
-					type="button"
-					aria-label="Upgrade now"
-					className="flex cursor-pointer items-center gap-0.5 whitespace-nowrap rounded-xl border border-[#C6F64D] bg-[radial-gradient(100%_100%_at_50%_0%,#EFFF9B_0%,#D8FF76_60%,#C6F64D_100%)] px-2.5 py-1.5 font-medium text-lime-900 text-sm italic shadow-none transition duration-150 ease-in-out will-change-transform hover:bg-lime-700/10 hover:brightness-95 focus:shadow-none focus:outline-none focus-visible:shadow-none"
-				>
-					<Zap fill="currentColor" className="size-3.5" />
-					PRO{" "}
-				</button>
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px]">
-				<DialogHeader>
-					<DialogTitle className="mb-2 font-bold font-lyon text-[1.7rem] leading-tight">
-						Upgrade to Pro
-					</DialogTitle>
-					<DialogDescription className="text-lg">
-						Join{" "}
-						<span className="rounded-lg bg-lime-100 px-2 py-0.5 font-medium text-lime-700">
-							10,000+
-						</span>{" "}
-						learners and start your <br /> journey to fluency today.
-					</DialogDescription>
-				</DialogHeader>
-				{/* <button
-					type="button"
-					onClick={() => setOpen(false)}
-					className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-500 transition-colors hover:bg-neutral-200"
-				>
-					<X className="size-4" />
-				</button> */}
-				<div className="grid gap-4 py-4">
-					<div className="space-y-2">
-						{features.map((feature) => (
-							<div className="flex items-center gap-2" key={feature}>
-								<CheckIcon className="size-4 shrink-0 text-muted-foreground" />
-								<span className="text-muted-foreground text-sm">{feature}</span>
-							</div>
-						))}
-					</div>
-				</div>
-				<RadioGroup
-					value={plan}
-					onValueChange={(value) => setPlan(value as "monthly" | "yearly")}
-					className="grid grid-cols-1 gap-3"
-				>
-					<Label
-						htmlFor="yearly"
-						className={cn(
-							"relative flex cursor-pointer flex-col items-center rounded-2xl border p-4 transition-all",
-							plan === "yearly"
-								? "border-lime-600 dark:bg-lime-950/30"
-								: "border-neutral-200 hover:border-neutral-300 dark:border-neutral-700 dark:hover:border-neutral-600",
-						)}
-					>
-						<div className="flex w-full items-center justify-between">
-							<div className="flex items-center gap-2">
-								<RadioGroupItem value="yearly" id="yearly" />
-								<span className="font-bold text-slate-900 dark:text-white">
-									Yearly
-								</span>
-								<span className="rounded-md bg-lime-100 bg-radial px-2 py-1 font-medium text-lime-700 text-xs">
-									Save 30%
-								</span>
-							</div>
-							<div>
-								<span className="font-bold text-lg text-slate-900 dark:text-white">
-									$100
-								</span>
-								<span className="ml-1 font-light text-muted-foreground text-xs md:text-sm md:leading-7">
-									/year
-								</span>
-							</div>
-						</div>
-					</Label>
-					<Label
-						htmlFor="monthly"
-						className={cn(
-							"relative flex cursor-pointer flex-col items-center rounded-2xl border p-4 transition-all",
-							plan === "monthly"
-								? "border-lime-600 dark:border-[#D8FF76] dark:bg-lime-950/30"
-								: "border-neutral-200 hover:border-neutral-300 dark:border-neutral-700 dark:hover:border-neutral-600",
-						)}
-					>
-						<div className="flex w-full items-center justify-between">
-							<div className="flex items-center gap-2">
-								<RadioGroupItem value="monthly" id="monthly" />
-								<span className="font-bold text-slate-900 dark:text-white">
-									Monthly
-								</span>
-							</div>
-							<div>
-								<span className="font-bold text-lg text-slate-900 dark:text-white">
-									$12
-								</span>
-								<span className="ml-1 font-light text-muted-foreground text-xs md:text-sm md:leading-7">
-									/month
-								</span>
-							</div>
-						</div>
-					</Label>
-				</RadioGroup>
-
-				<div className="mt-1 flex">
-					<Button
-						disabled={isLoading}
-						className="en-button-gradient h-14 w-full rounded-2xl text-base text-lime-900"
-						onClick={async () => {
-							if (!session?.user) return;
-							setIsLoading(true);
-							await openCheckout({
-								priceId:
-									plan === "yearly"
-										? PADDLE_PRICE_IDS.yearly
-										: PADDLE_PRICE_IDS.monthly,
-								userId: session.user.id,
-								email: session.user.email,
-								onSuccess: (data) => {
-									console.log(data);
-									setIsLoading(false);
-									toast.success("Subscription successful");
-								},
-							});
-						}}
-					>
-						{isLoading ? <Loader /> : "Start 7-Day Free Trial"}
-					</Button>
-				</div>
-				<div>
-					<div className="text-center text-muted-foreground text-xs">
-						By continuing, you agree to our{" "}
-						<Link
-							target="_blank"
-							className="text-lime-700 hover:text-lime-700/80"
-							to="/terms"
-						>
-							Terms of Service
-						</Link>
-						,{" "}
-						<Link
-							target="_blank"
-							className="text-lime-700 hover:text-lime-700/80"
-							to="/privacy"
-						>
-							Privacy
-						</Link>{" "}
-						and{" "}
-						<Link
-							target="_blank"
-							className="text-lime-700 hover:text-lime-700/80"
-							to="/refund"
-						>
-							Refund & Cancellation Policy
-						</Link>
-						.
-					</div>
-					{/* 
-					<div className="flex items-center justify-center gap-1.5 font-medium text-sm">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width={16}
-							height={17}
-							fill="none"
-							className="shrink-0"
-							aria-label="Shield checkmark"
-							role="img"
-							viewBox="0 0 16 17"
-						>
-							<title>Safe &amp; secure payment</title>
-							<path
-								fill="#278C49"
-								d="M.895 4.654c0-.62.37-1.186.939-1.437L7.36.776c.403-.181.869-.181 1.28 0l5.526 2.441c.568.251.94.817.94 1.437v3.69a9.9 9.9 0 0 1-1.25 4.773c-2.435 4.417-8.488 4.417-11.713 0A9.9 9.9 0 0 1 .895 8.344z"
-							/>
-							<g clipPath="url(#a)">
-								<path
-									stroke="#fff"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={1.184}
-									d="M10.632 6.562 7.014 10.18 5.369 8.536"
-								/>
-							</g>
-							<defs>
-								<clipPath id="a">
-									<rect
-										x={4.053}
-										y={4.585}
-										width={7.895}
-										height={7.895}
-										fill="#fff"
-									/>
-								</clipPath>
-							</defs>
-						</svg>
-						Pay safe &amp; Secure
-					</div> */}
-				</div>
-			</DialogContent>
-		</Dialog>
-	);
-}
+import UpgradeDialog from "./upgrade-dialog";
+import VoicesDialog from "./voices-dialog";
 
 export default function Navbar() {
-	const [settingsOpen, setSettingsOpen] = useState(false);
+	const [upgradeOpen, setUpgradeOpen] = useState(false);
+	const [voicesOpen, setVoicesOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
+	const [language, setLanguage] = useState<SupportedLanguage>(
+		getCurrentLanguage(),
+	);
+	const { i18n } = useTranslation();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { data: session, isPending } = authClient.useSession();
+
+	useEffect(() => {
+		const handleLanguageChanged = (lng: string) => {
+			setLanguage(lng as SupportedLanguage);
+		};
+		i18n.on("languageChanged", handleLanguageChanged);
+		return () => i18n.off("languageChanged", handleLanguageChanged);
+	}, [i18n]);
 
 	const _links = [
 		{
@@ -312,7 +106,8 @@ export default function Navbar() {
 					</div>
 
 					<div className="relative flex items-center justify-end gap-3">
-						<UpgradeDialog />
+						<UpgradeDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
+						<VoicesDialog open={voicesOpen} onOpenChange={setVoicesOpen} />
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<div className="flex w-full cursor-pointer flex-col items-start transition-opacity hover:opacity-80">
@@ -354,7 +149,7 @@ export default function Navbar() {
 							</DropdownMenuTrigger>
 							<DropdownMenuContent
 								align="end"
-								className="w-[200px] rounded-xl shadow-sm"
+								className="w-[180px] rounded-xl shadow-sm"
 								sideOffset={8}
 								side="bottom"
 							>
@@ -367,23 +162,54 @@ export default function Navbar() {
 									</div>
 								</DropdownMenuLabel>
 								<DropdownMenuSeparator />
-								<DropdownMenuItem asChild>
-									<Button
-										asChild
-										variant="ghost"
-										className="w-full justify-start rounded-lg border-none text-left hover:border-none hover:bg-neutral-100"
-										// onClick={() => setSettingsOpen(true)}
-									>
-										<Link to="/settings">
-											<Settings className="size-4" />
-											Settings
-										</Link>
-									</Button>
+								<DropdownMenuItem>
+									<Link to="/settings" className="flex items-center gap-2">
+										<Settings className="size-4" />
+										Settings
+									</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem asChild>
-									<Button
-										className="w-full justify-start rounded-lg border-none text-left hover:border-none hover:bg-neutral-100"
-										variant="ghost"
+								<DropdownMenuSeparator />
+								<DropdownMenuLabel>
+									<div className="flex flex-col text-xs">
+										<span className="font-medium text-gray-500">
+											Preferences
+										</span>
+									</div>
+								</DropdownMenuLabel>
+								<DropdownMenuItem>
+									<Select
+										value={language}
+										onValueChange={(value) => {
+											const lang = value as SupportedLanguage;
+											changeLanguage(lang);
+											setLanguage(lang);
+											localStorage.setItem("interface-language", lang);
+										}}
+									>
+										<SelectTrigger className="h-8 w-fit min-w-[100px] border-border/50">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											{supportedLanguages.map((code) => (
+												<SelectItem key={code} value={code}>
+													{languageNames[code]}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onSelect={() => setVoicesOpen(true)}
+									className="flex cursor-pointer items-center gap-2"
+								>
+									<Headphones className="size-4" />
+									Voices
+								</DropdownMenuItem>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem>
+									<button
+										type="button"
+										className="flex w-full items-center gap-2"
 										onClick={() => {
 											authClient.signOut({
 												fetchOptions: {
@@ -398,13 +224,10 @@ export default function Navbar() {
 									>
 										<LogOutIcon className="size-4" />
 										Sign Out
-									</Button>
+									</button>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
-							<SettingsModal
-								open={settingsOpen}
-								onOpenChange={setSettingsOpen}
-							/>
+							<VoicesDialog open={voicesOpen} onOpenChange={setVoicesOpen} />
 						</DropdownMenu>
 					</div>
 				</nav>

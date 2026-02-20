@@ -39,9 +39,11 @@ import { Route as DashboardHomeRouteImport } from './routes/_dashboard.home'
 import { Route as DashboardGrammarRouteImport } from './routes/_dashboard.grammar'
 import { Route as DashboardFluencyRouteImport } from './routes/_dashboard.fluency'
 import { Route as DashboardCoursesRouteImport } from './routes/_dashboard.courses'
+import { Route as SessionSessionIndexRouteImport } from './routes/_session.session.index'
 import { Route as DashboardCoursesIndexRouteImport } from './routes/_dashboard.courses.index'
 import { Route as ConversationConversationIndexRouteImport } from './routes/_conversation.conversation.index'
 import { Route as SessionSessionSessionIdRouteImport } from './routes/_session.session.$sessionId'
+import { Route as SessionFeedbackSessionIdRouteImport } from './routes/_session.feedback.$sessionId'
 import { Route as PronunciationPronunciationSessionIdRouteImport } from './routes/_pronunciation.pronunciation.$sessionId'
 import { Route as DashboardCoursesCourseIdRouteImport } from './routes/_dashboard.courses.$courseId'
 import { Route as ConversationConversationSessionIdRouteImport } from './routes/_conversation.conversation.$sessionId'
@@ -190,6 +192,11 @@ const DashboardCoursesRoute = DashboardCoursesRouteImport.update({
   path: '/courses',
   getParentRoute: () => DashboardRoute,
 } as any)
+const SessionSessionIndexRoute = SessionSessionIndexRouteImport.update({
+  id: '/session/',
+  path: '/session/',
+  getParentRoute: () => SessionRoute,
+} as any)
 const DashboardCoursesIndexRoute = DashboardCoursesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -206,6 +213,12 @@ const SessionSessionSessionIdRoute = SessionSessionSessionIdRouteImport.update({
   path: '/session/$sessionId',
   getParentRoute: () => SessionRoute,
 } as any)
+const SessionFeedbackSessionIdRoute =
+  SessionFeedbackSessionIdRouteImport.update({
+    id: '/feedback/$sessionId',
+    path: '/feedback/$sessionId',
+    getParentRoute: () => SessionRoute,
+  } as any)
 const PronunciationPronunciationSessionIdRoute =
   PronunciationPronunciationSessionIdRouteImport.update({
     id: '/pronunciation/$sessionId',
@@ -253,9 +266,11 @@ export interface FileRoutesByFullPath {
   '/conversation/$sessionId': typeof ConversationConversationSessionIdRoute
   '/courses/$courseId': typeof DashboardCoursesCourseIdRoute
   '/pronunciation/$sessionId': typeof PronunciationPronunciationSessionIdRoute
+  '/feedback/$sessionId': typeof SessionFeedbackSessionIdRoute
   '/session/$sessionId': typeof SessionSessionSessionIdRoute
   '/conversation': typeof ConversationConversationIndexRoute
   '/courses/': typeof DashboardCoursesIndexRoute
+  '/session': typeof SessionSessionIndexRoute
 }
 export interface FileRoutesByTo {
   '/generating': typeof GeneratingRoute
@@ -284,9 +299,11 @@ export interface FileRoutesByTo {
   '/conversation/$sessionId': typeof ConversationConversationSessionIdRoute
   '/courses/$courseId': typeof DashboardCoursesCourseIdRoute
   '/pronunciation/$sessionId': typeof PronunciationPronunciationSessionIdRoute
+  '/feedback/$sessionId': typeof SessionFeedbackSessionIdRoute
   '/session/$sessionId': typeof SessionSessionSessionIdRoute
   '/conversation': typeof ConversationConversationIndexRoute
   '/courses': typeof DashboardCoursesIndexRoute
+  '/session': typeof SessionSessionIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -323,9 +340,11 @@ export interface FileRoutesById {
   '/_conversation/conversation/$sessionId': typeof ConversationConversationSessionIdRoute
   '/_dashboard/courses/$courseId': typeof DashboardCoursesCourseIdRoute
   '/_pronunciation/pronunciation/$sessionId': typeof PronunciationPronunciationSessionIdRoute
+  '/_session/feedback/$sessionId': typeof SessionFeedbackSessionIdRoute
   '/_session/session/$sessionId': typeof SessionSessionSessionIdRoute
   '/_conversation/conversation/': typeof ConversationConversationIndexRoute
   '/_dashboard/courses/': typeof DashboardCoursesIndexRoute
+  '/_session/session/': typeof SessionSessionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -357,9 +376,11 @@ export interface FileRouteTypes {
     | '/conversation/$sessionId'
     | '/courses/$courseId'
     | '/pronunciation/$sessionId'
+    | '/feedback/$sessionId'
     | '/session/$sessionId'
     | '/conversation'
     | '/courses/'
+    | '/session'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/generating'
@@ -388,9 +409,11 @@ export interface FileRouteTypes {
     | '/conversation/$sessionId'
     | '/courses/$courseId'
     | '/pronunciation/$sessionId'
+    | '/feedback/$sessionId'
     | '/session/$sessionId'
     | '/conversation'
     | '/courses'
+    | '/session'
   id:
     | '__root__'
     | '/_conversation'
@@ -426,9 +449,11 @@ export interface FileRouteTypes {
     | '/_conversation/conversation/$sessionId'
     | '/_dashboard/courses/$courseId'
     | '/_pronunciation/pronunciation/$sessionId'
+    | '/_session/feedback/$sessionId'
     | '/_session/session/$sessionId'
     | '/_conversation/conversation/'
     | '/_dashboard/courses/'
+    | '/_session/session/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -654,6 +679,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCoursesRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/_session/session/': {
+      id: '/_session/session/'
+      path: '/session'
+      fullPath: '/session'
+      preLoaderRoute: typeof SessionSessionIndexRouteImport
+      parentRoute: typeof SessionRoute
+    }
     '/_dashboard/courses/': {
       id: '/_dashboard/courses/'
       path: '/'
@@ -673,6 +705,13 @@ declare module '@tanstack/react-router' {
       path: '/session/$sessionId'
       fullPath: '/session/$sessionId'
       preLoaderRoute: typeof SessionSessionSessionIdRouteImport
+      parentRoute: typeof SessionRoute
+    }
+    '/_session/feedback/$sessionId': {
+      id: '/_session/feedback/$sessionId'
+      path: '/feedback/$sessionId'
+      fullPath: '/feedback/$sessionId'
+      preLoaderRoute: typeof SessionFeedbackSessionIdRouteImport
       parentRoute: typeof SessionRoute
     }
     '/_pronunciation/pronunciation/$sessionId': {
@@ -812,11 +851,15 @@ const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
 interface SessionRouteChildren {
+  SessionFeedbackSessionIdRoute: typeof SessionFeedbackSessionIdRoute
   SessionSessionSessionIdRoute: typeof SessionSessionSessionIdRoute
+  SessionSessionIndexRoute: typeof SessionSessionIndexRoute
 }
 
 const SessionRouteChildren: SessionRouteChildren = {
+  SessionFeedbackSessionIdRoute: SessionFeedbackSessionIdRoute,
   SessionSessionSessionIdRoute: SessionSessionSessionIdRoute,
+  SessionSessionIndexRoute: SessionSessionIndexRoute,
 }
 
 const SessionRouteWithChildren =

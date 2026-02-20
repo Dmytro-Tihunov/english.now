@@ -14,11 +14,12 @@ import { openai } from "../utils/ai";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type ProgressCallback = (event: {
-	step: "outline" | "lessons" | "vocabulary" | "phrases" | "complete";
-	progress: number;
-	message: string;
-}) => void;
+export type GenerationStep =
+	| "outline"
+	| "lessons"
+	| "vocabulary"
+	| "phrases"
+	| "complete";
 
 // ─── Zod Schemas ──────────────────────────────────────────────────────────────
 
@@ -105,9 +106,19 @@ const LEVEL_TO_CEFR: Record<string, string> = {
 
 // ─── Main Generation Function ─────────────────────────────────────────────────
 
+async function updateProgress(
+	learningPathId: string,
+	progress: number,
+	message: string,
+) {
+	await db
+		.update(learningPath)
+		.set({ progress, progressMessage: message })
+		.where(eq(learningPath.id, learningPathId));
+}
+
 export async function generateLearningPath(
 	userId: string,
-	onProgress?: ProgressCallback,
 ): Promise<{ learningPathId: string }> {
 	// 1. Read user profile
 	const [profile] = await db
@@ -126,7 +137,7 @@ export async function generateLearningPath(
 		"vocabulary",
 		"grammar",
 	]) as string[];
-	const nativeLanguage = profile.nativeLanguage ?? "uk"; // Ukrainian default
+	const nativeLanguage = profile.nativeLanguage ?? "uk";
 
 	const nativeLanguageName = getNativeLanguageName(nativeLanguage);
 
@@ -139,18 +150,15 @@ export async function generateLearningPath(
 		goal,
 		focusAreas,
 		status: "generating",
+		progress: 0,
+		progressMessage: "Starting generation...",
 	});
 
 	try {
 		// ── Step 1: Generate course outline ───────────────────────────────────
 		const outline = await generateCourseOutline(cefrLevel, goal, focusAreas);
 		const savedUnits = await saveCourseOutline(learningPathId, outline);
-
-		onProgress?.({
-			step: "outline",
-			progress: 25,
-			message: "Course structure created",
-		});
+		await updateProgress(learningPathId, 25, "Course structure created");
 
 		// ── Step 2: Generate lesson content (parallel per unit) ───────────────
 		await generateAndSaveLessonContent(
@@ -159,12 +167,7 @@ export async function generateLearningPath(
 			goal,
 			nativeLanguageName,
 		);
-
-		onProgress?.({
-			step: "lessons",
-			progress: 50,
-			message: "Lesson content generated",
-		});
+		await updateProgress(learningPathId, 50, "Lesson content generated");
 
 		// ── Step 3: Generate vocabulary ───────────────────────────────────────
 		await generateAndSaveVocabulary(
@@ -173,12 +176,7 @@ export async function generateLearningPath(
 			goal,
 			nativeLanguageName,
 		);
-
-		onProgress?.({
-			step: "vocabulary",
-			progress: 75,
-			message: "Vocabulary built",
-		});
+		await updateProgress(learningPathId, 75, "Vocabulary built");
 
 		// ── Step 4: Generate phrases ─────────────────────────────────────────
 		await generateAndSavePhrases(userId, cefrLevel, goal, nativeLanguageName);
@@ -186,21 +184,23 @@ export async function generateLearningPath(
 		// ── Mark complete ─────────────────────────────────────────────────────
 		await db
 			.update(learningPath)
-			.set({ status: "ready", generatedAt: new Date() })
+			.set({
+				status: "ready",
+				progress: 100,
+				progressMessage: "Your learning path is ready!",
+				generatedAt: new Date(),
+			})
 			.where(eq(learningPath.id, learningPathId));
-
-		onProgress?.({
-			step: "complete",
-			progress: 100,
-			message: "Your learning path is ready!",
-		});
 
 		return { learningPathId };
 	} catch (error) {
-		// Mark as failed on any error
 		await db
 			.update(learningPath)
-			.set({ status: "failed" })
+			.set({
+				status: "failed",
+				progressMessage:
+					error instanceof Error ? error.message : "Generation failed",
+			})
 			.where(eq(learningPath.id, learningPathId));
 
 		throw error;

@@ -149,12 +149,12 @@ function RouteComponent() {
 						<Conversation />
 						<Pronunciation />
 						<div className="group flex items-center justify-center rounded-2xl border border-dashed bg-white p-3.5 opacity-50 transition-all duration-300 hover:opacity-100 dark:bg-slate-900/50">
-							<div className="flex items-center gap-3">
+							<div className="flex items-center gap-2">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="1rem"
 									height="1rem"
-									className="size-7.5 text-white"
+									className="size-6 text-white"
 									fill="none"
 									viewBox="0 0 50 49"
 									aria-label="Practice icon"
@@ -176,7 +176,7 @@ function RouteComponent() {
 								<div className="flex flex-col">
 									<a
 										href="mailto:support@english.now"
-										className="flex cursor-pointer items-center font-medium text-neutral-900 transition-all duration-300 group-hover:text-lime-700 group-hover:underline"
+										className="flex cursor-pointer items-center font-medium text-neutral-900 text-sm transition-all duration-300 group-hover:text-lime-700 group-hover:underline"
 									>
 										Can't find what you need?
 									</a>

@@ -1,4 +1,4 @@
-import { jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
 export type ConversationTopic = {
@@ -67,6 +67,37 @@ export const conversationSuggestion = pgTable("conversation_suggestion", {
 	generatedAt: timestamp("generated_at").notNull().defaultNow(),
 });
 
+export const conversationFeedback = pgTable("conversation_feedback", {
+	id: text("id").primaryKey(),
+	sessionId: text("session_id")
+		.notNull()
+		.references(() => conversationSession.id, { onDelete: "cascade" }),
+	userId: text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	overallScore: integer("overall_score"),
+	grammarScore: integer("grammar_score"),
+	vocabularyScore: integer("vocabulary_score"),
+	fluencyScore: integer("fluency_score"),
+	pronunciationScore: integer("pronunciation_score"),
+	summary: text("summary"),
+	strengths: jsonb("strengths").$type<string[]>(),
+	improvements: jsonb("improvements").$type<string[]>(),
+	corrections:
+		jsonb("corrections").$type<
+			Array<{
+				original: string;
+				corrected: string;
+				explanation: string;
+				type: "grammar" | "vocabulary" | "pronunciation" | "fluency";
+			}>
+		>(),
+	vocabularySuggestions: jsonb("vocabulary_suggestions").$type<string[]>(),
+	status: text("status").notNull().default("generating"),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	completedAt: timestamp("completed_at"),
+});
+
 export type ConversationSuggestion = typeof conversationSuggestion.$inferSelect;
 export type NewConversationSuggestion =
 	typeof conversationSuggestion.$inferInsert;
@@ -74,3 +105,5 @@ export type ConversationSession = typeof conversationSession.$inferSelect;
 export type NewConversationSession = typeof conversationSession.$inferInsert;
 export type ConversationMessage = typeof conversationMessage.$inferSelect;
 export type NewConversationMessage = typeof conversationMessage.$inferInsert;
+export type ConversationFeedback = typeof conversationFeedback.$inferSelect;
+export type NewConversationFeedback = typeof conversationFeedback.$inferInsert;

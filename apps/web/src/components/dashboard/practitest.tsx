@@ -37,6 +37,7 @@ function formatDuration(seconds: number): string {
 export default function DailyPracticeTime() {
 	const committedMinutes = 5; // User's daily goal from onboarding
 	const committedSeconds = committedMinutes * 60;
+
 	// Add minutes for chart Y-axis
 	const chartData = mockWeekData.map((d) => ({
 		...d,
@@ -52,7 +53,7 @@ export default function DailyPracticeTime() {
 			}}
 		>
 			<div className="mt-1 mb-2 flex flex-col gap-0.5 pl-1.5">
-				<div className="font-bold font-lyon text-xl">Daily speaking time</div>
+				<div className="font-bold font-lyon text-xl">Daily Speaking Time</div>
 				{/* <p className="text-muted-foreground text-sm">
 					Try to speak for at least {committedMinutes} minutes each day.
 				</p> */}
@@ -62,11 +63,11 @@ export default function DailyPracticeTime() {
 				{/* Bar Chart */}
 				<ChartContainer
 					config={chartConfig}
-					className="aspect-auto h-[120px] w-full self-stretch"
+					className="aspect-auto h-[150px] w-full self-stretch"
 				>
 					<BarChart
 						data={chartData}
-						margin={{ top: 8, right: 4, left: 4, bottom: 0 }}
+						margin={{ top: 24, right: 8, left: 0, bottom: 0 }}
 					>
 						<CartesianGrid
 							strokeDasharray="3 3"
@@ -78,14 +79,12 @@ export default function DailyPracticeTime() {
 							tick={false}
 							tickLine={false}
 							axisLine={false}
-							height={0}
 						/>
 						<YAxis
 							tick={false}
 							tickLine={false}
 							axisLine={false}
 							domain={[0, committedMinutes]}
-							width={0}
 						/>
 						<Tooltip
 							content={
@@ -104,14 +103,14 @@ export default function DailyPracticeTime() {
 							y={committedMinutes}
 							stroke="rgb(251 146 60)"
 							strokeDasharray="4 4"
-							strokeWidth={1}
-							label={{
-								value: `${committedMinutes} min`,
-								position: "bottom",
-								fill: "rgb(234 88 12)",
-								fontSize: 12,
-								fontWeight: 500,
-							}}
+							strokeWidth={2}
+							// label={{
+							// 	value: `${committedMinutes} min`,
+							// 	position: "left",
+							// 	fill: "rgb(234 88 12)",
+							// 	fontSize: 12,
+							// 	fontWeight: 500,
+							// }}
 						/>
 						<Bar
 							dataKey="minutes"
@@ -121,6 +120,8 @@ export default function DailyPracticeTime() {
 						/>
 					</BarChart>
 				</ChartContainer>
+
+				{/* Week Calendar */}
 				<div className="flex justify-between rounded-xl bg-neutral-50 p-0.5">
 					{mockWeekData.map((day) => (
 						<button
@@ -135,7 +136,7 @@ export default function DailyPracticeTime() {
 							<span
 								className={cn(
 									"font-semibold",
-									day.isToday ? "text-neutral-900" : "text-neutral-600",
+									day.isToday ? "text-slate-900" : "text-slate-600",
 								)}
 							>
 								{day.date}
@@ -143,7 +144,7 @@ export default function DailyPracticeTime() {
 							{day.seconds > 0 && (
 								<div
 									className={cn(
-										"mt-0.5 size-1.5 rounded-full bg-neutral-100",
+										"mt-0.5 size-1.5 rounded-full",
 										day.seconds >= committedSeconds
 											? "bg-lime-500"
 											: "bg-orange-400",

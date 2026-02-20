@@ -73,13 +73,13 @@ function ConversationLayout() {
 						<nav className="flex grid-cols-2 items-center justify-between py-5 md:grid-cols-5">
 							<div className="items-center gap-2 md:flex">
 								<Logo />
-
 								{/* <div className="flex flex-col">
 									<div className="font-medium text-sm">Practice Session</div>
 									<div className="text-lime-700 text-xs">Conversation</div>
 								</div> */}
 							</div>
-							<div className="flex items-center gap-2 divide-x divide-gray-200">
+							<div className="flex items-center gap-2 divide-gray-200">
+								<div>5 min</div>
 								<Popover open={settingsOpen} onOpenChange={setSettingsOpen}>
 									<PopoverTrigger asChild>
 										<Button

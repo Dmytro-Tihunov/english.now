@@ -144,23 +144,13 @@ function PracticeSpeakingDemo() {
 					</div>
 
 					<div
-						className="sticky inset-x-0 mx-auto flex w-fit justify-center overflow-hidden rounded-t-2xl border bg-white p-2 transition-all duration-75 ease-in dark:from-surface dark:to-transparent"
+						className="sticky inset-x-0 mx-auto flex w-fit justify-center overflow-hidden rounded-t-2xl border bg-white p-1.5 transition-all duration-75 ease-in dark:from-surface dark:to-transparent"
 						style={{
 							boxShadow:
 								"rgba(162, 166, 171, 0.2) 0px 0px 0px 0px inset, rgba(162, 166, 171, 0.2) 0px 0px 8px 2px inset",
 						}}
 					>
-						<div className="flex items-center gap-0.5">
-							<Button
-								type="button"
-								size="sm"
-								className={cn(
-									"flex size-7 items-center justify-center rounded-lg border border-[#C6F64D] bg-radial from-[#EFFF9B] to-[#D8FF76]",
-								)}
-							>
-								<Mic className="size-3.5 text-lime-900" />
-							</Button>
-
+						<div className="flex items-center gap-1">
 							<Button
 								type="button"
 								variant="ghost"
@@ -169,14 +159,14 @@ function PracticeSpeakingDemo() {
 							>
 								<Lightbulb className="size-3.5" />
 							</Button>
-
 							<Button
 								type="button"
-								variant="ghost"
 								size="sm"
-								className="size-7 rounded-lg"
+								className={cn(
+									"flex size-8 items-center justify-center rounded-lg border border-[#C6F64D] bg-radial from-[#EFFF9B] to-[#D8FF76]",
+								)}
 							>
-								<KeyboardIcon className="size-3.5" />
+								<Mic className="size-3.5 text-lime-900" />
 							</Button>
 							<Button
 								type="button"
@@ -185,15 +175,6 @@ function PracticeSpeakingDemo() {
 								size="sm"
 							>
 								<Settings className="size-3.5" />
-							</Button>
-
-							<Button
-								type="button"
-								variant="ghost"
-								size="sm"
-								className="flex size-7 items-center justify-center rounded-lg border border-red-600 bg-radial from-[#e28b8b] to-[#EF4444] text-red-800 hover:text-red-700/80"
-							>
-								<X className="size-3.5" />
 							</Button>
 						</div>
 					</div>

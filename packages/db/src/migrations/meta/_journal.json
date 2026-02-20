@@ -85,6 +85,20 @@
       "when": 1771409879811,
       "tag": "0011_soft_delete_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1771454281931,
+      "tag": "0012_brief_slipstream",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1771525431361,
+      "tag": "0013_yummy_human_cannonball",
+      "breakpoints": true
     }
   ]
 }

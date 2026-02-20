@@ -3,12 +3,13 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../index";
 
 export const contentRouter = router({
-	// Get generation status for current user
 	getGenerationStatus: protectedProcedure.query(async ({ ctx }) => {
 		const [path] = await db
 			.select({
 				id: learningPath.id,
 				status: learningPath.status,
+				progress: learningPath.progress,
+				progressMessage: learningPath.progressMessage,
 			})
 			.from(learningPath)
 			.where(eq(learningPath.userId, ctx.session.user.id))

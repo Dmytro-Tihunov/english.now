@@ -9,7 +9,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
-import SettingsModal from "./settings-modal";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 
@@ -106,7 +105,6 @@ export default function UserMenu() {
 					</Button>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
-			<SettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} />
 		</DropdownMenu>
 	);
 }

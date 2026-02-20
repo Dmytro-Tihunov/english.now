@@ -1,5 +1,7 @@
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { auth } from "@english.now/auth";
 import {
+	conversationFeedback,
 	conversationMessage,
 	conversationSession,
 	db,
@@ -12,8 +14,11 @@ import type { Context, Next } from "hono";
 import { Hono } from "hono";
 import { streamText } from "hono/streaming";
 import { z } from "zod";
+import { enqueueGenerateConversationFeedback } from "../jobs";
 import { generateTTSBase64 } from "../services/tts";
 import { openai } from "../utils/ai";
+import { getQueue } from "../utils/queue";
+import s3Client from "../utils/r2";
 
 type Variables = {
 	session: Awaited<ReturnType<typeof auth.api.getSession>>;
@@ -26,12 +31,13 @@ const sendMessageSchema = z.object({
 	sessionId: z.string(),
 	content: z.string().min(1).max(2000),
 	inputType: z.enum(["text", "voice"]).default("text"),
+	audioUrl: z.string().optional(),
 });
 
 // Schema for transcribe request (Deepgram integration)
 const transcribeSchema = z.object({
 	audio: z.string(), // base64 encoded audio
-	sessionId: z.string().optional(),
+	sessionId: z.string(),
 });
 
 // Schema for TTS request
@@ -83,7 +89,8 @@ conversation.post("/start", requireAuth, async (c) => {
 		.limit(1);
 
 	const level = profile[0]?.level ?? "beginner";
-
+	const voiceModel = profile[0]?.voiceModel ?? "aura-2-thalia-en";
+	console.log("voiceModel", voiceModel);
 	// Check if it's a built-in scenario
 	const builtInConfig = getScenarioConfig(scenario, level);
 	const isBuiltIn = scenario in getBuiltInScenarioIds();
@@ -140,7 +147,7 @@ The person you're talking to is learning English at a ${level} level.
 	});
 
 	// Generate TTS for the initial greeting
-	const greetingAudio = await generateTTSBase64(greeting);
+	const greetingAudio = await generateTTSBase64(greeting, voiceModel);
 
 	return c.json({
 		sessionId,
@@ -187,6 +194,7 @@ conversation.post("/send", requireAuth, async (c) => {
 		sessionId: input.sessionId,
 		role: "user",
 		content: input.content,
+		audioUrl: input.audioUrl,
 		metadata: { transcribedFrom: input.inputType },
 		createdAt: new Date(),
 	});
@@ -334,13 +342,17 @@ conversation.post("/speak", requireAuth, async (c) => {
 	}
 });
 
-// Transcribe audio using Deepgram
+// Transcribe audio using Deepgram, then persist the recording in R2
 conversation.post("/transcribe", requireAuth, async (c) => {
+	const session = c.get("session");
+	if (!session) {
+		return c.json({ error: "Unauthorized" }, 401);
+	}
+
 	const body = await c.req.json();
-	const { audio } = transcribeSchema.parse(body);
+	const { audio, sessionId } = transcribeSchema.parse(body);
 
 	try {
-		// Decode base64 audio
 		const audioBuffer = Buffer.from(audio, "base64");
 
 		// Send to Deepgram for transcription
@@ -375,10 +387,31 @@ conversation.post("/transcribe", requireAuth, async (c) => {
 		const transcript =
 			result.results?.channels?.[0]?.alternatives?.[0]?.transcript || "";
 
+		// Upload the raw audio to R2 for later feedback analysis
+		let audioUrl: string | undefined;
+		try {
+			const messageId = crypto.randomUUID();
+			const key = `${session.user.id}/${sessionId}/${messageId}.webm`;
+
+			await s3Client.send(
+				new PutObjectCommand({
+					Bucket: "_audio",
+					Key: key,
+					Body: audioBuffer,
+					ContentType: "audio/webm",
+				}),
+			);
+
+			audioUrl = `${env.R2_PUBLIC_URL}/_audio/${key}`;
+		} catch (uploadError) {
+			console.error("R2 audio upload error:", uploadError);
+		}
+
 		return c.json({
 			transcript,
 			confidence:
 				result.results?.channels?.[0]?.alternatives?.[0]?.confidence || 0,
+			audioUrl,
 		});
 	} catch (error) {
 		console.error("Transcription error:", error);
@@ -437,9 +470,7 @@ conversation.post("/hint", requireAuth, async (c) => {
 	}
 
 	const body = await c.req.json();
-	const { sessionId } = z
-		.object({ sessionId: z.string() })
-		.parse(body);
+	const { sessionId } = z.object({ sessionId: z.string() }).parse(body);
 
 	const conversationSessionResult = await db
 		.select()
@@ -499,9 +530,7 @@ conversation.post("/native-to-english", requireAuth, async (c) => {
 	}
 
 	const body = await c.req.json();
-	const { text } = z
-		.object({ text: z.string().min(1).max(5000) })
-		.parse(body);
+	const { text } = z.object({ text: z.string().min(1).max(5000) }).parse(body);
 
 	const profile = await db
 		.select()
@@ -556,6 +585,88 @@ conversation.get("/session/:sessionId", requireAuth, async (c) => {
 	return c.json({
 		session: sessionData,
 		messages,
+	});
+});
+
+// Finish a conversation session and enqueue feedback generation
+conversation.post("/finish", requireAuth, async (c) => {
+	const session = c.get("session");
+	if (!session) {
+		return c.json({ error: "Unauthorized" }, 401);
+	}
+
+	const body = await c.req.json();
+	const { sessionId } = z.object({ sessionId: z.string() }).parse(body);
+
+	const sessionResult = await db
+		.select()
+		.from(conversationSession)
+		.where(eq(conversationSession.id, sessionId))
+		.limit(1);
+
+	const sessionData = sessionResult[0];
+	if (!sessionData || sessionData.userId !== session.user.id) {
+		return c.json({ error: "Session not found" }, 404);
+	}
+
+	if (sessionData.status === "completed") {
+		const existing = await db
+			.select()
+			.from(conversationFeedback)
+			.where(eq(conversationFeedback.sessionId, sessionId))
+			.limit(1);
+
+		if (existing[0]) {
+			return c.json({
+				feedbackId: existing[0].id,
+				status: existing[0].status,
+			});
+		}
+	}
+
+	const messages = await db
+		.select()
+		.from(conversationMessage)
+		.where(eq(conversationMessage.sessionId, sessionId));
+
+	const userMessageCount = messages.filter((m) => m.role === "user").length;
+
+	if (userMessageCount < 3) {
+		await db
+			.update(conversationSession)
+			.set({ status: "completed", updatedAt: new Date() })
+			.where(eq(conversationSession.id, sessionId));
+
+		return c.json({
+			canGenerateFeedback: false,
+			userMessageCount,
+		});
+	}
+
+	await db
+		.update(conversationSession)
+		.set({ status: "completed", updatedAt: new Date() })
+		.where(eq(conversationSession.id, sessionId));
+
+	const feedbackId = crypto.randomUUID();
+	await db.insert(conversationFeedback).values({
+		id: feedbackId,
+		sessionId,
+		userId: session.user.id,
+		status: "generating",
+		createdAt: new Date(),
+	});
+
+	const boss = getQueue();
+	await enqueueGenerateConversationFeedback(boss, {
+		sessionId,
+		userId: session.user.id,
+	});
+
+	return c.json({
+		canGenerateFeedback: true,
+		feedbackId,
+		status: "generating",
 	});
 });
 

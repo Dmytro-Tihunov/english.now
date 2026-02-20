@@ -264,10 +264,6 @@ const MOCK_FEEDBACK = {
 	],
 };
 
-// =============================================================================
-// COMPONENTS
-// =============================================================================
-
 function ScoreBadge({
 	score,
 	size = "md",
@@ -559,7 +555,7 @@ function SessionFeedbackPage() {
 	// In real app, sessionId would be used to fetch feedback data
 
 	return (
-		<div className="container mx-auto max-w-6xl px-4 py-6">
+		<div className="container mx-auto max-w-5xl px-4 py-6">
 			{/* Header */}
 			<div className="mb-6 flex items-center justify-between">
 				<div className="flex items-center gap-4">
